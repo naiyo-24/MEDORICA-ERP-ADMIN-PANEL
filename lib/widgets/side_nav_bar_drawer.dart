@@ -12,6 +12,7 @@ class SideNavItemKeys {
   static const String dashboard = 'dashboard';
   static const String distributorManagement = 'distributor_management';
   static const String visualAdsManagement = 'visual_ads_management';
+  static const String notifications = 'notifications';
   static const String ourPortfolio = 'our_portfolio';
   static const String logout = 'logout';
 }
@@ -20,8 +21,9 @@ class SideNavRouteIndex {
   static const int dashboard = 0;
   static const int distributor = 1;
   static const int visualAds = 2;
-  static const int portfolio = 3;
-  static const int logout = 4;
+  static const int notifications = 3;
+  static const int portfolio = 4;
+  static const int logout = 5;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -32,6 +34,8 @@ class SideNavRouteIndex {
         return distributor;
       case SideNavItemKeys.visualAdsManagement:
         return visualAds;
+      case SideNavItemKeys.notifications:
+        return notifications;
       case SideNavItemKeys.ourPortfolio:
         return portfolio;
       case SideNavItemKeys.logout:
@@ -63,6 +67,11 @@ class SideNavRouteIndex {
       case visualAds:
         if (currentItemKey != SideNavItemKeys.visualAdsManagement) {
           context.go(AppRoutePaths.visualAds);
+        }
+        return true;
+      case notifications:
+        if (currentItemKey != SideNavItemKeys.notifications) {
+          context.go(AppRoutePaths.notifications);
         }
         return true;
       case portfolio:
@@ -270,7 +279,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: Iconsax.notification,
                     title: 'Notifications',
-                    itemKey: 'notifications',
+                    itemKey: SideNavItemKeys.notifications,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
