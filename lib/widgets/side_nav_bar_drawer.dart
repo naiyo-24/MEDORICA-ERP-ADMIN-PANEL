@@ -20,6 +20,7 @@ class SideNavItemKeys {
   static const String ourPortfolio = 'our_portfolio';
   static const String helpCenter = 'help_center';
   static const String mrAttendance = 'mr_attendance';
+  static const String asmAttendance = 'asm_attendance';
   static const String logout = 'logout';
 }
 
@@ -35,7 +36,8 @@ class SideNavRouteIndex {
   static const int portfolio = 8;
   static const int helpCenter = 9;
   static const int mrAttendance = 10;
-  static const int logout = 11;
+  static const int asmAttendance = 11;
+  static const int logout = 12;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -62,6 +64,8 @@ class SideNavRouteIndex {
         return helpCenter;
       case SideNavItemKeys.mrAttendance:
         return mrAttendance;
+      case SideNavItemKeys.asmAttendance:
+        return asmAttendance;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -131,6 +135,11 @@ class SideNavRouteIndex {
       case mrAttendance:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.mrAttendance);
+        }
+        return true;
+      case asmAttendance:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmAttendance);
         }
         return true;
       case logout:

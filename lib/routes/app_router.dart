@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../screens/attendance/asm_attendance_screen.dart';
 import '../screens/attendance/mr_attendance_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/splash_screen.dart';
@@ -28,6 +29,7 @@ class AppRoutePaths {
   static const String mrDoctorNetwork = '/mr-doctor-network';
   static const String asmDoctorNetwork = '/asm-doctor-network';
   static const String mrAttendance = '/mr-attendance';
+  static const String asmAttendance = '/asm-attendance';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -97,6 +99,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.mrAttendance,
       name: 'mr-attendance',
       builder: (context, state) => const MRAttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.asmAttendance,
+      name: 'asm-attendance',
+      builder: (context, state) => const ASMAttendanceScreen(),
     ),
   ],
 );

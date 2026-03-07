@@ -115,7 +115,7 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       DropdownButtonFormField<String>(
-                        value: selectedMRId.isEmpty ? null : selectedMRId,
+                        initialValue: selectedMRId.isEmpty ? null : selectedMRId,
                         decoration: InputDecoration(
                           hintText: 'Select MR',
                           prefixIcon: const Icon(Iconsax.user_search),
