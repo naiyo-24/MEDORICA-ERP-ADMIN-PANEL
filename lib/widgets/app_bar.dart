@@ -21,6 +21,9 @@ class MedoricaAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.bottom,
     this.height = 74,
+    this.menuButtonWidth = 42,
+    this.menuButtonHeight = 42,
+    this.titleGapFromLeading = 10,
   });
 
   final String title;
@@ -41,6 +44,9 @@ class MedoricaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final PreferredSizeWidget? bottom;
   final double height;
+  final double menuButtonWidth;
+  final double menuButtonHeight;
+  final double titleGapFromLeading;
 
   @override
   Size get preferredSize =>
@@ -72,8 +78,8 @@ class MedoricaAppBar extends StatelessWidget implements PreferredSizeWidget {
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                       onTap: onMenuTap,
                       child: Container(
-                        width: 42,
-                        height: 42,
+                        width: menuButtonWidth,
+                        height: menuButtonHeight,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(AppRadius.sm),
                           border: Border.all(color: AppColors.border),
@@ -94,7 +100,9 @@ class MedoricaAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () => Navigator.of(context).maybePop(),
                 )
               : null),
-      titleSpacing: (showBackButton || showMenuButton) ? 0 : 16,
+      titleSpacing: (showBackButton || showMenuButton)
+          ? titleGapFromLeading
+          : 16,
       title: Row(
         children: [
           if (showLogo) ...[
