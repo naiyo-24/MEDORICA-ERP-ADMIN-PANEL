@@ -45,6 +45,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
           address: '2nd Floor, Park Street Trade Tower',
           email: 'contact@astramedisupply.com',
           phone: '+919830001122',
+          expectedDeliveryTime: '24-36 hours',
+          minimumOrderValue: 5000,
           createdAt: DateTime.now().subtract(const Duration(days: 150)),
         ),
         Distributor(
@@ -55,6 +57,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
           address: 'Unit 6, Janpath Commercial Complex',
           email: 'ops@healthbridge.in',
           phone: '+919876543210',
+          expectedDeliveryTime: '48 hours',
+          minimumOrderValue: 7000,
           createdAt: DateTime.now().subtract(const Duration(days: 96)),
         ),
         Distributor(
@@ -65,6 +69,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
           address: 'GS Road, Ambari Business Hub',
           email: 'info@northstarpharma.in',
           phone: '+919954441100',
+          expectedDeliveryTime: '36-48 hours',
+          minimumOrderValue: 6500,
           createdAt: DateTime.now().subtract(const Duration(days: 68)),
         ),
         Distributor(
@@ -75,6 +81,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
           address: 'Boring Road, Medico Trade Plaza',
           email: 'hello@sanjeevanimedline.in',
           phone: '+919888117700',
+          expectedDeliveryTime: '24 hours',
+          minimumOrderValue: 4500,
           createdAt: DateTime.now().subtract(const Duration(days: 31)),
         ),
       ],
@@ -96,6 +104,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
     required String address,
     required String email,
     required String phone,
+    required String expectedDeliveryTime,
+    required double minimumOrderValue,
     Uint8List? imageBytes,
     String? imageFileName,
   }) async {
@@ -110,6 +120,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
       address: address,
       email: email,
       phone: phone,
+      expectedDeliveryTime: expectedDeliveryTime,
+      minimumOrderValue: minimumOrderValue,
       imageBytes: imageBytes,
       imageFileName: imageFileName,
       createdAt: now,
@@ -129,6 +141,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
     required String address,
     required String email,
     required String phone,
+    required String expectedDeliveryTime,
+    required double minimumOrderValue,
     Uint8List? imageBytes,
     String? imageFileName,
   }) async {
@@ -147,6 +161,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
             address: address,
             email: email,
             phone: phone,
+            expectedDeliveryTime: expectedDeliveryTime,
+            minimumOrderValue: minimumOrderValue,
             imageBytes: imageBytes,
             imageFileName: imageFileName,
           );

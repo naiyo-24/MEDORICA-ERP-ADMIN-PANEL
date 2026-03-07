@@ -9,6 +9,8 @@ class Distributor {
     required this.address,
     required this.email,
     required this.phone,
+    required this.expectedDeliveryTime,
+    required this.minimumOrderValue,
     this.imageBytes,
     this.imageFileName,
     required this.createdAt,
@@ -21,6 +23,8 @@ class Distributor {
   final String address;
   final String email;
   final String phone;
+  final String expectedDeliveryTime;
+  final double minimumOrderValue;
   final Uint8List? imageBytes;
   final String? imageFileName;
   final DateTime createdAt;
@@ -37,6 +41,8 @@ class Distributor {
     String? address,
     String? email,
     String? phone,
+    String? expectedDeliveryTime,
+    double? minimumOrderValue,
     Uint8List? imageBytes,
     String? imageFileName,
     DateTime? createdAt,
@@ -50,6 +56,8 @@ class Distributor {
       address: address ?? this.address,
       email: email ?? this.email,
       phone: phone ?? this.phone,
+      expectedDeliveryTime: expectedDeliveryTime ?? this.expectedDeliveryTime,
+      minimumOrderValue: minimumOrderValue ?? this.minimumOrderValue,
       imageBytes: clearImage ? null : imageBytes ?? this.imageBytes,
       imageFileName: clearImage ? null : imageFileName ?? this.imageFileName,
       createdAt: createdAt ?? this.createdAt,

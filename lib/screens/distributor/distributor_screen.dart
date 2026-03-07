@@ -71,6 +71,8 @@ class _DistributorScreenState extends ConsumerState<DistributorScreen> {
                   address: data.address,
                   email: data.email,
                   phone: data.phone,
+                  expectedDeliveryTime: data.expectedDeliveryTime,
+                  minimumOrderValue: data.minimumOrderValue,
                   imageBytes: data.imageBytes,
                   imageFileName: data.imageFileName,
                 );
@@ -83,6 +85,8 @@ class _DistributorScreenState extends ConsumerState<DistributorScreen> {
                   address: data.address,
                   email: data.email,
                   phone: data.phone,
+                  expectedDeliveryTime: data.expectedDeliveryTime,
+                  minimumOrderValue: data.minimumOrderValue,
                   imageBytes: data.imageBytes,
                   imageFileName: data.imageFileName,
                 );

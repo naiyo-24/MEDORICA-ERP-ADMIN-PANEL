@@ -81,6 +81,16 @@ class DistributorDetailCard extends StatelessWidget {
               title: 'Phone',
               value: distributor.phone,
             ),
+            _DetailRow(
+              icon: Iconsax.timer_1,
+              title: 'Expected Delivery',
+              value: distributor.expectedDeliveryTime,
+            ),
+            _DetailRow(
+              icon: Iconsax.money_3,
+              title: 'Minimum Order Value',
+              value: 'INR ${distributor.minimumOrderValue.toStringAsFixed(0)}',
+            ),
             const SizedBox(height: AppSpacing.md),
             Wrap(
               spacing: AppSpacing.sm,

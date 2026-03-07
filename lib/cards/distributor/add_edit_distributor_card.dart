@@ -15,6 +15,8 @@ class DistributorFormData {
     required this.address,
     required this.email,
     required this.phone,
+    required this.expectedDeliveryTime,
+    required this.minimumOrderValue,
     this.imageBytes,
     this.imageFileName,
   });
@@ -25,6 +27,8 @@ class DistributorFormData {
   final String address;
   final String email;
   final String phone;
+  final String expectedDeliveryTime;
+  final double minimumOrderValue;
   final Uint8List? imageBytes;
   final String? imageFileName;
 }
@@ -52,6 +56,8 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
   late final TextEditingController _addressController;
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
+  late final TextEditingController _expectedDeliveryTimeController;
+  late final TextEditingController _minimumOrderValueController;
 
   Uint8List? _imageBytes;
   String? _imageFileName;
@@ -71,6 +77,14 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
     );
     _emailController = TextEditingController(text: distributor?.email ?? '');
     _phoneController = TextEditingController(text: distributor?.phone ?? '');
+    _expectedDeliveryTimeController = TextEditingController(
+      text: distributor?.expectedDeliveryTime ?? '',
+    );
+    _minimumOrderValueController = TextEditingController(
+      text: distributor != null
+          ? distributor.minimumOrderValue.toStringAsFixed(0)
+          : '',
+    );
     _imageBytes = distributor?.imageBytes;
     _imageFileName = distributor?.imageFileName;
   }
@@ -83,6 +97,8 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
     _addressController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _expectedDeliveryTimeController.dispose();
+    _minimumOrderValueController.dispose();
     super.dispose();
   }
 
@@ -123,6 +139,9 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
         address: _addressController.text.trim(),
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim(),
+        expectedDeliveryTime: _expectedDeliveryTimeController.text.trim(),
+        minimumOrderValue:
+            double.tryParse(_minimumOrderValueController.text.trim()) ?? 0,
         imageBytes: _imageBytes,
         imageFileName: _imageFileName,
       ),
@@ -317,6 +336,48 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                         validator: (value) {
                           if (value == null || value.trim().length < 10) {
                             return 'Enter valid phone.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _expectedDeliveryTimeController,
+                        decoration: const InputDecoration(
+                          labelText: 'Expected delivery time',
+                          prefixIcon: Icon(Iconsax.timer_1),
+                          hintText: 'e.g. 24-48 hours',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Enter delivery time.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _minimumOrderValueController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Minimum order value',
+                          prefixIcon: Icon(Iconsax.money_3),
+                          hintText: 'e.g. 5000',
+                        ),
+                        validator: (value) {
+                          final parsed = double.tryParse(value?.trim() ?? '');
+                          if (parsed == null || parsed <= 0) {
+                            return 'Enter valid amount.';
                           }
                           return null;
                         },
