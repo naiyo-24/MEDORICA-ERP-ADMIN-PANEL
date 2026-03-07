@@ -205,6 +205,13 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
+                  _NavTile(
+                    icon: Iconsax.info_circle,
+                    title: 'Our Portfolio',
+                    itemKey: 'our_portfolio',
+                    selectedKey: selectedKey,
+                    onTap: onItemTap,
+                  ),
                 ],
               ),
             ),
