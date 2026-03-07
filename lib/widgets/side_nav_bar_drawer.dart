@@ -21,12 +21,8 @@ class SideNavBarDrawer extends StatelessWidget {
     return Container(
       width: 320,
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.white, AppColors.surface],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border(right: BorderSide(color: AppColors.border)),
+        color: AppColors.primary,
+        border: Border(right: BorderSide(color: AppColors.primaryDark)),
       ),
       child: SafeArea(
         child: Column(
@@ -38,7 +34,7 @@ class SideNavBarDrawer extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(color: AppColors.divider),
+              child: Divider(color: AppColors.primaryDark),
             ),
             Expanded(
               child: ListView(
@@ -60,10 +56,12 @@ class SideNavBarDrawer extends StatelessWidget {
                       _NavChild(
                         itemKey: 'mr_onboarding',
                         label: 'MR Onboarding',
+                        icon: Iconsax.profile_2user,
                       ),
                       _NavChild(
                         itemKey: 'asm_onboarding',
                         label: 'ASM Onboarding',
+                        icon: Iconsax.user_octagon,
                       ),
                     ],
                     onTap: onItemTap,
@@ -87,8 +85,16 @@ class SideNavBarDrawer extends StatelessWidget {
                     title: 'Monthly Target',
                     selectedKey: selectedKey,
                     children: const [
-                      _NavChild(itemKey: 'asm_targets', label: 'ASM Targets'),
-                      _NavChild(itemKey: 'mr_targets', label: 'MR Targets'),
+                      _NavChild(
+                        itemKey: 'asm_targets',
+                        label: 'ASM Targets',
+                        icon: Iconsax.user_octagon,
+                      ),
+                      _NavChild(
+                        itemKey: 'mr_targets',
+                        label: 'MR Targets',
+                        icon: Iconsax.profile_2user,
+                      ),
                     ],
                     onTap: onItemTap,
                   ),
@@ -100,10 +106,12 @@ class SideNavBarDrawer extends StatelessWidget {
                       _NavChild(
                         itemKey: 'mr_doctor_networks',
                         label: 'MR Doctor Networks',
+                        icon: Iconsax.profile_2user,
                       ),
                       _NavChild(
                         itemKey: 'asm_doctor_networks',
                         label: 'ASM Doctor Networks',
+                        icon: Iconsax.user_octagon,
                       ),
                     ],
                     onTap: onItemTap,
@@ -116,10 +124,12 @@ class SideNavBarDrawer extends StatelessWidget {
                       _NavChild(
                         itemKey: 'mr_appointments',
                         label: 'MR Appointments',
+                        icon: Iconsax.profile_2user,
                       ),
                       _NavChild(
                         itemKey: 'asm_appointments',
                         label: 'ASM Appointments',
+                        icon: Iconsax.user_octagon,
                       ),
                     ],
                     onTap: onItemTap,
@@ -132,10 +142,12 @@ class SideNavBarDrawer extends StatelessWidget {
                       _NavChild(
                         itemKey: 'asm_shop_network',
                         label: 'ASM Shop Network',
+                        icon: Iconsax.user_octagon,
                       ),
                       _NavChild(
                         itemKey: 'mr_shop_network',
                         label: 'MR Shop Network',
+                        icon: Iconsax.profile_2user,
                       ),
                     ],
                     onTap: onItemTap,
@@ -162,8 +174,13 @@ class SideNavBarDrawer extends StatelessWidget {
                       _NavChild(
                         itemKey: 'asm_trip_plan',
                         label: 'ASM Trip Plan',
+                        icon: Iconsax.user_octagon,
                       ),
-                      _NavChild(itemKey: 'mr_trip_plan', label: 'MR Trip Plan'),
+                      _NavChild(
+                        itemKey: 'mr_trip_plan',
+                        label: 'MR Trip Plan',
+                        icon: Iconsax.profile_2user,
+                      ),
                     ],
                     onTap: onItemTap,
                   ),
@@ -193,7 +210,7 @@ class SideNavBarDrawer extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(color: AppColors.divider),
+              child: Divider(color: AppColors.primaryDark),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
@@ -224,18 +241,12 @@ class _NavHeader extends StatelessWidget {
       children: [
         Container(
           width: 52,
-          height: 52,
+          height: 82,
           decoration: BoxDecoration(
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(color: AppColors.border),
-            boxShadow: const [
-              BoxShadow(
-                color: AppColors.shadowColor,
-                blurRadius: 14,
-                offset: Offset(0, 6),
-              ),
-            ],
+            border: Border.all(color: AppColors.primary),
+            
           ),
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -253,13 +264,13 @@ class _NavHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontSize: 20,
-                  color: AppColors.primary,
+                  color: AppColors.secondary,
                 ),
               ),
               Text(
                 'Your managerial command center',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.quaternary,
+                  color: AppColors.secondary,
                 ),
               ),
             ],
@@ -271,10 +282,15 @@ class _NavHeader extends StatelessWidget {
 }
 
 class _NavChild {
-  const _NavChild({required this.itemKey, required this.label});
+  const _NavChild({
+    required this.itemKey,
+    required this.label,
+    required this.icon,
+  });
 
   final String itemKey;
   final String label;
+  final IconData icon;
 }
 
 class _NavGroup extends StatelessWidget {
@@ -309,23 +325,24 @@ class _NavGroup extends StatelessWidget {
         collapsedShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        iconColor: AppColors.primary,
-        collapsedIconColor: AppColors.quaternary,
-        leading: Icon(icon, size: 18, color: AppColors.primary),
+        iconColor: AppColors.secondary,
+        collapsedIconColor: AppColors.secondary,
+        leading: Icon(icon, size: 18, color: AppColors.secondary),
         title: Text(
           title,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: AppColors.primary,
+            color: AppColors.secondary,
             fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: hasSelectedChild
-            ? AppColors.primaryLight
+            ? AppColors.primaryDark
             : Colors.transparent,
         collapsedBackgroundColor: Colors.transparent,
         children: [
           for (final child in children)
             _NavSubTile(
+              icon: child.icon,
               label: child.label,
               itemKey: child.itemKey,
               selectedKey: selectedKey,
@@ -339,12 +356,14 @@ class _NavGroup extends StatelessWidget {
 
 class _NavSubTile extends StatelessWidget {
   const _NavSubTile({
+    required this.icon,
     required this.label,
     required this.itemKey,
     required this.selectedKey,
     required this.onTap,
   });
 
+  final IconData icon;
   final String label;
   final String itemKey;
   final String selectedKey;
@@ -358,19 +377,35 @@ class _NavSubTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Material(
-        color: isSelected ? AppColors.primaryLight : Colors.transparent,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () => onTap(itemKey),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: isSelected ? AppColors.primary : AppColors.quaternary,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 15,
+                  color: isSelected ? AppColors.primary : AppColors.quaternary,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.quaternary,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -401,15 +436,13 @@ class _NavTile extends StatelessWidget {
     final isSelected = selectedKey == itemKey;
     final theme = Theme.of(context);
 
-    final baseColor = danger ? AppColors.error : AppColors.primary;
-    final textColor = danger
-        ? AppColors.error
-        : (isSelected ? AppColors.primary : AppColors.quaternary);
+    final baseColor = danger ? AppColors.error : AppColors.secondary;
+    final textColor = danger ? AppColors.error : AppColors.secondary;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Material(
-        color: isSelected ? AppColors.primaryLight : Colors.transparent,
+        color: isSelected ? AppColors.primaryDark : Colors.transparent,
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
