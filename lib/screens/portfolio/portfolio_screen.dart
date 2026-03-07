@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../cards/portfolio/edit_portfolio_card.dart';
 import '../../cards/portfolio/portfolio_contact_card.dart';
 import '../../cards/portfolio/portfolio_description_card.dart';
 import '../../cards/portfolio/portfolio_director_message_card.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/portfolio_provider.dart';
-import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
@@ -30,23 +27,13 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   void _onNavTap(String itemKey) {
     Navigator.of(context).pop();
 
-    if (itemKey == 'dashboard') {
-      context.go(AppRoutePaths.dashboard);
-      return;
-    }
-
-    if (itemKey == 'visual_ads_management') {
-      context.go(AppRoutePaths.visualAds);
-      return;
-    }
-
-    if (itemKey == 'our_portfolio') {
-      return;
-    }
-
-    if (itemKey == 'logout') {
-      ref.read(authNotifierProvider.notifier).logout();
-      context.go(AppRoutePaths.login);
+    final handled = SideNavRouteIndex.handleTap(
+      context: context,
+      ref: ref,
+      itemKey: itemKey,
+      currentItemKey: SideNavItemKeys.ourPortfolio,
+    );
+    if (handled) {
       return;
     }
 
@@ -119,7 +106,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       drawer: Drawer(
         width: 320,
         child: SideNavBarDrawer(
-          selectedKey: 'our_portfolio',
+          selectedKey: SideNavItemKeys.ourPortfolio,
           onItemTap: _onNavTap,
         ),
       ),

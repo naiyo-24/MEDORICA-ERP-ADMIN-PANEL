@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../cards/dashboard/asm_graph_card.dart';
 import '../../cards/dashboard/count_card.dart';
@@ -8,9 +7,7 @@ import '../../cards/dashboard/dsitributor_graph_card.dart';
 import '../../cards/dashboard/home_footer.dart';
 import '../../cards/dashboard/mr_graph_card.dart';
 import '../../cards/dashboard/order_graph_card.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/dashboard_provider.dart';
-import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
@@ -24,7 +21,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _selectedNavKey = 'dashboard';
+  String _selectedNavKey = SideNavItemKeys.dashboard;
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -33,19 +30,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void _onNavTap(String itemKey) {
     Navigator.of(context).pop();
 
-    if (itemKey == 'logout') {
-      ref.read(authNotifierProvider.notifier).logout();
-      context.go(AppRoutePaths.login);
-      return;
-    }
-
-    if (itemKey == 'visual_ads_management') {
-      context.go(AppRoutePaths.visualAds);
-      return;
-    }
-
-    if (itemKey == 'our_portfolio') {
-      context.go(AppRoutePaths.portfolio);
+    final handled = SideNavRouteIndex.handleTap(
+      context: context,
+      ref: ref,
+      itemKey: itemKey,
+      currentItemKey: SideNavItemKeys.dashboard,
+    );
+    if (handled) {
       return;
     }
 
@@ -53,7 +44,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       _selectedNavKey = itemKey;
     });
 
-    if (itemKey != 'dashboard') {
+    if (itemKey != SideNavItemKeys.dashboard) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$itemKey module will be available soon.')),
       );

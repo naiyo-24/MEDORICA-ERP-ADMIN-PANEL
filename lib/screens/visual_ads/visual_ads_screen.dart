@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../cards/visual_ads/create_edit_visual_ads_card.dart';
 import '../../cards/visual_ads/visual_ads_cards.dart';
 import '../../models/visual_ads.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/visual_ads_provider.dart';
-import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
@@ -30,23 +27,13 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
   void _onNavTap(String itemKey) {
     Navigator.of(context).pop();
 
-    if (itemKey == 'dashboard') {
-      context.go(AppRoutePaths.dashboard);
-      return;
-    }
-
-    if (itemKey == 'visual_ads_management') {
-      return;
-    }
-
-    if (itemKey == 'our_portfolio') {
-      context.go(AppRoutePaths.portfolio);
-      return;
-    }
-
-    if (itemKey == 'logout') {
-      ref.read(authNotifierProvider.notifier).logout();
-      context.go(AppRoutePaths.login);
+    final handled = SideNavRouteIndex.handleTap(
+      context: context,
+      ref: ref,
+      itemKey: itemKey,
+      currentItemKey: SideNavItemKeys.visualAdsManagement,
+    );
+    if (handled) {
       return;
     }
 
@@ -125,7 +112,7 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
       drawer: Drawer(
         width: 320,
         child: SideNavBarDrawer(
-          selectedKey: 'visual_ads_management',
+          selectedKey: SideNavItemKeys.visualAdsManagement,
           onItemTap: _onNavTap,
         ),
       ),

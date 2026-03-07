@@ -1,8 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../providers/auth_provider.dart';
+import '../routes/app_router.dart';
 import '../theme/app_theme.dart';
+
+class SideNavItemKeys {
+  static const String dashboard = 'dashboard';
+  static const String visualAdsManagement = 'visual_ads_management';
+  static const String ourPortfolio = 'our_portfolio';
+  static const String logout = 'logout';
+}
+
+class SideNavRouteIndex {
+  static const int dashboard = 0;
+  static const int visualAds = 1;
+  static const int portfolio = 2;
+  static const int logout = 3;
+  static const int unhandled = -1;
+
+  static int fromItemKey(String itemKey) {
+    switch (itemKey) {
+      case SideNavItemKeys.dashboard:
+        return dashboard;
+      case SideNavItemKeys.visualAdsManagement:
+        return visualAds;
+      case SideNavItemKeys.ourPortfolio:
+        return portfolio;
+      case SideNavItemKeys.logout:
+        return logout;
+      default:
+        return unhandled;
+    }
+  }
+
+  static bool handleTap({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String itemKey,
+    required String currentItemKey,
+  }) {
+    final index = fromItemKey(itemKey);
+
+    switch (index) {
+      case dashboard:
+        if (currentItemKey != SideNavItemKeys.dashboard) {
+          context.go(AppRoutePaths.dashboard);
+        }
+        return true;
+      case visualAds:
+        if (currentItemKey != SideNavItemKeys.visualAdsManagement) {
+          context.go(AppRoutePaths.visualAds);
+        }
+        return true;
+      case portfolio:
+        if (currentItemKey != SideNavItemKeys.ourPortfolio) {
+          context.go(AppRoutePaths.portfolio);
+        }
+        return true;
+      case logout:
+        ref.read(authNotifierProvider.notifier).logout();
+        context.go(AppRoutePaths.login);
+        return true;
+      default:
+        return false;
+    }
+  }
+}
 
 class SideNavBarDrawer extends StatelessWidget {
   const SideNavBarDrawer({
@@ -253,7 +320,6 @@ class _NavHeader extends StatelessWidget {
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(AppRadius.md),
             border: Border.all(color: AppColors.primary),
-            
           ),
           child: Padding(
             padding: const EdgeInsets.all(8),

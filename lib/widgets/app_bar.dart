@@ -61,10 +61,31 @@ class MedoricaAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading:
           leading ??
           (showMenuButton
-              ? IconButton(
-                  tooltip: 'Menu',
-                  icon: const Icon(Iconsax.menu_1, size: 20),
-                  onPressed: onMenuTap,
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
+                  child: Material(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                    shadowColor: AppColors.shadowColor,
+                    elevation: 1,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      onTap: onMenuTap,
+                      child: Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: const Icon(
+                          Iconsax.menu_1,
+                          size: 19,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
                 )
               : showBackButton
               ? IconButton(
