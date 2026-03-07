@@ -203,11 +203,22 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
-                  _NavTile(
+                  _NavGroup(
                     icon: Iconsax.calendar_1,
                     title: 'Attendance Record',
-                    itemKey: 'attendance_record',
                     selectedKey: selectedKey,
+                    children: const [
+                      _NavChild(
+                        itemKey: 'mr_attendance',
+                        label: 'MR Attendance',
+                        icon: Iconsax.profile_2user,
+                      ),
+                      _NavChild(
+                        itemKey: 'asm_attendance',
+                        label: 'ASM Attendance',
+                        icon: Iconsax.user_octagon,
+                      ),
+                    ],
                     onTap: onItemTap,
                   ),
                   _NavGroup(
