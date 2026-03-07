@@ -21,6 +21,8 @@ class SideNavItemKeys {
   static const String helpCenter = 'help_center';
   static const String mrAttendance = 'mr_attendance';
   static const String asmAttendance = 'asm_attendance';
+  static const String asmTargets = 'asm_targets';
+  static const String mrTargets = 'mr_targets';
   static const String logout = 'logout';
 }
 
@@ -37,7 +39,9 @@ class SideNavRouteIndex {
   static const int helpCenter = 9;
   static const int mrAttendance = 10;
   static const int asmAttendance = 11;
-  static const int logout = 12;
+  static const int asmTargets = 12;
+  static const int mrTargets = 13;
+  static const int logout = 14;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -66,6 +70,10 @@ class SideNavRouteIndex {
         return mrAttendance;
       case SideNavItemKeys.asmAttendance:
         return asmAttendance;
+      case SideNavItemKeys.asmTargets:
+        return asmTargets;
+      case SideNavItemKeys.mrTargets:
+        return mrTargets;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -140,6 +148,16 @@ class SideNavRouteIndex {
       case asmAttendance:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.asmAttendance);
+        }
+        return true;
+      case asmTargets:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmMonthlyTarget);
+        }
+        return true;
+      case mrTargets:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrMonthlyTarget);
         }
         return true;
       case logout:
@@ -245,12 +263,12 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     children: const [
                       _NavChild(
-                        itemKey: 'asm_targets',
+                        itemKey: SideNavItemKeys.asmTargets,
                         label: 'ASM Targets',
                         icon: Iconsax.user_octagon,
                       ),
                       _NavChild(
-                        itemKey: 'mr_targets',
+                        itemKey: SideNavItemKeys.mrTargets,
                         label: 'MR Targets',
                         icon: Iconsax.profile_2user,
                       ),

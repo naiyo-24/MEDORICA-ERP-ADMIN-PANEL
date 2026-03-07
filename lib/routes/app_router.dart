@@ -9,6 +9,8 @@ import '../screens/distributor/distributor_screen.dart';
 import '../screens/doctor_network/asm_doctor_network_screen.dart';
 import '../screens/doctor_network/mr_doctor_network_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
+import '../screens/monthly_target/asm_monthly_target_screen.dart';
+import '../screens/monthly_target/mr_monthly_target_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/onboarding/asm_screen.dart';
 import '../screens/onboarding/mr_screen.dart';
@@ -30,6 +32,8 @@ class AppRoutePaths {
   static const String asmDoctorNetwork = '/asm-doctor-network';
   static const String mrAttendance = '/mr-attendance';
   static const String asmAttendance = '/asm-attendance';
+  static const String mrMonthlyTarget = '/mr-monthly-target';
+  static const String asmMonthlyTarget = '/asm-monthly-target';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -104,6 +108,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmAttendance,
       name: 'asm-attendance',
       builder: (context, state) => const ASMAttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrMonthlyTarget,
+      name: 'mr-monthly-target',
+      builder: (context, state) => const MRMonthlyTargetScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.asmMonthlyTarget,
+      name: 'asm-monthly-target',
+      builder: (context, state) => const ASMMonthlyTargetScreen(),
     ),
   ],
 );
