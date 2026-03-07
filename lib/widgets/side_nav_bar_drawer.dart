@@ -13,6 +13,7 @@ class SideNavItemKeys {
   static const String mrOnboarding = 'mr_onboarding';
   static const String asmOnboarding = 'asm_onboarding';
   static const String mrDoctorNetworks = 'mr_doctor_networks';
+  static const String asmDoctorNetworks = 'asm_doctor_networks';
   static const String distributorManagement = 'distributor_management';
   static const String visualAdsManagement = 'visual_ads_management';
   static const String notifications = 'notifications';
@@ -26,12 +27,13 @@ class SideNavRouteIndex {
   static const int mrOnboarding = 1;
   static const int asmOnboarding = 2;
   static const int mrDoctorNetworks = 3;
-  static const int distributor = 4;
-  static const int visualAds = 5;
-  static const int notifications = 6;
-  static const int portfolio = 7;
-  static const int helpCenter = 8;
-  static const int logout = 9;
+  static const int asmDoctorNetworks = 4;
+  static const int distributor = 5;
+  static const int visualAds = 6;
+  static const int notifications = 7;
+  static const int portfolio = 8;
+  static const int helpCenter = 9;
+  static const int logout = 10;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -44,6 +46,8 @@ class SideNavRouteIndex {
         return asmOnboarding;
       case SideNavItemKeys.mrDoctorNetworks:
         return mrDoctorNetworks;
+      case SideNavItemKeys.asmDoctorNetworks:
+        return asmDoctorNetworks;
       case SideNavItemKeys.distributorManagement:
         return distributor;
       case SideNavItemKeys.visualAdsManagement:
@@ -88,6 +92,11 @@ class SideNavRouteIndex {
       case mrDoctorNetworks:
         if (currentItemKey != SideNavItemKeys.mrDoctorNetworks) {
           context.go(AppRoutePaths.mrDoctorNetwork);
+        }
+        return true;
+      case asmDoctorNetworks:
+        if (currentItemKey != SideNavItemKeys.asmDoctorNetworks) {
+          context.go(AppRoutePaths.asmDoctorNetwork);
         }
         return true;
       case distributor:
