@@ -54,6 +54,9 @@ dependencies:
   # Charts and graphs
   fl_chart: ^0.69.2
 
+  # Media picking
+  file_picker: ^8.1.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

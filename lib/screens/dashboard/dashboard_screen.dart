@@ -39,6 +39,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return;
     }
 
+    if (itemKey == 'visual_ads_management') {
+      context.go(AppRoutePaths.visualAds);
+      return;
+    }
+
     setState(() {
       _selectedNavKey = itemKey;
     });
