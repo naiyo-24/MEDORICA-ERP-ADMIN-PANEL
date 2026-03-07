@@ -93,7 +93,7 @@ class MRDoctorDetailsCard extends StatelessWidget {
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: AppColors.white.withOpacity(0.2),
+                            color: AppColors.white.withAlpha(20),
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: const Icon(

@@ -59,7 +59,7 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
               // MR Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: selectedMR.isEmpty ? 'All MRs' : selectedMR,
+                  initialValue: selectedMR.isEmpty ? 'All MRs' : selectedMR,
                   decoration: InputDecoration(
                     labelText: 'Filter by MR',
                     prefixIcon: const Icon(Iconsax.user, size: 16),
@@ -89,7 +89,7 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
               // Department Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: selectedDepartment.isEmpty
+                  initialValue: selectedDepartment.isEmpty
                       ? 'All Departments'
                       : selectedDepartment,
                   decoration: InputDecoration(

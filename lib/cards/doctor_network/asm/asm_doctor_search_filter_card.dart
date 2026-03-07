@@ -59,7 +59,7 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
               // ASM Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: selectedASM.isEmpty ? 'All ASMs' : selectedASM,
+                  initialValue: selectedASM.isEmpty ? 'All ASMs' : selectedASM,
                   decoration: InputDecoration(
                     labelText: 'Filter by ASM',
                     prefixIcon: const Icon(Iconsax.user, size: 16),
@@ -89,7 +89,7 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
               // Department Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: selectedDepartment.isEmpty
+                  initialValue: selectedDepartment.isEmpty
                       ? 'All Departments'
                       : selectedDepartment,
                   decoration: InputDecoration(
