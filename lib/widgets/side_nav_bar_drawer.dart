@@ -77,7 +77,9 @@ class SideNavRouteIndex {
         }
         return true;
       case asmOnboarding:
-        // ASM onboarding route to be added later
+        if (currentItemKey != SideNavItemKeys.asmOnboarding) {
+          context.go(AppRoutePaths.asmOnboarding);
+        }
         return true;
       case distributor:
         if (currentItemKey != SideNavItemKeys.distributorManagement) {
