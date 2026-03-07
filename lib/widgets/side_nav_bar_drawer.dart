@@ -10,6 +10,7 @@ import '../theme/app_theme.dart';
 
 class SideNavItemKeys {
   static const String dashboard = 'dashboard';
+  static const String distributorManagement = 'distributor_management';
   static const String visualAdsManagement = 'visual_ads_management';
   static const String ourPortfolio = 'our_portfolio';
   static const String logout = 'logout';
@@ -17,15 +18,18 @@ class SideNavItemKeys {
 
 class SideNavRouteIndex {
   static const int dashboard = 0;
-  static const int visualAds = 1;
-  static const int portfolio = 2;
-  static const int logout = 3;
+  static const int distributor = 1;
+  static const int visualAds = 2;
+  static const int portfolio = 3;
+  static const int logout = 4;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
     switch (itemKey) {
       case SideNavItemKeys.dashboard:
         return dashboard;
+      case SideNavItemKeys.distributorManagement:
+        return distributor;
       case SideNavItemKeys.visualAdsManagement:
         return visualAds;
       case SideNavItemKeys.ourPortfolio:
@@ -49,6 +53,11 @@ class SideNavRouteIndex {
       case dashboard:
         if (currentItemKey != SideNavItemKeys.dashboard) {
           context.go(AppRoutePaths.dashboard);
+        }
+        return true;
+      case distributor:
+        if (currentItemKey != SideNavItemKeys.distributorManagement) {
+          context.go(AppRoutePaths.distributor);
         }
         return true;
       case visualAds:
@@ -110,7 +119,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: Iconsax.home_2,
                     title: 'Dashboard',
-                    itemKey: 'dashboard',
+                    itemKey: SideNavItemKeys.dashboard,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
@@ -222,7 +231,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: FontAwesomeIcons.truckFast,
                     title: 'Distributor Management',
-                    itemKey: 'distributor_management',
+                    itemKey: SideNavItemKeys.distributorManagement,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
@@ -254,7 +263,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: Iconsax.gallery,
                     title: 'Visual Ads Management',
-                    itemKey: 'visual_ads_management',
+                    itemKey: SideNavItemKeys.visualAdsManagement,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
@@ -275,7 +284,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: Iconsax.info_circle,
                     title: 'Our Portfolio',
-                    itemKey: 'our_portfolio',
+                    itemKey: SideNavItemKeys.ourPortfolio,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
@@ -291,7 +300,7 @@ class SideNavBarDrawer extends StatelessWidget {
               child: _NavTile(
                 icon: Iconsax.logout,
                 title: 'Log Out',
-                itemKey: 'logout',
+                itemKey: SideNavItemKeys.logout,
                 selectedKey: selectedKey,
                 onTap: onItemTap,
                 danger: true,
