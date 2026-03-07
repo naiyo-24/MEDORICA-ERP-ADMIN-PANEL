@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
+import '../screens/portfolio/portfolio_screen.dart';
 import '../screens/visual_ads/visual_ads_screen.dart';
 
 class AppRoutePaths {
@@ -10,6 +11,7 @@ class AppRoutePaths {
   static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String visualAds = '/visual-ads';
+  static const String portfolio = '/portfolio';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -34,6 +36,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.visualAds,
       name: 'visual-ads',
       builder: (context, state) => const VisualAdsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.portfolio,
+      name: 'portfolio',
+      builder: (context, state) => const PortfolioScreen(),
     ),
   ],
 );

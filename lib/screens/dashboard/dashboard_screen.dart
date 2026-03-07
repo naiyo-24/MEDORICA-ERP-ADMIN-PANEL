@@ -44,6 +44,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return;
     }
 
+    if (itemKey == 'our_portfolio') {
+      context.go(AppRoutePaths.portfolio);
+      return;
+    }
+
     setState(() {
       _selectedNavKey = itemKey;
     });

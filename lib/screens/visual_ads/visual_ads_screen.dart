@@ -39,6 +39,11 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
       return;
     }
 
+    if (itemKey == 'our_portfolio') {
+      context.go(AppRoutePaths.portfolio);
+      return;
+    }
+
     if (itemKey == 'logout') {
       ref.read(authNotifierProvider.notifier).logout();
       context.go(AppRoutePaths.login);
