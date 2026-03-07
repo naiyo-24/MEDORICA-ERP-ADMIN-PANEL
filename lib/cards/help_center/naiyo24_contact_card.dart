@@ -143,7 +143,7 @@ class _ContactRow extends StatelessWidget {
             Icon(
               Iconsax.arrow_right_3,
               size: 16,
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary.withAlpha(50),
             ),
           ],
         ],

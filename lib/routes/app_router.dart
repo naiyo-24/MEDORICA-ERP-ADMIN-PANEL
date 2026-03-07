@@ -6,6 +6,7 @@ import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/distributor/distributor_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
 import '../screens/notification/notification_screen.dart';
+import '../screens/onboarding/mr_screen.dart';
 import '../screens/portfolio/portfolio_screen.dart';
 import '../screens/visual_ads/visual_ads_screen.dart';
 
@@ -18,6 +19,7 @@ class AppRoutePaths {
   static const String visualAds = '/visual-ads';
   static const String portfolio = '/portfolio';
   static const String helpCenter = '/help-center';
+  static const String mrOnboarding = '/mr-onboarding';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -62,6 +64,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.helpCenter,
       name: 'help-center',
       builder: (context, state) => const HelpCenterScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrOnboarding,
+      name: 'mr-onboarding',
+      builder: (context, state) => const MROnboardingScreen(),
     ),
   ],
 );

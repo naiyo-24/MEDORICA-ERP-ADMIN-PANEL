@@ -10,6 +10,8 @@ import '../theme/app_theme.dart';
 
 class SideNavItemKeys {
   static const String dashboard = 'dashboard';
+  static const String mrOnboarding = 'mr_onboarding';
+  static const String asmOnboarding = 'asm_onboarding';
   static const String distributorManagement = 'distributor_management';
   static const String visualAdsManagement = 'visual_ads_management';
   static const String notifications = 'notifications';
@@ -20,18 +22,24 @@ class SideNavItemKeys {
 
 class SideNavRouteIndex {
   static const int dashboard = 0;
-  static const int distributor = 1;
-  static const int visualAds = 2;
-  static const int notifications = 3;
-  static const int portfolio = 4;
-  static const int helpCenter = 5;
-  static const int logout = 6;
+  static const int mrOnboarding = 1;
+  static const int asmOnboarding = 2;
+  static const int distributor = 3;
+  static const int visualAds = 4;
+  static const int notifications = 5;
+  static const int portfolio = 6;
+  static const int helpCenter = 7;
+  static const int logout = 8;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
     switch (itemKey) {
       case SideNavItemKeys.dashboard:
         return dashboard;
+      case SideNavItemKeys.mrOnboarding:
+        return mrOnboarding;
+      case SideNavItemKeys.asmOnboarding:
+        return asmOnboarding;
       case SideNavItemKeys.distributorManagement:
         return distributor;
       case SideNavItemKeys.visualAdsManagement:
@@ -62,6 +70,14 @@ class SideNavRouteIndex {
         if (currentItemKey != SideNavItemKeys.dashboard) {
           context.go(AppRoutePaths.dashboard);
         }
+        return true;
+      case mrOnboarding:
+        if (currentItemKey != SideNavItemKeys.mrOnboarding) {
+          context.go(AppRoutePaths.mrOnboarding);
+        }
+        return true;
+      case asmOnboarding:
+        // ASM onboarding route to be added later
         return true;
       case distributor:
         if (currentItemKey != SideNavItemKeys.distributorManagement) {
