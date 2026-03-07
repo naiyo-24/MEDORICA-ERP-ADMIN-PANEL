@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -56,6 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Welcome to Medorica Admin Panel')),
     );
+    context.go(AppRoutePaths.dashboard);
   }
 
   Future<void> _contactSupport() async {
