@@ -4,6 +4,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/distributor/distributor_screen.dart';
+import '../screens/help_center/help_center_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/portfolio/portfolio_screen.dart';
 import '../screens/visual_ads/visual_ads_screen.dart';
@@ -16,6 +17,7 @@ class AppRoutePaths {
   static const String notifications = '/notifications';
   static const String visualAds = '/visual-ads';
   static const String portfolio = '/portfolio';
+  static const String helpCenter = '/help-center';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -55,6 +57,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.portfolio,
       name: 'portfolio',
       builder: (context, state) => const PortfolioScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.helpCenter,
+      name: 'help-center',
+      builder: (context, state) => const HelpCenterScreen(),
     ),
   ],
 );

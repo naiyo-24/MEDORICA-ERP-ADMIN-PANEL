@@ -14,6 +14,7 @@ class SideNavItemKeys {
   static const String visualAdsManagement = 'visual_ads_management';
   static const String notifications = 'notifications';
   static const String ourPortfolio = 'our_portfolio';
+  static const String helpCenter = 'help_center';
   static const String logout = 'logout';
 }
 
@@ -23,7 +24,8 @@ class SideNavRouteIndex {
   static const int visualAds = 2;
   static const int notifications = 3;
   static const int portfolio = 4;
-  static const int logout = 5;
+  static const int helpCenter = 5;
+  static const int logout = 6;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -38,6 +40,8 @@ class SideNavRouteIndex {
         return notifications;
       case SideNavItemKeys.ourPortfolio:
         return portfolio;
+      case SideNavItemKeys.helpCenter:
+        return helpCenter;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -77,6 +81,11 @@ class SideNavRouteIndex {
       case portfolio:
         if (currentItemKey != SideNavItemKeys.ourPortfolio) {
           context.go(AppRoutePaths.portfolio);
+        }
+        return true;
+      case helpCenter:
+        if (currentItemKey != SideNavItemKeys.helpCenter) {
+          context.go(AppRoutePaths.helpCenter);
         }
         return true;
       case logout:
@@ -286,7 +295,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: FontAwesomeIcons.circleQuestion,
                     title: 'Help Center',
-                    itemKey: 'help_center',
+                    itemKey: SideNavItemKeys.helpCenter,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),

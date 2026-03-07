@@ -131,7 +131,7 @@ class _AddNotificationCardState extends State<AddNotificationCard> {
               ),
               const SizedBox(height: AppSpacing.sm),
               DropdownButtonFormField<NotificationAudience>(
-                value: _audience,
+                initialValue: _audience,
                 decoration: const InputDecoration(
                   labelText: 'Audience',
                   prefixIcon: Icon(Iconsax.profile_2user),
