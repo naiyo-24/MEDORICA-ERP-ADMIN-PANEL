@@ -46,56 +46,18 @@ class _SplashScreenState extends State<SplashScreen>
 	Widget build(BuildContext context) {
 		return Scaffold(
 			backgroundColor: AppColors.primary,
-			body: SafeArea(
-				child: Padding(
-					padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-					child: Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						crossAxisAlignment: CrossAxisAlignment.center,
-						children: [
-							const Spacer(),
-							FadeTransition(
-								opacity: _fade,
-								child: ScaleTransition(
-									scale: _scale,
-									child: Column(
-										mainAxisSize: MainAxisSize.min,
-										crossAxisAlignment: CrossAxisAlignment.center,
-										children: [
-											Image.asset('assets/logo/logo.png', width: 400, height: 400),
-											const SizedBox(height: AppSpacing.lg),
-											Text(
-												'Admin Panel',
-												textAlign: TextAlign.center,
-												style: Theme.of(context).textTheme.displayLarge?.copyWith(
-													color: AppColors.secondary,
-													fontSize: 48,
-												),
-											),
-											const SizedBox(height: AppSpacing.xs),
-											Text(
-												'Manage ASMs & Medical Representatives',
-												textAlign: TextAlign.center,
-												style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-													color: AppColors.secondary,
-													fontSize: 22,
-													fontWeight: FontWeight.w500,
-												),
-											),
-										],
-									),
-								),
-							),
-							const Spacer(),
-							Text(
-								'Powered by Naiyo24',
-								textAlign: TextAlign.center,
-								style: Theme.of(context).textTheme.bodySmall?.copyWith(
-									color: AppColors.secondary,
-									fontWeight: FontWeight.w500,
-								),
-							),
-						],
+			body: Center(
+				child: FadeTransition(
+					opacity: _fade,
+					child: ScaleTransition(
+						scale: _scale,
+						child: Column(
+							mainAxisSize: MainAxisSize.min,
+							children: [
+								Image.asset('assets/logo/logo.png', width: 400, height: 400),
+								
+							],
+						),
 					),
 				),
 			),
