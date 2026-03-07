@@ -4,6 +4,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/distributor/distributor_screen.dart';
+import '../screens/doctor_network/mr_doctor_network_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/onboarding/asm_screen.dart';
@@ -22,6 +23,7 @@ class AppRoutePaths {
   static const String helpCenter = '/help-center';
   static const String mrOnboarding = '/mr-onboarding';
   static const String asmOnboarding = '/asm-onboarding';
+  static const String mrDoctorNetwork = '/mr-doctor-network';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -76,6 +78,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmOnboarding,
       name: 'asm-onboarding',
       builder: (context, state) => const ASMOnboardingScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrDoctorNetwork,
+      name: 'mr-doctor-network',
+      builder: (context, state) => const MRDoctorNetworkScreen(),
     ),
   ],
 );
