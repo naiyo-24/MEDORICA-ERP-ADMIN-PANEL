@@ -6,10 +6,7 @@ import '../../../providers/asm_attendance_provider.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMCalendarCard extends ConsumerStatefulWidget {
-  const ASMCalendarCard({
-    super.key,
-    required this.onDateSelected,
-  });
+  const ASMCalendarCard({super.key, required this.onDateSelected});
 
   final Function(DateTime) onDateSelected;
 
@@ -20,6 +17,19 @@ class ASMCalendarCard extends ConsumerStatefulWidget {
 class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+
+  Color? _selfieStatusColor(bool isPresent, bool hasCheckIn, bool hasCheckOut) {
+    if (!isPresent) {
+      return null;
+    }
+    if (hasCheckIn && hasCheckOut) {
+      return Colors.blue;
+    }
+    if (hasCheckIn || hasCheckOut) {
+      return Colors.orange;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +105,14 @@ class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
             fontWeight: FontWeight.w600,
             color: AppColors.primary,
           ),
-          leftChevronIcon: const Icon(Icons.chevron_left, color: AppColors.primary),
-          rightChevronIcon: const Icon(Icons.chevron_right, color: AppColors.primary),
+          leftChevronIcon: const Icon(
+            Icons.chevron_left,
+            color: AppColors.primary,
+          ),
+          rightChevronIcon: const Icon(
+            Icons.chevron_right,
+            color: AppColors.primary,
+          ),
         ),
         daysOfWeekStyle: DaysOfWeekStyle(
           weekdayStyle: theme.textTheme.bodySmall!.copyWith(
@@ -122,14 +138,19 @@ class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
             }
 
             final attendance = state.getAttendanceForDate(day);
+            final selfieStatusColor = attendance == null
+                ? null
+                : _selfieStatusColor(
+                    attendance.isPresent,
+                    attendance.hasCheckInSelfie,
+                    attendance.hasCheckOutSelfie,
+                  );
+
             return Center(
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Text(
-                    '${day.day}',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text('${day.day}', style: theme.textTheme.bodyMedium),
                   if (attendance != null)
                     Positioned(
                       bottom: 2,
@@ -137,7 +158,22 @@ class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
                         width: 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: attendance.isPresent ? Colors.green : Colors.red,
+                          color: attendance.isPresent
+                              ? Colors.green
+                              : Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  if (selfieStatusColor != null)
+                    Positioned(
+                      bottom: 2,
+                      right: 8,
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: selfieStatusColor,
                           shape: BoxShape.circle,
                         ),
                       ),

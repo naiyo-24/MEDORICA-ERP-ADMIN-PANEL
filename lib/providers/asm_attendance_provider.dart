@@ -5,8 +5,8 @@ import '../notifiers/asm_attendance_notifier.dart';
 
 final asmAttendanceNotifierProvider =
     NotifierProvider<ASMAttendanceNotifier, ASMAttendanceState>(
-  () => ASMAttendanceNotifier(),
-);
+      () => ASMAttendanceNotifier(),
+    );
 
 final asmAttendanceListProvider = Provider<List<ASMAttendance>>((ref) {
   final state = ref.watch(asmAttendanceNotifierProvider);
@@ -26,4 +26,27 @@ final selectedASMMonthProvider = Provider<int>((ref) {
 final selectedASMYearProvider = Provider<int>((ref) {
   final state = ref.watch(asmAttendanceNotifierProvider);
   return state.selectedYear;
+});
+
+final asmAttendanceByDateProvider = Provider.family<ASMAttendance?, DateTime>((
+  ref,
+  date,
+) {
+  final state = ref.watch(asmAttendanceNotifierProvider);
+  return state.getAttendanceForDate(date);
+});
+
+final asmCheckInSelfieCountProvider = Provider<int>((ref) {
+  final state = ref.watch(asmAttendanceNotifierProvider);
+  return state.checkInSelfieCount;
+});
+
+final asmCheckOutSelfieCountProvider = Provider<int>((ref) {
+  final state = ref.watch(asmAttendanceNotifierProvider);
+  return state.checkOutSelfieCount;
+});
+
+final asmPresentCountProvider = Provider<int>((ref) {
+  final state = ref.watch(asmAttendanceNotifierProvider);
+  return state.presentCount;
 });

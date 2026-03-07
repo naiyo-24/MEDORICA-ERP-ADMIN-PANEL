@@ -29,6 +29,9 @@ class ASMAttendance {
   final String? checkOutSelfieFileName;
   final String? remarks;
 
+  bool get hasCheckInSelfie => checkInSelfie != null;
+  bool get hasCheckOutSelfie => checkOutSelfie != null;
+
   ASMAttendance copyWith({
     String? id,
     String? asmId,
@@ -42,6 +45,8 @@ class ASMAttendance {
     Uint8List? checkOutSelfie,
     String? checkOutSelfieFileName,
     String? remarks,
+    bool clearCheckInSelfie = false,
+    bool clearCheckOutSelfie = false,
   }) {
     return ASMAttendance(
       id: id ?? this.id,
@@ -50,11 +55,19 @@ class ASMAttendance {
       date: date ?? this.date,
       isPresent: isPresent ?? this.isPresent,
       checkInTime: checkInTime ?? this.checkInTime,
-      checkInSelfie: checkInSelfie ?? this.checkInSelfie,
-      checkInSelfieFileName: checkInSelfieFileName ?? this.checkInSelfieFileName,
+      checkInSelfie: clearCheckInSelfie
+          ? null
+          : checkInSelfie ?? this.checkInSelfie,
+      checkInSelfieFileName: clearCheckInSelfie
+          ? null
+          : checkInSelfieFileName ?? this.checkInSelfieFileName,
       checkOutTime: checkOutTime ?? this.checkOutTime,
-      checkOutSelfie: checkOutSelfie ?? this.checkOutSelfie,
-      checkOutSelfieFileName: checkOutSelfieFileName ?? this.checkOutSelfieFileName,
+      checkOutSelfie: clearCheckOutSelfie
+          ? null
+          : checkOutSelfie ?? this.checkOutSelfie,
+      checkOutSelfieFileName: clearCheckOutSelfie
+          ? null
+          : checkOutSelfieFileName ?? this.checkOutSelfieFileName,
       remarks: remarks ?? this.remarks,
     );
   }

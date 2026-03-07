@@ -15,7 +15,8 @@ class ASMAttendanceScreen extends ConsumerStatefulWidget {
   const ASMAttendanceScreen({super.key});
 
   @override
-  ConsumerState<ASMAttendanceScreen> createState() => _ASMAttendanceScreenState();
+  ConsumerState<ASMAttendanceScreen> createState() =>
+      _ASMAttendanceScreenState();
 }
 
 class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
@@ -30,9 +31,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
   }
 
   void _showAttendanceDetails(DateTime date) {
-    final attendance = ref
-        .read(asmAttendanceNotifierProvider)
-        .getAttendanceForDate(date);
+    final attendance = ref.read(asmAttendanceByDateProvider(date));
 
     if (attendance != null) {
       showDialog(
@@ -50,6 +49,9 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
     final theme = Theme.of(context);
     final asmList = ref.watch(asmListProvider);
     final selectedASMId = ref.watch(selectedASMIdProvider);
+    final presentCount = ref.watch(asmPresentCountProvider);
+    final checkInSelfieCount = ref.watch(asmCheckInSelfieCountProvider);
+    final checkOutSelfieCount = ref.watch(asmCheckOutSelfieCountProvider);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -58,6 +60,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
         title: 'ASM Attendance',
         subtitle: 'Track and manage ASM attendance records',
         showMenuButton: true,
+        showLogo: false,
         onMenuTap: _onMenuTap,
       ),
       drawer: SideNavBarDrawer(
@@ -115,24 +118,33 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                             'Select ASM',
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: AppColors.secondary,
+                              color: AppColors.primary,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.md),
                       DropdownButtonFormField<String>(
-                        initialValue: selectedASMId.isEmpty ? null : selectedASMId,
+                        initialValue: selectedASMId.isEmpty
+                            ? null
+                            : selectedASMId,
                         decoration: InputDecoration(
                           hintText: 'Select an ASM',
-                          prefixIcon: const Icon(Iconsax.user_octagon, size: 20),
+                          prefixIcon: const Icon(
+                            Iconsax.user_octagon,
+                            size: 20,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -173,9 +185,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                   const SizedBox(height: AppSpacing.lg),
 
                   // Calendar Card
-                  ASMCalendarCard(
-                    onDateSelected: _showAttendanceDetails,
-                  ),
+                  ASMCalendarCard(onDateSelected: _showAttendanceDetails),
 
                   const SizedBox(height: AppSpacing.md),
 
@@ -187,35 +197,52 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                       borderRadius: BorderRadius.circular(AppRadius.md),
                       border: Border.all(color: AppColors.border),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: AppSpacing.lg,
+                      runSpacing: AppSpacing.xs,
                       children: [
-                        _LegendItem(
-                          color: Colors.green,
-                          label: 'Present',
+                        _LegendItem(color: Colors.green, label: 'Present'),
+                        _LegendItem(color: Colors.red, label: 'Absent'),
+                        _LegendItem(color: Colors.blue, label: 'Both selfies'),
+                        _LegendItem(color: Colors.orange, label: 'One selfie'),
+                        Text(
+                          'Sundays (No attendance)',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary.withOpacity(0.8),
+                          ),
                         ),
-                        const SizedBox(width: AppSpacing.lg),
-                        _LegendItem(
-                          color: Colors.red,
-                          label: 'Absent',
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSpacing.md),
+
+                  // Selfie Coverage
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Iconsax.camera,
+                          color: AppColors.primary,
+                          size: 18,
                         ),
-                        const SizedBox(width: AppSpacing.lg),
-                        Row(
-                          children: [
-                            Text(
-                              'Sundays',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: AppColors.error.withOpacity(0.5),
-                              ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(
+                            'Selfie coverage this month: Check-in $checkInSelfieCount/$presentCount, Check-out $checkOutSelfieCount/$presentCount',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.quaternary,
+                              fontWeight: FontWeight.w500,
                             ),
-                            const SizedBox(width: AppSpacing.xs),
-                            Text(
-                              '(No attendance)',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: AppColors.secondary.withOpacity(0.6),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -231,10 +258,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
 }
 
 class _LegendItem extends StatelessWidget {
-  const _LegendItem({
-    required this.color,
-    required this.label,
-  });
+  const _LegendItem({required this.color, required this.label});
 
   final Color color;
   final String label;
@@ -248,16 +272,10 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: AppSpacing.xs),
-        Text(
-          label,
-          style: theme.textTheme.bodyMedium,
-        ),
+        Text(label, style: theme.textTheme.bodyMedium),
       ],
     );
   }

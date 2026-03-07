@@ -118,7 +118,9 @@ class ASMAttendanceCard extends ConsumerWidget {
                           : Iconsax.close_circle,
                       label: 'Status',
                       value: attendance.isPresent ? 'Present' : 'Absent',
-                      valueColor: attendance.isPresent ? Colors.green : Colors.red,
+                      valueColor: attendance.isPresent
+                          ? Colors.green
+                          : Colors.red,
                     ),
                     const SizedBox(height: AppSpacing.md),
 
@@ -128,7 +130,9 @@ class ASMAttendanceCard extends ConsumerWidget {
                         _DetailRow(
                           icon: Iconsax.login,
                           label: 'Check In Time',
-                          value: DateFormat('hh:mm a').format(attendance.checkInTime!),
+                          value: DateFormat(
+                            'hh:mm a',
+                          ).format(attendance.checkInTime!),
                         ),
                         const SizedBox(height: AppSpacing.md),
                       ],
@@ -139,10 +143,19 @@ class ASMAttendanceCard extends ConsumerWidget {
                           'Check In Selfie',
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.secondary,
+                            color: AppColors.primary,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
+                        if (attendance.checkInSelfieFileName != null) ...[
+                          Text(
+                            attendance.checkInSelfieFileName!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AppColors.quaternary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                        ],
                         Container(
                           height: 200,
                           width: double.infinity,
@@ -160,6 +173,14 @@ class ASMAttendanceCard extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
+                      ] else ...[
+                        _DetailRow(
+                          icon: Iconsax.camera,
+                          label: 'Check In Selfie',
+                          value: 'Not uploaded',
+                          valueColor: AppColors.quaternary,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
                       ],
 
                       // Check Out Time
@@ -167,7 +188,9 @@ class ASMAttendanceCard extends ConsumerWidget {
                         _DetailRow(
                           icon: Iconsax.logout,
                           label: 'Check Out Time',
-                          value: DateFormat('hh:mm a').format(attendance.checkOutTime!),
+                          value: DateFormat(
+                            'hh:mm a',
+                          ).format(attendance.checkOutTime!),
                         ),
                         const SizedBox(height: AppSpacing.md),
                       ],
@@ -178,10 +201,19 @@ class ASMAttendanceCard extends ConsumerWidget {
                           'Check Out Selfie',
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.secondary,
+                            color: AppColors.primary,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
+                        if (attendance.checkOutSelfieFileName != null) ...[
+                          Text(
+                            attendance.checkOutSelfieFileName!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AppColors.quaternary,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                        ],
                         Container(
                           height: 200,
                           width: double.infinity,
@@ -199,11 +231,20 @@ class ASMAttendanceCard extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
+                      ] else ...[
+                        _DetailRow(
+                          icon: Iconsax.camera,
+                          label: 'Check Out Selfie',
+                          value: 'Not uploaded',
+                          valueColor: AppColors.quaternary,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
                       ],
                     ],
 
                     // Remarks
-                    if (attendance.remarks != null && attendance.remarks!.isNotEmpty) ...[
+                    if (attendance.remarks != null &&
+                        attendance.remarks!.isNotEmpty) ...[
                       _DetailRow(
                         icon: Iconsax.message_text,
                         label: 'Remarks',
@@ -220,7 +261,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                       'Admin Actions',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: AppColors.secondary,
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -233,14 +274,20 @@ class ASMAttendanceCard extends ConsumerWidget {
                                 ? null
                                 : () async {
                                     await ref
-                                        .read(asmAttendanceNotifierProvider.notifier)
+                                        .read(
+                                          asmAttendanceNotifierProvider
+                                              .notifier,
+                                        )
                                         .markAttendance(
                                           asmId: attendance.asmId,
+                                          asmName: attendance.asmName,
                                           date: attendance.date,
                                           isPresent: true,
                                         );
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
                                           content: Text('Marked as Present'),
                                           backgroundColor: Colors.green,
@@ -256,7 +303,8 @@ class ASMAttendanceCard extends ConsumerWidget {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          AppColors.white),
+                                        AppColors.white,
+                                      ),
                                     ),
                                   )
                                 : const Icon(Iconsax.tick_circle, size: 20),
@@ -269,7 +317,9 @@ class ASMAttendanceCard extends ConsumerWidget {
                                 vertical: AppSpacing.sm,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                               ),
                             ),
                           ),
@@ -281,14 +331,20 @@ class ASMAttendanceCard extends ConsumerWidget {
                                 ? null
                                 : () async {
                                     await ref
-                                        .read(asmAttendanceNotifierProvider.notifier)
+                                        .read(
+                                          asmAttendanceNotifierProvider
+                                              .notifier,
+                                        )
                                         .markAttendance(
                                           asmId: attendance.asmId,
+                                          asmName: attendance.asmName,
                                           date: attendance.date,
                                           isPresent: false,
                                         );
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
                                           content: Text('Marked as Absent'),
                                           backgroundColor: Colors.red,
@@ -304,7 +360,8 @@ class ASMAttendanceCard extends ConsumerWidget {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          AppColors.white),
+                                        AppColors.white,
+                                      ),
                                     ),
                                   )
                                 : const Icon(Iconsax.close_circle, size: 20),
@@ -317,7 +374,9 @@ class ASMAttendanceCard extends ConsumerWidget {
                                 vertical: AppSpacing.sm,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                               ),
                             ),
                           ),
@@ -355,11 +414,7 @@ class _DetailRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: AppColors.primary,
-        ),
+        Icon(icon, size: 20, color: AppColors.primary),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
@@ -368,7 +423,7 @@ class _DetailRow extends StatelessWidget {
               Text(
                 label,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.secondary.withOpacity(0.7),
+                  color: AppColors.quaternary.withOpacity(0.9),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -376,7 +431,7 @@ class _DetailRow extends StatelessWidget {
               Text(
                 value,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: valueColor ?? AppColors.secondary,
+                  color: valueColor ?? AppColors.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
