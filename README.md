@@ -398,8 +398,8 @@ flutter build web --release
 **Developer:** Rajdeep Dey  
 **Designation:** Software Developer  
 **Company:** Naiyo24 Pvt Ltd  
-**Phone:** +91-XXXXXXXXXX  
-**Email:** rajdeep.dey@naiyo24.com
+**Phone:** +91-6289398298  
+**Email:** deyrajdeep201@gmail.com
 
 For support or inquiries, please reach out via email or phone.
 
