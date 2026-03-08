@@ -32,6 +32,8 @@ class SideNavItemKeys {
   static const String mrTargets = 'mr_targets';
   static const String asmTripPlan = 'asm_trip_plan';
   static const String mrTripPlan = 'mr_trip_plan';
+  static const String mrSalarySlip = 'mr_salary_slip';
+  static const String asmSalarySlip = 'asm_salary_slip';
   static const String logout = 'logout';
 }
 
@@ -59,7 +61,9 @@ class SideNavRouteIndex {
   static const int mrTargets = 20;
   static const int asmTripPlan = 21;
   static const int mrTripPlan = 22;
-  static const int logout = 23;
+  static const int mrSalarySlip = 23;
+  static const int asmSalarySlip = 24;
+  static const int logout = 25;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -110,6 +114,10 @@ class SideNavRouteIndex {
         return asmTripPlan;
       case SideNavItemKeys.mrTripPlan:
         return mrTripPlan;
+      case SideNavItemKeys.mrSalarySlip:
+        return mrSalarySlip;
+      case SideNavItemKeys.asmSalarySlip:
+        return asmSalarySlip;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -239,6 +247,16 @@ class SideNavRouteIndex {
       case mrTripPlan:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.mrMonthTripPlan);
+        }
+        return true;
+      case mrSalarySlip:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrSalarySlip);
+        }
+        return true;
+      case asmSalarySlip:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmSalarySlip);
         }
         return true;
       case logout:
@@ -461,6 +479,24 @@ class SideNavBarDrawer extends StatelessWidget {
                         itemKey: SideNavItemKeys.mrTripPlan,
                         label: 'MR Trip Plan',
                         icon: Iconsax.profile_2user,
+                      ),
+                    ],
+                    onTap: onItemTap,
+                  ),
+                  _NavGroup(
+                    icon: Iconsax.money,
+                    title: 'Salary Slip Management',
+                    selectedKey: selectedKey,
+                    children: const [
+                      _NavChild(
+                        itemKey: SideNavItemKeys.mrSalarySlip,
+                        label: 'MR Salary Slips',
+                        icon: Iconsax.profile_2user,
+                      ),
+                      _NavChild(
+                        itemKey: SideNavItemKeys.asmSalarySlip,
+                        label: 'ASM Salary Slips',
+                        icon: Iconsax.user_octagon,
                       ),
                     ],
                     onTap: onItemTap,

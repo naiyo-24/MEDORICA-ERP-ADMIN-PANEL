@@ -121,7 +121,7 @@ class _MRChemistShopScreenState extends ConsumerState<MRChemistShopScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: shops.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.md),
                     itemBuilder: (context, index) {
                       return MRChemistShopCard(shop: shops[index]);

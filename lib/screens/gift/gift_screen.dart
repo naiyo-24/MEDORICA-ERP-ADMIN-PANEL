@@ -228,7 +228,7 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: gifts.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final gift = gifts[index];

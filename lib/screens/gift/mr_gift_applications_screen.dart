@@ -120,7 +120,7 @@ class _MRGiftApplicationsScreenState
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: applications.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final app = applications[index];

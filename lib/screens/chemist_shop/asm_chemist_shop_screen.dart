@@ -120,7 +120,7 @@ class _ASMChemistShopScreenState extends ConsumerState<ASMChemistShopScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: shops.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.md),
                     itemBuilder: (context, index) {
                       return ASMChemistShopCard(shop: shops[index]);

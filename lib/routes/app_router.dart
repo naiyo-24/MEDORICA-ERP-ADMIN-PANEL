@@ -21,6 +21,8 @@ import '../screens/monthly_target/mr_monthly_target_screen.dart';
 import '../screens/month_trip_plan/asm_month_trip_plan_screen.dart';
 import '../screens/month_trip_plan/mr_month_trip_plan_screen.dart';
 import '../screens/notification/notification_screen.dart';
+import '../screens/salary_slip/asm_salary_slip_screen.dart';
+import '../screens/salary_slip/mr_salary_slip_screen.dart';
 import '../screens/onboarding/asm_screen.dart';
 import '../screens/onboarding/mr_screen.dart';
 import '../screens/portfolio/portfolio_screen.dart';
@@ -52,6 +54,8 @@ class AppRoutePaths {
   static const String asmMonthlyTarget = '/asm-monthly-target';
   static const String mrMonthTripPlan = '/mr-month-trip-plan';
   static const String asmMonthTripPlan = '/asm-month-trip-plan';
+  static const String mrSalarySlip = '/mr-salary-slip';
+  static const String asmSalarySlip = '/asm-salary-slip';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -181,6 +185,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmMonthTripPlan,
       name: 'asm-month-trip-plan',
       builder: (context, state) => const ASMMonthTripPlanScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrSalarySlip,
+      name: 'mr-salary-slip',
+      builder: (context, state) => const MRSalarySlipScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.asmSalarySlip,
+      name: 'asm-salary-slip',
+      builder: (context, state) => const ASMSalarySlipScreen(),
     ),
   ],
 );

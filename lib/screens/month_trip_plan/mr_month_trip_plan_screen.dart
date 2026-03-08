@@ -207,7 +207,7 @@ class _MRMonthTripPlanScreenState extends ConsumerState<MRMonthTripPlanScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: tripPlans.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final group = tripPlans[index];
