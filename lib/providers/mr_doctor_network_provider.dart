@@ -5,8 +5,8 @@ import '../notifiers/mr_doctor_network_notifier.dart';
 
 final mrDoctorNetworkNotifierProvider =
     NotifierProvider<MRDoctorNetworkNotifier, MRDoctorNetworkState>(
-  () => MRDoctorNetworkNotifier(),
-);
+      () => MRDoctorNetworkNotifier(),
+    );
 
 final mrDoctorListProvider = Provider<List<MRDoctorNetwork>>((ref) {
   final state = ref.watch(mrDoctorNetworkNotifierProvider);

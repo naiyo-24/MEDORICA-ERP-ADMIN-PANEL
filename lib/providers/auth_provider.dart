@@ -4,13 +4,13 @@ import '../models/user.dart';
 import '../notifiers/auth_notifier.dart';
 
 final authNotifierProvider = NotifierProvider<AuthNotifier, AuthState>(
-	AuthNotifier.new,
+  AuthNotifier.new,
 );
 
 final currentUserProvider = Provider<User?>((ref) {
-	return ref.watch(authNotifierProvider).user;
+  return ref.watch(authNotifierProvider).user;
 });
 
 final authLoadingProvider = Provider<bool>((ref) {
-	return ref.watch(authNotifierProvider).isLoading;
+  return ref.watch(authNotifierProvider).isLoading;
 });

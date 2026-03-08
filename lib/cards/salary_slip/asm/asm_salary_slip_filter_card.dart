@@ -30,10 +30,7 @@ class ASMSalarySlipFilterCard extends StatelessWidget {
       margin: const EdgeInsets.all(AppSpacing.md),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        side: BorderSide(
-          color: AppColors.primary.withAlpha(51),
-          width: 1,
-        ),
+        side: BorderSide(color: AppColors.primary.withAlpha(51), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),

@@ -15,8 +15,7 @@ class MROnboardingScreen extends ConsumerStatefulWidget {
   const MROnboardingScreen({super.key});
 
   @override
-  ConsumerState<MROnboardingScreen> createState() =>
-      _MROnboardingScreenState();
+  ConsumerState<MROnboardingScreen> createState() => _MROnboardingScreenState();
 }
 
 class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
@@ -151,7 +150,10 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
                 );
               }
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -186,7 +188,9 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
         padding: AppLayout.screenPadding(context),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppLayout.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppLayout.maxContentWidth,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -205,9 +209,8 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
                     child: Center(
                       child: Text(
                         'No MRs found',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.quaternary,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: AppColors.quaternary),
                       ),
                     ),
                   )
@@ -217,10 +220,10 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 8 / 1,
-                      mainAxisSpacing: AppSpacing.sm,
-                    ),
+                          crossAxisCount: 1,
+                          childAspectRatio: 8 / 1,
+                          mainAxisSpacing: AppSpacing.sm,
+                        ),
                     itemCount: mrList.length,
                     itemBuilder: (context, index) {
                       final mr = mrList[index];

@@ -90,15 +90,19 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
     _altPhoneController = TextEditingController(text: asm?.altPhone ?? '');
     _emailController = TextEditingController(text: asm?.email ?? '');
     _addressController = TextEditingController(text: asm?.address ?? '');
-    _headquarterController =
-        TextEditingController(text: asm?.headquarterAssigned ?? '');
-    _territoriesController =
-        TextEditingController(text: asm?.territoriesOfWork ?? '');
+    _headquarterController = TextEditingController(
+      text: asm?.headquarterAssigned ?? '',
+    );
+    _territoriesController = TextEditingController(
+      text: asm?.territoriesOfWork ?? '',
+    );
     _bankNameController = TextEditingController(text: asm?.bankName ?? '');
-    _bankBranchController =
-        TextEditingController(text: asm?.bankBranchName ?? '');
-    _accountNumberController =
-        TextEditingController(text: asm?.bankAccountNumber ?? '');
+    _bankBranchController = TextEditingController(
+      text: asm?.bankBranchName ?? '',
+    );
+    _accountNumberController = TextEditingController(
+      text: asm?.bankAccountNumber ?? '',
+    );
     _ifscCodeController = TextEditingController(text: asm?.ifscCode ?? '');
     _targetController = TextEditingController(
       text: asm != null ? asm.monthlyTarget.toStringAsFixed(0) : '',
@@ -168,8 +172,7 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
         bankBranchName: _bankBranchController.text.trim(),
         bankAccountNumber: _accountNumberController.text.trim(),
         ifscCode: _ifscCodeController.text.trim(),
-        monthlyTarget:
-            double.tryParse(_targetController.text.trim()) ?? 0,
+        monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
         password: _passwordController.text.trim(),
         photoBytes: _photoBytes,
         photoFileName: _photoFileName,
@@ -276,8 +279,9 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                             ),
                             child: _photoBytes != null
                                 ? ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(AppRadius.md),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.md,
+                                    ),
                                     child: Image.memory(
                                       _photoBytes!,
                                       fit: BoxFit.cover,
@@ -298,9 +302,9 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                                           'Pick Photo',
                                           style: theme.textTheme.bodySmall
                                               ?.copyWith(
-                                            color: AppColors.quaternary,
-                                            fontSize: 11,
-                                          ),
+                                                color: AppColors.quaternary,
+                                                fontSize: 11,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -346,8 +350,9 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                             if (value?.isEmpty ?? true) {
                               return 'Email is required';
                             }
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                .hasMatch(value!)) {
+                            if (!RegExp(
+                              r'^[^@]+@[^@]+\.[^@]+',
+                            ).hasMatch(value!)) {
                               return 'Enter a valid email';
                             }
                             return null;
@@ -446,8 +451,7 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                           controller: _targetController,
                           label: 'Monthly Target',
                           icon: Iconsax.chart_1,
-                          keyboardType:
-                              const TextInputType.numberWithOptions(
+                          keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
                           validator: (value) {
@@ -469,24 +473,20 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                           height: 46,
                           child: Material(
                             color: AppColors.primary,
-                            borderRadius:
-                                BorderRadius.circular(AppRadius.md),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                             child: InkWell(
                               onTap: _submitting ? null : _submit,
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.md),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               child: Center(
                                 child: _submitting
                                     ? const SizedBox(
                                         width: 20,
                                         height: 20,
-                                        child:
-                                            CircularProgressIndicator(
+                                        child: CircularProgressIndicator(
                                           valueColor:
-                                              AlwaysStoppedAnimation<
-                                                  Color>(
-                                            AppColors.white,
-                                          ),
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppColors.white,
+                                              ),
                                           strokeWidth: 2,
                                         ),
                                       )
@@ -496,9 +496,9 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                                             : 'Onboard ASM',
                                         style: theme.textTheme.labelLarge
                                             ?.copyWith(
-                                          color: AppColors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                              color: AppColors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                               ),
                             ),
@@ -574,9 +574,7 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
           prefixIcon: const Icon(Iconsax.lock, size: 16),
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible
-                  ? Iconsax.eye
-                  : Iconsax.eye_slash,
+              _isPasswordVisible ? Iconsax.eye : Iconsax.eye_slash,
               size: 16,
             ),
             onPressed: () {

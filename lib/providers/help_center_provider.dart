@@ -5,7 +5,8 @@ import '../notifiers/help_center_notifier.dart';
 
 final helpCenterNotifierProvider =
     NotifierProvider<HelpCenterNotifier, HelpCenterState>(
-        HelpCenterNotifier.new);
+      HelpCenterNotifier.new,
+    );
 
 final helpCenterDataProvider = Provider<HelpCenterData>((ref) {
   return ref.watch(helpCenterNotifierProvider).data;

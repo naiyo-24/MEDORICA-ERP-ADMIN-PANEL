@@ -3,18 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/help_center.dart';
 
 class HelpCenterState {
-  const HelpCenterState({
-    required this.data,
-    this.isLoading = false,
-  });
+  const HelpCenterState({required this.data, this.isLoading = false});
 
   final HelpCenterData data;
   final bool isLoading;
 
-  HelpCenterState copyWith({
-    HelpCenterData? data,
-    bool? isLoading,
-  }) {
+  HelpCenterState copyWith({HelpCenterData? data, bool? isLoading}) {
     return HelpCenterState(
       data: data ?? this.data,
       isLoading: isLoading ?? this.isLoading,

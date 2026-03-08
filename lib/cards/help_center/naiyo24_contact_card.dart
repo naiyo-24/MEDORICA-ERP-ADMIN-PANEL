@@ -6,10 +6,7 @@ import '../../models/help_center.dart';
 import '../../theme/app_theme.dart';
 
 class Naiyo24ContactCard extends StatelessWidget {
-  const Naiyo24ContactCard({
-    super.key,
-    required this.data,
-  });
+  const Naiyo24ContactCard({super.key, required this.data});
 
   final HelpCenterData data;
 
@@ -53,7 +50,7 @@ class Naiyo24ContactCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           _ContactRow(
             icon: Iconsax.call,
             label: 'Phone',

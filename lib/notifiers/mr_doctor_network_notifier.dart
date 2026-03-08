@@ -38,18 +38,25 @@ class MRDoctorNetworkState {
 
     if (searchQuery.isNotEmpty) {
       filtered = filtered
-          .where((doctor) =>
-              doctor.doctorName.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              doctor.phone.contains(searchQuery) ||
-              doctor.email.toLowerCase().contains(searchQuery.toLowerCase()))
+          .where(
+            (doctor) =>
+                doctor.doctorName.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ||
+                doctor.phone.contains(searchQuery) ||
+                doctor.email.toLowerCase().contains(searchQuery.toLowerCase()),
+          )
           .toList();
     }
 
     if (selectedMR.isNotEmpty && selectedMR != 'All MRs') {
-      filtered = filtered.where((doctor) => doctor.mrAddedBy == selectedMR).toList();
+      filtered = filtered
+          .where((doctor) => doctor.mrAddedBy == selectedMR)
+          .toList();
     }
 
-    if (selectedDepartment.isNotEmpty && selectedDepartment != 'All Departments') {
+    if (selectedDepartment.isNotEmpty &&
+        selectedDepartment != 'All Departments') {
       filtered = filtered
           .where((doctor) => doctor.specialization == selectedDepartment)
           .toList();
@@ -65,7 +72,10 @@ class MRDoctorNetworkState {
   }
 
   List<String> get uniqueDepartments {
-    final departments = doctorList.map((d) => d.specialization).toSet().toList();
+    final departments = doctorList
+        .map((d) => d.specialization)
+        .toSet()
+        .toList();
     departments.sort();
     return ['All Departments', ...departments];
   }
@@ -74,9 +84,7 @@ class MRDoctorNetworkState {
 class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
   @override
   MRDoctorNetworkState build() {
-    return MRDoctorNetworkState(
-      doctorList: _mockDoctorData(),
-    );
+    return MRDoctorNetworkState(doctorList: _mockDoctorData());
   }
 
   List<MRDoctorNetwork> _mockDoctorData() {
@@ -90,7 +98,8 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
         specialization: 'Cardiology',
         experience: 15.0,
         qualification: 'MD (Medicine), DM (Cardiology)',
-        description: 'Experienced cardiologist specializing in interventional cardiology and heart failure management.',
+        description:
+            'Experienced cardiologist specializing in interventional cardiology and heart failure management.',
         chambers: [
           const Chamber(
             name: 'Apollo Hospital',
@@ -116,7 +125,8 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
         specialization: 'Dermatology',
         experience: 10.0,
         qualification: 'MBBS, MD (Dermatology)',
-        description: 'Dermatologist with expertise in cosmetic procedures and skin disorders.',
+        description:
+            'Dermatologist with expertise in cosmetic procedures and skin disorders.',
         chambers: [
           const Chamber(
             name: 'Fortis Hospital',
@@ -137,7 +147,8 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
         specialization: 'Orthopedics',
         experience: 12.0,
         qualification: 'MBBS, MS (Orthopedics)',
-        description: 'Orthopedic surgeon specializing in joint replacement and sports injuries.',
+        description:
+            'Orthopedic surgeon specializing in joint replacement and sports injuries.',
         chambers: [
           const Chamber(
             name: 'Sterling Hospital',
@@ -163,7 +174,8 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
         specialization: 'Pediatrics',
         experience: 8.0,
         qualification: 'MBBS, MD (Pediatrics)',
-        description: 'Pediatrician with focus on child development and preventive care.',
+        description:
+            'Pediatrician with focus on child development and preventive care.',
         chambers: [
           const Chamber(
             name: 'Manipal Hospital',
@@ -184,7 +196,8 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
         specialization: 'Cardiology',
         experience: 18.0,
         qualification: 'MD (Medicine), DM (Cardiology), FACC',
-        description: 'Senior cardiologist with extensive experience in cardiac interventions.',
+        description:
+            'Senior cardiologist with extensive experience in cardiac interventions.',
         chambers: [
           const Chamber(
             name: 'CARE Hospital',
@@ -213,18 +226,18 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
 
   Future<void> addDoctor({required MRDoctorNetwork doctor}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newDoctorList = [...state.doctorList, doctor];
     state = state.copyWith(doctorList: newDoctorList, isSaving: false);
   }
 
   Future<void> updateDoctor({required MRDoctorNetwork doctor}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newDoctorList = state.doctorList
         .map((d) => d.id == doctor.id ? doctor : d)
         .toList();
@@ -233,10 +246,12 @@ class MRDoctorNetworkNotifier extends Notifier<MRDoctorNetworkState> {
 
   Future<void> deleteDoctor({required String doctorId}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
-    final newDoctorList = state.doctorList.where((d) => d.id != doctorId).toList();
+
+    final newDoctorList = state.doctorList
+        .where((d) => d.id != doctorId)
+        .toList();
     state = state.copyWith(doctorList: newDoctorList, isSaving: false);
   }
 }

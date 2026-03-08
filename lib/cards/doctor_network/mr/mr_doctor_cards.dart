@@ -5,11 +5,7 @@ import '../../../models/mr_doctor_network.dart';
 import '../../../theme/app_theme.dart';
 
 class MRDoctorCard extends StatelessWidget {
-  const MRDoctorCard({
-    super.key,
-    required this.doctor,
-    required this.onTap,
-  });
+  const MRDoctorCard({super.key, required this.doctor, required this.onTap});
 
   final MRDoctorNetwork doctor;
   final VoidCallback onTap;

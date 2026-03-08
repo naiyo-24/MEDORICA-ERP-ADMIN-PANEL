@@ -9,11 +9,7 @@ class Chamber {
   final String address;
   final String phone;
 
-  Chamber copyWith({
-    String? name,
-    String? address,
-    String? phone,
-  }) {
+  Chamber copyWith({String? name, String? address, String? phone}) {
     return Chamber(
       name: name ?? this.name,
       address: address ?? this.address,

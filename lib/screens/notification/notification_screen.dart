@@ -98,7 +98,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
         showSubtitle: true,
         showMenuButton: true,
         showNotification: false,
-        
+
         onMenuTap: _onMenuTap,
       ),
       drawer: Drawer(

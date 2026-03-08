@@ -127,9 +127,9 @@ class _MRSalarySlipScreenState extends ConsumerState<MRSalarySlipScreen> {
                 ? Center(
                     child: Text(
                       'No salary slips found',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: theme.hintColor,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: theme.hintColor),
                     ),
                   )
                 : ListView.separated(

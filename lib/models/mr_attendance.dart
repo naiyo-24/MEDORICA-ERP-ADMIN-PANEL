@@ -51,10 +51,12 @@ class MRAttendance {
       isPresent: isPresent ?? this.isPresent,
       checkInTime: checkInTime ?? this.checkInTime,
       checkInSelfie: checkInSelfie ?? this.checkInSelfie,
-      checkInSelfieFileName: checkInSelfieFileName ?? this.checkInSelfieFileName,
+      checkInSelfieFileName:
+          checkInSelfieFileName ?? this.checkInSelfieFileName,
       checkOutTime: checkOutTime ?? this.checkOutTime,
       checkOutSelfie: checkOutSelfie ?? this.checkOutSelfie,
-      checkOutSelfieFileName: checkOutSelfieFileName ?? this.checkOutSelfieFileName,
+      checkOutSelfieFileName:
+          checkOutSelfieFileName ?? this.checkOutSelfieFileName,
       remarks: remarks ?? this.remarks,
     );
   }

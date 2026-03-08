@@ -6,10 +6,7 @@ import '../../../providers/mr_attendance_provider.dart';
 import '../../../theme/app_theme.dart';
 
 class MRCalendarCard extends ConsumerStatefulWidget {
-  const MRCalendarCard({
-    super.key,
-    required this.onDateSelected,
-  });
+  const MRCalendarCard({super.key, required this.onDateSelected});
 
   final Function(DateTime) onDateSelected;
 
@@ -66,10 +63,9 @@ class _MRCalendarCardState extends ConsumerState<MRCalendarCard> {
           });
 
           // Update the month/year in state
-          ref.read(mrAttendanceNotifierProvider.notifier).setSelectedMonth(
-                focusedDay.month,
-                focusedDay.year,
-              );
+          ref
+              .read(mrAttendanceNotifierProvider.notifier)
+              .setSelectedMonth(focusedDay.month, focusedDay.year);
         },
         calendarStyle: CalendarStyle(
           todayDecoration: BoxDecoration(
@@ -123,7 +119,8 @@ class _MRCalendarCardState extends ConsumerState<MRCalendarCard> {
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, date, events) {
             // Don't show markers on Sundays or future dates
-            if (date.weekday == DateTime.sunday || date.isAfter(DateTime.now())) {
+            if (date.weekday == DateTime.sunday ||
+                date.isAfter(DateTime.now())) {
               return null;
             }
 

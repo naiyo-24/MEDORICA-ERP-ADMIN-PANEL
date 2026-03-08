@@ -52,7 +52,7 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           // Filter Row
           Row(
             children: [
@@ -72,10 +72,9 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
                     ),
                   ),
                   items: asmOptions
-                      .map((asm) => DropdownMenuItem(
-                            value: asm,
-                            child: Text(asm),
-                          ))
+                      .map(
+                        (asm) => DropdownMenuItem(value: asm, child: Text(asm)),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) {
@@ -85,7 +84,7 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
-              
+
               // Department Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
@@ -104,10 +103,10 @@ class ASMDoctorSearchFilterCard extends StatelessWidget {
                     ),
                   ),
                   items: departmentOptions
-                      .map((dept) => DropdownMenuItem(
-                            value: dept,
-                            child: Text(dept),
-                          ))
+                      .map(
+                        (dept) =>
+                            DropdownMenuItem(value: dept, child: Text(dept)),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) {

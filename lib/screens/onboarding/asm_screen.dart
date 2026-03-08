@@ -151,7 +151,10 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                 );
               }
             },
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -186,7 +189,9 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
         padding: AppLayout.screenPadding(context),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppLayout.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppLayout.maxContentWidth,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -205,9 +210,8 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                     child: Center(
                       child: Text(
                         'No ASMs found',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.quaternary,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: AppColors.quaternary),
                       ),
                     ),
                   )
@@ -217,10 +221,10 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 8 / 1,
-                      mainAxisSpacing: AppSpacing.sm,
-                    ),
+                          crossAxisCount: 1,
+                          childAspectRatio: 8 / 1,
+                          mainAxisSpacing: AppSpacing.sm,
+                        ),
                     itemCount: asmList.length,
                     itemBuilder: (context, index) {
                       final asm = asmList[index];

@@ -68,7 +68,9 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            constraints: const BoxConstraints(maxWidth: AppLayout.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppLayout.maxContentWidth,
+            ),
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width > 600
                   ? AppSpacing.xl
@@ -115,17 +117,23 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       DropdownButtonFormField<String>(
-                        initialValue: selectedMRId.isEmpty ? null : selectedMRId,
+                        initialValue: selectedMRId.isEmpty
+                            ? null
+                            : selectedMRId,
                         decoration: InputDecoration(
                           hintText: 'Select MR',
                           prefixIcon: const Icon(Iconsax.user_search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -159,9 +167,7 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
 
                 // Calendar Card
                 if (selectedMRId.isNotEmpty) ...[
-                  MRCalendarCard(
-                    onDateSelected: _showAttendanceDetails,
-                  ),
+                  MRCalendarCard(onDateSelected: _showAttendanceDetails),
                 ] else ...[
                   Container(
                     width: double.infinity,

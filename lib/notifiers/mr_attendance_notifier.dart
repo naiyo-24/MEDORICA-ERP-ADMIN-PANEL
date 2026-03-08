@@ -39,10 +39,12 @@ class MRAttendanceState {
     }
 
     return attendanceList
-        .where((attendance) =>
-            attendance.mrId == selectedMRId &&
-            attendance.date.month == selectedMonth &&
-            attendance.date.year == selectedYear)
+        .where(
+          (attendance) =>
+              attendance.mrId == selectedMRId &&
+              attendance.date.month == selectedMonth &&
+              attendance.date.year == selectedYear,
+        )
         .toList();
   }
 
@@ -206,14 +208,17 @@ class MRAttendanceNotifier extends Notifier<MRAttendanceState> {
     final updatedAttendance = existingAttendance.copyWith(
       isPresent: isPresent,
       checkInTime: isPresent ? DateTime.now() : null,
-      checkOutTime: isPresent ? DateTime.now().add(const Duration(hours: 9)) : null,
+      checkOutTime: isPresent
+          ? DateTime.now().add(const Duration(hours: 9))
+          : null,
       remarks: isPresent ? 'Marked by admin' : 'Marked absent by admin',
     );
 
-    final newList = state.attendanceList
-        .where((att) => att.id != existingAttendance.id)
-        .toList()
-      ..add(updatedAttendance);
+    final newList =
+        state.attendanceList
+            .where((att) => att.id != existingAttendance.id)
+            .toList()
+          ..add(updatedAttendance);
 
     state = state.copyWith(attendanceList: newList, isSaving: false);
   }

@@ -87,8 +87,9 @@ class _ASMDoctorNetworkScreenState
         padding: AppLayout.screenPadding(context),
         child: Center(
           child: ConstrainedBox(
-            constraints:
-                const BoxConstraints(maxWidth: AppLayout.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppLayout.maxContentWidth,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -104,8 +105,9 @@ class _ASMDoctorNetworkScreenState
                   },
                   asmOptions: asmOptions,
                   departmentOptions: departmentOptions,
-                  selectedASM:
-                      state.selectedASM.isEmpty ? 'All ASMs' : state.selectedASM,
+                  selectedASM: state.selectedASM.isEmpty
+                      ? 'All ASMs'
+                      : state.selectedASM,
                   selectedDepartment: state.selectedDepartment.isEmpty
                       ? 'All Departments'
                       : state.selectedDepartment,
@@ -116,9 +118,9 @@ class _ASMDoctorNetworkScreenState
                 Text(
                   '$doctorCount ${doctorCount == 1 ? 'Doctor' : 'Doctors'}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.quaternary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppColors.quaternary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
 
@@ -130,9 +132,8 @@ class _ASMDoctorNetworkScreenState
                     child: Center(
                       child: Text(
                         'No doctors found',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: AppColors.quaternary,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: AppColors.quaternary),
                       ),
                     ),
                   )

@@ -30,10 +30,12 @@ class ASMOnboardingState {
       return asmList;
     }
     return asmList
-        .where((asm) =>
-            asm.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-            asm.phone.contains(searchQuery) ||
-            asm.email.toLowerCase().contains(searchQuery.toLowerCase()))
+        .where(
+          (asm) =>
+              asm.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              asm.phone.contains(searchQuery) ||
+              asm.email.toLowerCase().contains(searchQuery.toLowerCase()),
+        )
         .toList();
   }
 }
@@ -41,9 +43,7 @@ class ASMOnboardingState {
 class ASMOnboardingNotifier extends Notifier<ASMOnboardingState> {
   @override
   ASMOnboardingState build() {
-    return ASMOnboardingState(
-      asmList: _mockASMData(),
-    );
+    return ASMOnboardingState(asmList: _mockASMData());
   }
 
   List<ASM> _mockASMData() {
@@ -108,30 +108,32 @@ class ASMOnboardingNotifier extends Notifier<ASMOnboardingState> {
 
   Future<void> addASM({required ASM asm}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newASMList = [...state.asmList, asm];
     state = state.copyWith(asmList: newASMList, isSaving: false);
   }
 
   Future<void> updateASM({required ASM asm}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
-    final newASMList = state.asmList.map((a) => a.id == asm.id ? asm : a).toList();
+
+    final newASMList = state.asmList
+        .map((a) => a.id == asm.id ? asm : a)
+        .toList();
     state = state.copyWith(asmList: newASMList, isSaving: false);
   }
 
   Future<void> deleteASM({required String asmId}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newASMList = state.asmList.where((a) => a.id != asmId).toList();
     state = state.copyWith(asmList: newASMList, isSaving: false);
   }

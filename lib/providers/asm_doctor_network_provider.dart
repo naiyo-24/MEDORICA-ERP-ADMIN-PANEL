@@ -5,8 +5,8 @@ import '../notifiers/asm_doctor_network_notifier.dart';
 
 final asmDoctorNetworkNotifierProvider =
     NotifierProvider<ASMDoctorNetworkNotifier, ASMDoctorNetworkState>(
-  () => ASMDoctorNetworkNotifier(),
-);
+      () => ASMDoctorNetworkNotifier(),
+    );
 
 final asmDoctorListProvider = Provider<List<ASMDoctorNetwork>>((ref) {
   final state = ref.watch(asmDoctorNetworkNotifierProvider);

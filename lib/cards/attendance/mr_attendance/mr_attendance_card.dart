@@ -43,10 +43,7 @@ class MRAttendanceCard extends ConsumerWidget {
               padding: const EdgeInsets.all(AppSpacing.lg),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    AppColors.primary,
-                    AppColors.primary.withAlpha(204),
-                  ],
+                  colors: [AppColors.primary, AppColors.primary.withAlpha(204)],
                 ),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(AppRadius.lg),
@@ -163,17 +160,16 @@ class MRAttendanceCard extends ConsumerWidget {
                                   const SizedBox(width: AppSpacing.xs),
                                   Text(
                                     'Check-In Time:',
-                                    style:
-                                        theme.textTheme.bodyMedium?.copyWith(
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       color: AppColors.quaternary,
                                     ),
                                   ),
                                   const SizedBox(width: AppSpacing.sm),
                                   Text(
-                                    DateFormat('hh:mm a')
-                                        .format(attendance.checkInTime!),
-                                    style:
-                                        theme.textTheme.bodyMedium?.copyWith(
+                                    DateFormat(
+                                      'hh:mm a',
+                                    ).format(attendance.checkInTime!),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.primary,
                                     ),
@@ -191,8 +187,9 @@ class MRAttendanceCard extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.sm),
                               ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                                 child: Image.memory(
                                   attendance.checkInSelfie!,
                                   width: 150,
@@ -206,8 +203,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 height: 150,
                                 decoration: BoxDecoration(
                                   color: AppColors.surface,
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.sm),
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.sm,
+                                  ),
                                   border: Border.all(color: AppColors.border),
                                 ),
                                 child: Column(
@@ -221,10 +219,10 @@ class MRAttendanceCard extends ConsumerWidget {
                                     const SizedBox(height: AppSpacing.xs),
                                     Text(
                                       'No selfie',
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
-                                        color: AppColors.quaternary,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: AppColors.quaternary,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -275,17 +273,16 @@ class MRAttendanceCard extends ConsumerWidget {
                                   const SizedBox(width: AppSpacing.xs),
                                   Text(
                                     'Check-Out Time:',
-                                    style:
-                                        theme.textTheme.bodyMedium?.copyWith(
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       color: AppColors.quaternary,
                                     ),
                                   ),
                                   const SizedBox(width: AppSpacing.sm),
                                   Text(
-                                    DateFormat('hh:mm a')
-                                        .format(attendance.checkOutTime!),
-                                    style:
-                                        theme.textTheme.bodyMedium?.copyWith(
+                                    DateFormat(
+                                      'hh:mm a',
+                                    ).format(attendance.checkOutTime!),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.primary,
                                     ),
@@ -303,8 +300,9 @@ class MRAttendanceCard extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.sm),
                               ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                                 child: Image.memory(
                                   attendance.checkOutSelfie!,
                                   width: 150,
@@ -318,8 +316,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 height: 150,
                                 decoration: BoxDecoration(
                                   color: AppColors.surface,
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.sm),
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.sm,
+                                  ),
                                   border: Border.all(color: AppColors.border),
                                 ),
                                 child: Column(
@@ -333,10 +332,10 @@ class MRAttendanceCard extends ConsumerWidget {
                                     const SizedBox(height: AppSpacing.xs),
                                     Text(
                                       'No selfie',
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
-                                        color: AppColors.quaternary,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: AppColors.quaternary,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -369,8 +368,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 ? null
                                 : () async {
                                     await ref
-                                        .read(mrAttendanceNotifierProvider
-                                            .notifier)
+                                        .read(
+                                          mrAttendanceNotifierProvider.notifier,
+                                        )
                                         .markAttendance(
                                           mrId: attendance.mrId,
                                           mrName: attendance.mrName,
@@ -378,11 +378,11 @@ class MRAttendanceCard extends ConsumerWidget {
                                           isPresent: true,
                                         );
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
-                                          content:
-                                              Text('Marked as Present'),
+                                          content: Text('Marked as Present'),
                                           backgroundColor: Colors.green,
                                         ),
                                       );
@@ -395,8 +395,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 vertical: AppSpacing.md,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                               ),
                             ),
                             child: isSaving
@@ -406,7 +407,8 @@ class MRAttendanceCard extends ConsumerWidget {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation(
-                                          AppColors.white),
+                                        AppColors.white,
+                                      ),
                                     ),
                                   )
                                 : const Row(
@@ -426,8 +428,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 ? null
                                 : () async {
                                     await ref
-                                        .read(mrAttendanceNotifierProvider
-                                            .notifier)
+                                        .read(
+                                          mrAttendanceNotifierProvider.notifier,
+                                        )
                                         .markAttendance(
                                           mrId: attendance.mrId,
                                           mrName: attendance.mrName,
@@ -435,8 +438,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                           isPresent: false,
                                         );
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
                                           content: Text('Marked as Absent'),
                                           backgroundColor: AppColors.error,
@@ -451,8 +455,9 @@ class MRAttendanceCard extends ConsumerWidget {
                                 vertical: AppSpacing.md,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.sm),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.sm,
+                                ),
                               ),
                             ),
                             child: isSaving
@@ -462,7 +467,8 @@ class MRAttendanceCard extends ConsumerWidget {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation(
-                                          AppColors.white),
+                                        AppColors.white,
+                                      ),
                                     ),
                                   )
                                 : const Row(
@@ -508,11 +514,7 @@ class _DetailRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: AppColors.primary,
-        ),
+        Icon(icon, size: 20, color: AppColors.primary),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(

@@ -138,7 +138,9 @@ class MRDetailsCard extends StatelessWidget {
                                 Text(
                                   mr.headquarterAssigned,
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: AppColors.white.withValues(alpha: 0.8),
+                                    color: AppColors.white.withValues(
+                                      alpha: 0.8,
+                                    ),
                                   ),
                                 ),
                               ],

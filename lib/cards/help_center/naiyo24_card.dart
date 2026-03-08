@@ -4,10 +4,7 @@ import '../../models/help_center.dart';
 import '../../theme/app_theme.dart';
 
 class Naiyo24Card extends StatelessWidget {
-  const Naiyo24Card({
-    super.key,
-    required this.data,
-  });
+  const Naiyo24Card({super.key, required this.data});
 
   final HelpCenterData data;
 
@@ -58,7 +55,7 @@ class Naiyo24Card extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           // Company Name
           Text(
             data.companyName,
@@ -70,7 +67,7 @@ class Naiyo24Card extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          
+
           // Tagline
           Text(
             data.tagline,
@@ -82,7 +79,7 @@ class Naiyo24Card extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           // Description
           Container(
             padding: const EdgeInsets.all(AppSpacing.md),

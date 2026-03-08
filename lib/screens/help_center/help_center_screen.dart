@@ -68,7 +68,9 @@ class _HelpCenterScreenState extends ConsumerState<HelpCenterScreen> {
         padding: AppLayout.screenPadding(context),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppLayout.maxContentWidth),
+            constraints: const BoxConstraints(
+              maxWidth: AppLayout.maxContentWidth,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

@@ -46,9 +46,7 @@ class MRDoctorDetailsCard extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    border: Border(
-                      bottom: BorderSide(color: AppColors.border),
-                    ),
+                    border: Border(bottom: BorderSide(color: AppColors.border)),
                   ),
                   child: Row(
                     children: [
@@ -214,8 +212,9 @@ class MRDoctorDetailsCard extends StatelessWidget {
                                       height: 32,
                                       decoration: BoxDecoration(
                                         color: AppColors.primaryLight,
-                                        borderRadius:
-                                            BorderRadius.circular(AppRadius.sm),
+                                        borderRadius: BorderRadius.circular(
+                                          AppRadius.sm,
+                                        ),
                                       ),
                                       child: const Icon(
                                         Iconsax.building,
@@ -227,11 +226,11 @@ class MRDoctorDetailsCard extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         chamber.name,
-                                        style:
-                                            theme.textTheme.bodyMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.primary,
-                                        ),
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.primary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -248,11 +247,11 @@ class MRDoctorDetailsCard extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         chamber.address,
-                                        style:
-                                            theme.textTheme.bodySmall?.copyWith(
-                                          fontSize: 13,
-                                          color: AppColors.quaternary,
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              fontSize: 13,
+                                              color: AppColors.quaternary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -268,10 +267,11 @@ class MRDoctorDetailsCard extends StatelessWidget {
                                     const SizedBox(width: 6),
                                     Text(
                                       chamber.phone,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        fontSize: 13,
-                                        color: AppColors.quaternary,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            fontSize: 13,
+                                            color: AppColors.quaternary,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -308,11 +308,7 @@ class MRDoctorDetailsCard extends StatelessWidget {
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadius.sm),
             ),
-            child: Icon(
-              icon,
-              size: 16,
-              color: AppColors.primary,
-            ),
+            child: Icon(icon, size: 16, color: AppColors.primary),
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(

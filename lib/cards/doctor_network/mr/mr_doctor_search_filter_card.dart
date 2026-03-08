@@ -52,7 +52,7 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           // Filter Row
           Row(
             children: [
@@ -72,10 +72,7 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
                     ),
                   ),
                   items: mrOptions
-                      .map((mr) => DropdownMenuItem(
-                            value: mr,
-                            child: Text(mr),
-                          ))
+                      .map((mr) => DropdownMenuItem(value: mr, child: Text(mr)))
                       .toList(),
                   onChanged: (value) {
                     if (value != null) {
@@ -85,7 +82,7 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
-              
+
               // Department Filter
               Expanded(
                 child: DropdownButtonFormField<String>(
@@ -104,10 +101,10 @@ class MRDoctorSearchFilterCard extends StatelessWidget {
                     ),
                   ),
                   items: departmentOptions
-                      .map((dept) => DropdownMenuItem(
-                            value: dept,
-                            child: Text(dept),
-                          ))
+                      .map(
+                        (dept) =>
+                            DropdownMenuItem(value: dept, child: Text(dept)),
+                      )
                       .toList(),
                   onChanged: (value) {
                     if (value != null) {

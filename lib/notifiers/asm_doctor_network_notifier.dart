@@ -38,18 +38,25 @@ class ASMDoctorNetworkState {
 
     if (searchQuery.isNotEmpty) {
       filtered = filtered
-          .where((doctor) =>
-              doctor.doctorName.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              doctor.phone.contains(searchQuery) ||
-              doctor.email.toLowerCase().contains(searchQuery.toLowerCase()))
+          .where(
+            (doctor) =>
+                doctor.doctorName.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ||
+                doctor.phone.contains(searchQuery) ||
+                doctor.email.toLowerCase().contains(searchQuery.toLowerCase()),
+          )
           .toList();
     }
 
     if (selectedASM.isNotEmpty && selectedASM != 'All ASMs') {
-      filtered = filtered.where((doctor) => doctor.asmAddedBy == selectedASM).toList();
+      filtered = filtered
+          .where((doctor) => doctor.asmAddedBy == selectedASM)
+          .toList();
     }
 
-    if (selectedDepartment.isNotEmpty && selectedDepartment != 'All Departments') {
+    if (selectedDepartment.isNotEmpty &&
+        selectedDepartment != 'All Departments') {
       filtered = filtered
           .where((doctor) => doctor.specialization == selectedDepartment)
           .toList();
@@ -65,7 +72,10 @@ class ASMDoctorNetworkState {
   }
 
   List<String> get uniqueDepartments {
-    final departments = doctorList.map((d) => d.specialization).toSet().toList();
+    final departments = doctorList
+        .map((d) => d.specialization)
+        .toSet()
+        .toList();
     departments.sort();
     return ['All Departments', ...departments];
   }
@@ -74,9 +84,7 @@ class ASMDoctorNetworkState {
 class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
   @override
   ASMDoctorNetworkState build() {
-    return ASMDoctorNetworkState(
-      doctorList: _mockDoctorData(),
-    );
+    return ASMDoctorNetworkState(doctorList: _mockDoctorData());
   }
 
   List<ASMDoctorNetwork> _mockDoctorData() {
@@ -90,7 +98,8 @@ class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
         specialization: 'Neurology',
         experience: 20.0,
         qualification: 'MD (Medicine), DM (Neurology)',
-        description: 'Senior neurologist with expertise in stroke management and neurodegenerative diseases.',
+        description:
+            'Senior neurologist with expertise in stroke management and neurodegenerative diseases.',
         chambers: [
           const Chamber(
             name: 'Fortis Escorts',
@@ -116,7 +125,8 @@ class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
         specialization: 'Oncology',
         experience: 16.0,
         qualification: 'MD (Medicine), DM (Medical Oncology)',
-        description: 'Oncologist specializing in breast cancer and targeted therapy.',
+        description:
+            'Oncologist specializing in breast cancer and targeted therapy.',
         chambers: [
           const Chamber(
             name: 'HCG Cancer Centre',
@@ -137,7 +147,8 @@ class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
         specialization: 'Nephrology',
         experience: 14.0,
         qualification: 'MD (Medicine), DM (Nephrology)',
-        description: 'Nephrologist with focus on kidney transplantation and dialysis.',
+        description:
+            'Nephrologist with focus on kidney transplantation and dialysis.',
         chambers: [
           const Chamber(
             name: 'Yashoda Hospital',
@@ -171,18 +182,18 @@ class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
 
   Future<void> addDoctor({required ASMDoctorNetwork doctor}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newDoctorList = [...state.doctorList, doctor];
     state = state.copyWith(doctorList: newDoctorList, isSaving: false);
   }
 
   Future<void> updateDoctor({required ASMDoctorNetwork doctor}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newDoctorList = state.doctorList
         .map((d) => d.id == doctor.id ? doctor : d)
         .toList();
@@ -191,10 +202,12 @@ class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
 
   Future<void> deleteDoctor({required String doctorId}) async {
     state = state.copyWith(isSaving: true);
-    
+
     await Future.delayed(const Duration(milliseconds: 800));
-    
-    final newDoctorList = state.doctorList.where((d) => d.id != doctorId).toList();
+
+    final newDoctorList = state.doctorList
+        .where((d) => d.id != doctorId)
+        .toList();
     state = state.copyWith(doctorList: newDoctorList, isSaving: false);
   }
 }

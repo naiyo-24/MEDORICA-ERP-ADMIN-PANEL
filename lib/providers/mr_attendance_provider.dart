@@ -5,8 +5,8 @@ import '../notifiers/mr_attendance_notifier.dart';
 
 final mrAttendanceNotifierProvider =
     NotifierProvider<MRAttendanceNotifier, MRAttendanceState>(
-  () => MRAttendanceNotifier(),
-);
+      () => MRAttendanceNotifier(),
+    );
 
 final mrAttendanceListProvider = Provider<List<MRAttendance>>((ref) {
   final state = ref.watch(mrAttendanceNotifierProvider);

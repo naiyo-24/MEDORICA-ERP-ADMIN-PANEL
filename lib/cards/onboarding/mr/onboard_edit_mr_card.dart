@@ -44,11 +44,7 @@ class MRFormData {
 }
 
 class OnboardEditMRCard extends StatefulWidget {
-  const OnboardEditMRCard({
-    super.key,
-    this.initialMR,
-    required this.onSubmit,
-  });
+  const OnboardEditMRCard({super.key, this.initialMR, required this.onSubmit});
 
   final MR? initialMR;
   final Future<void> Function(MRFormData data) onSubmit;
@@ -90,15 +86,19 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
     _altPhoneController = TextEditingController(text: mr?.altPhone ?? '');
     _emailController = TextEditingController(text: mr?.email ?? '');
     _addressController = TextEditingController(text: mr?.address ?? '');
-    _headquarterController =
-        TextEditingController(text: mr?.headquarterAssigned ?? '');
-    _territoriesController =
-        TextEditingController(text: mr?.territoriesOfWork ?? '');
+    _headquarterController = TextEditingController(
+      text: mr?.headquarterAssigned ?? '',
+    );
+    _territoriesController = TextEditingController(
+      text: mr?.territoriesOfWork ?? '',
+    );
     _bankNameController = TextEditingController(text: mr?.bankName ?? '');
-    _bankBranchController =
-        TextEditingController(text: mr?.bankBranchName ?? '');
-    _accountNumberController =
-        TextEditingController(text: mr?.bankAccountNumber ?? '');
+    _bankBranchController = TextEditingController(
+      text: mr?.bankBranchName ?? '',
+    );
+    _accountNumberController = TextEditingController(
+      text: mr?.bankAccountNumber ?? '',
+    );
     _ifscCodeController = TextEditingController(text: mr?.ifscCode ?? '');
     _targetController = TextEditingController(
       text: mr != null ? mr.monthlyTarget.toStringAsFixed(0) : '',
@@ -168,8 +168,7 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
         bankBranchName: _bankBranchController.text.trim(),
         bankAccountNumber: _accountNumberController.text.trim(),
         ifscCode: _ifscCodeController.text.trim(),
-        monthlyTarget:
-            double.tryParse(_targetController.text.trim()) ?? 0,
+        monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
         password: _passwordController.text.trim(),
         photoBytes: _photoBytes,
         photoFileName: _photoFileName,
@@ -276,8 +275,9 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                             ),
                             child: _photoBytes != null
                                 ? ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(AppRadius.md),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.md,
+                                    ),
                                     child: Image.memory(
                                       _photoBytes!,
                                       fit: BoxFit.cover,
@@ -298,9 +298,9 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                                           'Pick Photo',
                                           style: theme.textTheme.bodySmall
                                               ?.copyWith(
-                                            color: AppColors.quaternary,
-                                            fontSize: 11,
-                                          ),
+                                                color: AppColors.quaternary,
+                                                fontSize: 11,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -346,8 +346,9 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                             if (value?.isEmpty ?? true) {
                               return 'Email is required';
                             }
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                .hasMatch(value!)) {
+                            if (!RegExp(
+                              r'^[^@]+@[^@]+\.[^@]+',
+                            ).hasMatch(value!)) {
                               return 'Enter a valid email';
                             }
                             return null;
@@ -446,8 +447,7 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                           controller: _targetController,
                           label: 'Monthly Target',
                           icon: Iconsax.chart_1,
-                          keyboardType:
-                              const TextInputType.numberWithOptions(
+                          keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
                           validator: (value) {
@@ -469,36 +469,30 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                           height: 46,
                           child: Material(
                             color: AppColors.primary,
-                            borderRadius:
-                                BorderRadius.circular(AppRadius.md),
+                            borderRadius: BorderRadius.circular(AppRadius.md),
                             child: InkWell(
                               onTap: _submitting ? null : _submit,
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.md),
+                              borderRadius: BorderRadius.circular(AppRadius.md),
                               child: Center(
                                 child: _submitting
                                     ? const SizedBox(
                                         width: 20,
                                         height: 20,
-                                        child:
-                                            CircularProgressIndicator(
+                                        child: CircularProgressIndicator(
                                           valueColor:
-                                              AlwaysStoppedAnimation<
-                                                  Color>(
-                                            AppColors.white,
-                                          ),
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppColors.white,
+                                              ),
                                           strokeWidth: 2,
                                         ),
                                       )
                                     : Text(
-                                        _isEditing
-                                            ? 'Update MR'
-                                            : 'Onboard MR',
+                                        _isEditing ? 'Update MR' : 'Onboard MR',
                                         style: theme.textTheme.labelLarge
                                             ?.copyWith(
-                                          color: AppColors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                              color: AppColors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                               ),
                             ),
@@ -574,9 +568,7 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
           prefixIcon: const Icon(Iconsax.lock, size: 16),
           suffixIcon: IconButton(
             icon: Icon(
-              _isPasswordVisible
-                  ? Iconsax.eye
-                  : Iconsax.eye_slash,
+              _isPasswordVisible ? Iconsax.eye : Iconsax.eye_slash,
               size: 16,
             ),
             onPressed: () {

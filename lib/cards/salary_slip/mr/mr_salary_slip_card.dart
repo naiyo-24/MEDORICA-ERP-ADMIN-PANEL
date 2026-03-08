@@ -70,10 +70,7 @@ class MRSalarySlipCard extends StatelessWidget {
               height: 48,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    AppColors.primary.withAlpha(204),
-                    AppColors.primary,
-                  ],
+                  colors: [AppColors.primary.withAlpha(204), AppColors.primary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),

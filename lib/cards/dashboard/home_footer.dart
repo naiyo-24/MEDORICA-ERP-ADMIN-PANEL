@@ -20,7 +20,7 @@ class HomeFooter extends StatelessWidget {
             width: double.infinity,
             color: AppColors.surface.withAlpha(128),
             alignment: Alignment.center,
-            );
+          );
         },
       ),
     );

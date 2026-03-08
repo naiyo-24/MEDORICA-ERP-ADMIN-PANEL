@@ -73,11 +73,10 @@ class MRCard extends StatelessWidget {
                           : Center(
                               child: Text(
                                 initials,
-                                style: theme.textTheme.headlineSmall
-                                    ?.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                     ),

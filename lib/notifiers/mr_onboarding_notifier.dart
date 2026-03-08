@@ -30,10 +30,12 @@ class MROnboardingState {
       return mrList;
     }
     return mrList
-        .where((mr) =>
-            mr.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-            mr.phone.contains(searchQuery) ||
-            mr.email.toLowerCase().contains(searchQuery.toLowerCase()))
+        .where(
+          (mr) =>
+              mr.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              mr.phone.contains(searchQuery) ||
+              mr.email.toLowerCase().contains(searchQuery.toLowerCase()),
+        )
         .toList();
   }
 }
@@ -41,9 +43,7 @@ class MROnboardingState {
 class MROnboardingNotifier extends Notifier<MROnboardingState> {
   @override
   MROnboardingState build() {
-    return MROnboardingState(
-      mrList: _mockMRData(),
-    );
+    return MROnboardingState(mrList: _mockMRData());
   }
 
   List<MR> _mockMRData() {
@@ -108,30 +108,30 @@ class MROnboardingNotifier extends Notifier<MROnboardingState> {
 
   Future<void> addMR({required MR mr}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newMRList = [...state.mrList, mr];
     state = state.copyWith(mrList: newMRList, isSaving: false);
   }
 
   Future<void> updateMR({required MR mr}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newMRList = state.mrList.map((m) => m.id == mr.id ? mr : m).toList();
     state = state.copyWith(mrList: newMRList, isSaving: false);
   }
 
   Future<void> deleteMR({required String mrId}) async {
     state = state.copyWith(isSaving: true);
-    
+
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     final newMRList = state.mrList.where((m) => m.id != mrId).toList();
     state = state.copyWith(mrList: newMRList, isSaving: false);
   }
