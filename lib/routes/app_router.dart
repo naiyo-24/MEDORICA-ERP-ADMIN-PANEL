@@ -12,6 +12,7 @@ import '../screens/chemist_shop/asm_chemist_shop_screen.dart';
 import '../screens/chemist_shop/mr_chemist_shop_screen.dart';
 import '../screens/doctor_network/asm_doctor_network_screen.dart';
 import '../screens/doctor_network/mr_doctor_network_screen.dart';
+import '../screens/gift/gift_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
 import '../screens/monthly_target/asm_monthly_target_screen.dart';
 import '../screens/monthly_target/mr_monthly_target_screen.dart';
@@ -40,6 +41,7 @@ class AppRoutePaths {
   static const String asmAppointments = '/asm-appointments';
   static const String mrChemistShop = '/mr-chemist-shop-network';
   static const String asmChemistShop = '/asm-chemist-shop-network';
+  static const String giftManagement = '/gift-management';
   static const String mrMonthlyTarget = '/mr-monthly-target';
   static const String asmMonthlyTarget = '/asm-monthly-target';
 }
@@ -136,6 +138,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmChemistShop,
       name: 'asm-chemist-shop-network',
       builder: (context, state) => const ASMChemistShopScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.giftManagement,
+      name: 'gift-management',
+      builder: (context, state) => const GiftScreen(),
     ),
     GoRoute(
       path: AppRoutePaths.mrMonthlyTarget,

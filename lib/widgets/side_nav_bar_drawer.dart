@@ -25,6 +25,9 @@ class SideNavItemKeys {
   static const String asmAppointments = 'asm_appointments';
   static const String asmShopNetwork = 'asm_shop_network';
   static const String mrShopNetwork = 'mr_shop_network';
+  static const String manageGifts = 'manage_gifts';
+  static const String mrGiftApplications = 'mr_gift_applications';
+  static const String asmGiftApplications = 'asm_gift_applications';
   static const String asmTargets = 'asm_targets';
   static const String mrTargets = 'mr_targets';
   static const String logout = 'logout';
@@ -47,9 +50,12 @@ class SideNavRouteIndex {
   static const int asmAppointments = 13;
   static const int asmShopNetwork = 14;
   static const int mrShopNetwork = 15;
-  static const int asmTargets = 16;
-  static const int mrTargets = 17;
-  static const int logout = 18;
+  static const int manageGifts = 16;
+  static const int mrGiftApplications = 17;
+  static const int asmGiftApplications = 18;
+  static const int asmTargets = 19;
+  static const int mrTargets = 20;
+  static const int logout = 21;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -86,6 +92,12 @@ class SideNavRouteIndex {
         return asmShopNetwork;
       case SideNavItemKeys.mrShopNetwork:
         return mrShopNetwork;
+      case SideNavItemKeys.manageGifts:
+        return manageGifts;
+      case SideNavItemKeys.mrGiftApplications:
+        return mrGiftApplications;
+      case SideNavItemKeys.asmGiftApplications:
+        return asmGiftApplications;
       case SideNavItemKeys.asmTargets:
         return asmTargets;
       case SideNavItemKeys.mrTargets:
@@ -184,6 +196,11 @@ class SideNavRouteIndex {
       case mrShopNetwork:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.mrChemistShop);
+        }
+        return true;
+      case manageGifts:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.giftManagement);
         }
         return true;
       case asmTargets:
@@ -361,6 +378,29 @@ class SideNavBarDrawer extends StatelessWidget {
                         itemKey: SideNavItemKeys.mrShopNetwork,
                         label: 'MR Shop Network',
                         icon: Iconsax.profile_2user,
+                      ),
+                    ],
+                    onTap: onItemTap,
+                  ),
+                  _NavGroup(
+                    icon: FontAwesomeIcons.gift,
+                    title: 'Gift Management',
+                    selectedKey: selectedKey,
+                    children: const [
+                      _NavChild(
+                        itemKey: SideNavItemKeys.manageGifts,
+                        label: 'Manage Gifts',
+                        icon: Iconsax.gift,
+                      ),
+                      _NavChild(
+                        itemKey: SideNavItemKeys.mrGiftApplications,
+                        label: 'MR Gift Applications',
+                        icon: Iconsax.profile_2user,
+                      ),
+                      _NavChild(
+                        itemKey: SideNavItemKeys.asmGiftApplications,
+                        label: 'ASM Gift Applications',
+                        icon: Iconsax.user_octagon,
                       ),
                     ],
                     onTap: onItemTap,
