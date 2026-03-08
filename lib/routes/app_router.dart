@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 
 import '../screens/attendance/asm_attendance_screen.dart';
 import '../screens/attendance/mr_attendance_screen.dart';
+import '../screens/appointments/asm_appointments_screen.dart';
+import '../screens/appointments/mr_appointments_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
@@ -32,6 +34,8 @@ class AppRoutePaths {
   static const String asmDoctorNetwork = '/asm-doctor-network';
   static const String mrAttendance = '/mr-attendance';
   static const String asmAttendance = '/asm-attendance';
+  static const String mrAppointments = '/mr-appointments';
+  static const String asmAppointments = '/asm-appointments';
   static const String mrMonthlyTarget = '/mr-monthly-target';
   static const String asmMonthlyTarget = '/asm-monthly-target';
 }
@@ -108,6 +112,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmAttendance,
       name: 'asm-attendance',
       builder: (context, state) => const ASMAttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrAppointments,
+      name: 'mr-appointments',
+      builder: (context, state) => const MRAppointmentsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.asmAppointments,
+      name: 'asm-appointments',
+      builder: (context, state) => const ASMAppointmentsScreen(),
     ),
     GoRoute(
       path: AppRoutePaths.mrMonthlyTarget,
