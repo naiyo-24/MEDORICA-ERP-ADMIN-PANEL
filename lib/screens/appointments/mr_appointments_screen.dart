@@ -119,7 +119,7 @@ class _MRAppointmentsScreenState extends ConsumerState<MRAppointmentsScreen> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: appointments.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       return MRAppointmentCard(

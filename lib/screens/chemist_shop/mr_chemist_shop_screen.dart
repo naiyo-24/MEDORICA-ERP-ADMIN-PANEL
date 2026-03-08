@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../cards/appointments/asm/asm_appointment_card.dart';
-import '../../cards/appointments/asm/asm_appointment_filter_card.dart';
-import '../../providers/asm_appointments_provider.dart';
-import '../../providers/asm_onboarding_provider.dart';
+import '../../cards/chemist_shop/mr/mr_chemist_shop_card.dart';
+import '../../cards/chemist_shop/mr/mr_chemist_shop_filter_card.dart';
+import '../../providers/mr_chemist_shop_provider.dart';
+import '../../providers/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
-class ASMAppointmentsScreen extends ConsumerStatefulWidget {
-  const ASMAppointmentsScreen({super.key});
+class MRChemistShopScreen extends ConsumerStatefulWidget {
+  const MRChemistShopScreen({super.key});
 
   @override
-  ConsumerState<ASMAppointmentsScreen> createState() =>
-      _ASMAppointmentsScreenState();
+  ConsumerState<MRChemistShopScreen> createState() =>
+      _MRChemistShopScreenState();
 }
 
-class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
+class _MRChemistShopScreenState extends ConsumerState<MRChemistShopScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _selectedNavKey = SideNavItemKeys.asmAppointments;
+  String _selectedNavKey = SideNavItemKeys.mrShopNetwork;
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -32,7 +32,7 @@ class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
       context: context,
       ref: ref,
       itemKey: itemKey,
-      currentItemKey: SideNavItemKeys.asmAppointments,
+      currentItemKey: SideNavItemKeys.mrShopNetwork,
     );
     if (!handled) {
       setState(() {
@@ -44,19 +44,20 @@ class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final appointments = ref.watch(asmAppointmentsListProvider);
-    final count = ref.watch(asmAppointmentsCountProvider);
-    final asmList = ref.watch(asmListProvider);
-    final selectedASMId = ref.watch(selectedASMAppointmentIdProvider);
-    final selectedDate = ref.watch(selectedASMAppointmentDateProvider);
-    final notifier = ref.read(asmAppointmentsNotifierProvider.notifier);
+    final shops = ref.watch(mrChemistShopListProvider);
+    final count = ref.watch(mrChemistShopCountProvider);
+    final locations = ref.watch(mrChemistLocationsProvider);
+    final mrList = ref.watch(mrListProvider);
+    final state = ref.watch(mrChemistShopNotifierProvider);
+    final notifier = ref.read(mrChemistShopNotifierProvider.notifier);
 
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.surface,
       appBar: MedoricaAppBar(
-        title: 'ASM Appointments',
-        subtitle: 'Track ASM doctor appointments with chamber details',
+        title: 'MR Chemist Shop Network',
+        subtitle:
+            'Manage chemist shops associated with Medical Representatives',
         showLogo: false,
         showMenuButton: true,
         onMenuTap: _onMenuTap,
@@ -78,24 +79,25 @@ class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ASMAppointmentFilterCard(
-                  asmList: asmList,
-                  selectedASMId: selectedASMId,
-                  selectedDate: selectedDate,
-                  onASMChanged: notifier.setSelectedASM,
-                  onDateChanged: notifier.setSelectedDate,
-                  onClearDate: notifier.clearDateFilter,
+                MRChemistShopFilterCard(
+                  mrList: mrList,
+                  locationOptions: locations,
+                  selectedMRId: state.selectedMRId,
+                  selectedLocation: state.selectedLocation,
+                  onSearchChanged: notifier.setSearchQuery,
+                  onMRChanged: notifier.setSelectedMRId,
+                  onLocationChanged: notifier.setSelectedLocation,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  '$count ${count == 1 ? 'Appointment' : 'Appointments'}',
+                  '$count ${count == 1 ? 'Shop' : 'Shops'}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.quaternary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                if (appointments.isEmpty)
+                if (shops.isEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.xxl,
@@ -107,7 +109,7 @@ class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        'No appointments found for current filters',
+                        'No chemist shops found for current filters',
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: AppColors.quaternary,
                         ),
@@ -118,13 +120,11 @@ class _ASMAppointmentsScreenState extends ConsumerState<ASMAppointmentsScreen> {
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: appointments.length,
-                    separatorBuilder: (_, _) =>
-                        const SizedBox(height: AppSpacing.sm),
+                    itemCount: shops.length,
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: AppSpacing.md),
                     itemBuilder: (context, index) {
-                      return ASMAppointmentCard(
-                        appointment: appointments[index],
-                      );
+                      return MRChemistShopCard(shop: shops[index]);
                     },
                   ),
               ],

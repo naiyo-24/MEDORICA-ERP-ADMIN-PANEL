@@ -23,6 +23,8 @@ class SideNavItemKeys {
   static const String asmAttendance = 'asm_attendance';
   static const String mrAppointments = 'mr_appointments';
   static const String asmAppointments = 'asm_appointments';
+  static const String asmShopNetwork = 'asm_shop_network';
+  static const String mrShopNetwork = 'mr_shop_network';
   static const String asmTargets = 'asm_targets';
   static const String mrTargets = 'mr_targets';
   static const String logout = 'logout';
@@ -43,9 +45,11 @@ class SideNavRouteIndex {
   static const int asmAttendance = 11;
   static const int mrAppointments = 12;
   static const int asmAppointments = 13;
-  static const int asmTargets = 14;
-  static const int mrTargets = 15;
-  static const int logout = 16;
+  static const int asmShopNetwork = 14;
+  static const int mrShopNetwork = 15;
+  static const int asmTargets = 16;
+  static const int mrTargets = 17;
+  static const int logout = 18;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -78,6 +82,10 @@ class SideNavRouteIndex {
         return mrAppointments;
       case SideNavItemKeys.asmAppointments:
         return asmAppointments;
+      case SideNavItemKeys.asmShopNetwork:
+        return asmShopNetwork;
+      case SideNavItemKeys.mrShopNetwork:
+        return mrShopNetwork;
       case SideNavItemKeys.asmTargets:
         return asmTargets;
       case SideNavItemKeys.mrTargets:
@@ -166,6 +174,16 @@ class SideNavRouteIndex {
       case asmAppointments:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.asmAppointments);
+        }
+        return true;
+      case asmShopNetwork:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmChemistShop);
+        }
+        return true;
+      case mrShopNetwork:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrChemistShop);
         }
         return true;
       case asmTargets:
@@ -335,12 +353,12 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     children: const [
                       _NavChild(
-                        itemKey: 'asm_shop_network',
+                        itemKey: SideNavItemKeys.asmShopNetwork,
                         label: 'ASM Shop Network',
                         icon: Iconsax.user_octagon,
                       ),
                       _NavChild(
-                        itemKey: 'mr_shop_network',
+                        itemKey: SideNavItemKeys.mrShopNetwork,
                         label: 'MR Shop Network',
                         icon: Iconsax.profile_2user,
                       ),
