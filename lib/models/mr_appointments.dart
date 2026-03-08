@@ -13,6 +13,7 @@ class MRAppointment {
     required this.doctorPhone,
     required this.doctorSpecialization,
     required this.status,
+    this.appointmentProofImage,
   });
 
   final String id;
@@ -26,6 +27,7 @@ class MRAppointment {
   final String doctorPhone;
   final String doctorSpecialization;
   final AppointmentStatus status;
+  final String? appointmentProofImage;
 
   MRAppointment copyWith({
     String? id,
@@ -39,6 +41,7 @@ class MRAppointment {
     String? doctorPhone,
     String? doctorSpecialization,
     AppointmentStatus? status,
+    String? appointmentProofImage,
   }) {
     return MRAppointment(
       id: id ?? this.id,
@@ -52,6 +55,8 @@ class MRAppointment {
       doctorPhone: doctorPhone ?? this.doctorPhone,
       doctorSpecialization: doctorSpecialization ?? this.doctorSpecialization,
       status: status ?? this.status,
+      appointmentProofImage:
+          appointmentProofImage ?? this.appointmentProofImage,
     );
   }
 }

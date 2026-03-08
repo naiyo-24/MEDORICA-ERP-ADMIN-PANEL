@@ -93,6 +93,9 @@ class MRAppointmentsNotifier extends Notifier<MRAppointmentsState> {
           doctorPhone: doctor.phone,
           doctorSpecialization: doctor.specialization,
           status: AppointmentStatus.values[i % AppointmentStatus.values.length],
+          appointmentProofImage: i % 3 == 0
+              ? 'https://via.placeholder.com/600x400.png?text=Appointment+Proof+${1000 + i}'
+              : null,
         ),
       );
     }
@@ -111,6 +114,8 @@ class MRAppointmentsNotifier extends Notifier<MRAppointmentsState> {
           doctorPhone: doctorList.first.phone,
           doctorSpecialization: doctorList.first.specialization,
           status: AppointmentStatus.scheduled,
+          appointmentProofImage:
+              'https://via.placeholder.com/600x400.png?text=Appointment+Proof+2001',
         ),
       );
     }

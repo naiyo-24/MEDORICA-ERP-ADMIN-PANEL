@@ -13,6 +13,7 @@ class ASMAppointment {
     required this.doctorPhone,
     required this.doctorSpecialization,
     required this.status,
+    this.appointmentProofImage,
   });
 
   final String id;
@@ -26,6 +27,7 @@ class ASMAppointment {
   final String doctorPhone;
   final String doctorSpecialization;
   final ASMAppointmentStatus status;
+  final String? appointmentProofImage;
 
   ASMAppointment copyWith({
     String? id,
@@ -39,6 +41,7 @@ class ASMAppointment {
     String? doctorPhone,
     String? doctorSpecialization,
     ASMAppointmentStatus? status,
+    String? appointmentProofImage,
   }) {
     return ASMAppointment(
       id: id ?? this.id,
@@ -52,6 +55,8 @@ class ASMAppointment {
       doctorPhone: doctorPhone ?? this.doctorPhone,
       doctorSpecialization: doctorSpecialization ?? this.doctorSpecialization,
       status: status ?? this.status,
+      appointmentProofImage:
+          appointmentProofImage ?? this.appointmentProofImage,
     );
   }
 }

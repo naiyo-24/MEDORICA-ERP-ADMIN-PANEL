@@ -151,6 +151,51 @@ class MRAppointmentCard extends StatelessWidget {
             label: 'Chamber Phone No',
             value: appointment.chamberPhone,
           ),
+          if (appointment.appointmentProofImage != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            const Divider(color: AppColors.border),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                const Icon(Iconsax.gallery, size: 16, color: AppColors.primary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  'Appointment Proof Image',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+              child: Image.network(
+                appointment.appointmentProofImage!,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Iconsax.gallery_slash,
+                        size: 48,
+                        color: AppColors.quaternary,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ],
       ),
     );

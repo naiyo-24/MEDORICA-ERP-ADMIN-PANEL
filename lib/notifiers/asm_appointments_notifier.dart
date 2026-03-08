@@ -94,6 +94,9 @@ class ASMAppointmentsNotifier extends Notifier<ASMAppointmentsState> {
           doctorSpecialization: doctor.specialization,
           status: ASMAppointmentStatus
               .values[i % ASMAppointmentStatus.values.length],
+          appointmentProofImage: i % 3 == 0
+              ? 'https://via.placeholder.com/600x400.png?text=Appointment+Proof+${1000 + i}'
+              : null,
         ),
       );
     }
@@ -112,6 +115,8 @@ class ASMAppointmentsNotifier extends Notifier<ASMAppointmentsState> {
           doctorPhone: doctorList.first.phone,
           doctorSpecialization: doctorList.first.specialization,
           status: ASMAppointmentStatus.scheduled,
+          appointmentProofImage:
+              'https://via.placeholder.com/600x400.png?text=Appointment+Proof+2001',
         ),
       );
     }
