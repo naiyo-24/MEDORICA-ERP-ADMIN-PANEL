@@ -104,7 +104,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                           Container(
                             padding: const EdgeInsets.all(AppSpacing.sm),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryLight.withOpacity(0.2),
+                              color: AppColors.primaryLight.withAlpha(51),
                               borderRadius: BorderRadius.circular(AppRadius.sm),
                             ),
                             child: const Icon(
@@ -210,7 +210,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                         Text(
                           'Sundays (No attendance)',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: AppColors.quaternary.withOpacity(0.8),
+                            color: AppColors.quaternary.withAlpha(204),
                           ),
                         ),
                       ],

@@ -94,7 +94,7 @@ class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
             shape: BoxShape.circle,
           ),
           todayDecoration: BoxDecoration(
-            color: AppColors.primaryLight.withOpacity(0.3),
+            color: AppColors.primaryLight.withAlpha(77),
             shape: BoxShape.circle,
           ),
         ),
@@ -131,7 +131,7 @@ class _ASMCalendarCardState extends ConsumerState<ASMCalendarCard> {
                 child: Text(
                   '${day.day}',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppColors.error.withOpacity(0.5),
+                    color: AppColors.error.withAlpha(128),
                   ),
                 ),
               );

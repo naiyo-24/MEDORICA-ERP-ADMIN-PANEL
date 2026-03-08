@@ -57,7 +57,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.2),
+                      color: AppColors.white.withAlpha(51),
                       borderRadius: BorderRadius.circular(AppRadius.md),
                     ),
                     child: const Icon(
@@ -82,7 +82,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                         Text(
                           DateFormat('EEEE, MMMM d, y').format(attendance.date),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.white.withOpacity(0.9),
+                            color: AppColors.white.withAlpha(230),
                           ),
                         ),
                       ],
@@ -423,7 +423,7 @@ class _DetailRow extends StatelessWidget {
               Text(
                 label,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.quaternary.withOpacity(0.9),
+                  color: AppColors.quaternary.withAlpha(230),
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -87,7 +87,7 @@ class _MRCalendarCardState extends ConsumerState<MRCalendarCard> {
           markersMaxCount: 1,
           outsideDaysVisible: false,
           disabledTextStyle: TextStyle(
-            color: AppColors.quaternary.withOpacity(0.3),
+            color: AppColors.quaternary.withAlpha(77),
           ),
         ),
         headerStyle: HeaderStyle(

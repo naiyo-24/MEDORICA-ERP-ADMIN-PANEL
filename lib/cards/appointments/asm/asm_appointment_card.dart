@@ -100,7 +100,7 @@ class ASMAppointmentCard extends StatelessWidget {
                   vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withAlpha(26),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(

@@ -59,7 +59,7 @@ class ASMSalarySlipCard extends StatelessWidget {
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        side: BorderSide(color: AppColors.primary.withOpacity(0.1), width: 1),
+        side: BorderSide(color: AppColors.primary.withAlpha(26), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -71,7 +71,7 @@ class ASMSalarySlipCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.primary.withOpacity(0.8),
+                    AppColors.primary.withAlpha(204),
                     AppColors.primary,
                   ],
                   begin: Alignment.topLeft,
@@ -152,8 +152,8 @@ class ASMSalarySlipCard extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.surface,
-                disabledBackgroundColor: AppColors.primary.withOpacity(0.3),
-                disabledForegroundColor: AppColors.surface.withOpacity(0.5),
+                disabledBackgroundColor: AppColors.primary.withAlpha(77),
+                disabledForegroundColor: AppColors.surface.withAlpha(128),
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.md,
                   vertical: AppSpacing.sm,

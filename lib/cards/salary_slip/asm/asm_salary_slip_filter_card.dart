@@ -31,7 +31,7 @@ class ASMSalarySlipFilterCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.md),
         side: BorderSide(
-          color: AppColors.primary.withOpacity(0.2),
+          color: AppColors.primary.withAlpha(51),
           width: 1,
         ),
       ),

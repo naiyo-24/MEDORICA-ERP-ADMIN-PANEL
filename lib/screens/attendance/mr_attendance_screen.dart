@@ -176,7 +176,7 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
                         Icon(
                           Iconsax.calendar_1,
                           size: 64,
-                          color: AppColors.quaternary.withOpacity(0.5),
+                          color: AppColors.quaternary.withAlpha(128),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         Text(

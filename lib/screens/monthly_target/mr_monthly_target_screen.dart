@@ -124,7 +124,7 @@ class _MRMonthlyTargetScreenState extends ConsumerState<MRMonthlyTargetScreen> {
                         Icon(
                           Iconsax.chart_21,
                           size: 52,
-                          color: AppColors.quaternary.withOpacity(0.7),
+                          color: AppColors.quaternary.withAlpha(179),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         Text(

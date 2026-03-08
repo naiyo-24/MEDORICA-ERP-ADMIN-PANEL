@@ -105,7 +105,7 @@ class _Tag extends StatelessWidget {
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Text(

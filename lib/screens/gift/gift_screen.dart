@@ -147,7 +147,7 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
                         Container(
                           padding: const EdgeInsets.all(AppSpacing.sm),
                           decoration: BoxDecoration(
-                            color: AppColors.white.withOpacity(0.14),
+                            color: AppColors.white.withAlpha(36),
                             borderRadius: BorderRadius.circular(AppRadius.sm),
                           ),
                           child: const Icon(

@@ -45,7 +45,7 @@ class MRAttendanceCard extends ConsumerWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary,
-                    AppColors.primary.withOpacity(0.8),
+                    AppColors.primary.withAlpha(204),
                   ],
                 ),
                 borderRadius: const BorderRadius.only(
@@ -58,7 +58,7 @@ class MRAttendanceCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.2),
+                      color: AppColors.white.withAlpha(51),
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: const Icon(
@@ -82,7 +82,7 @@ class MRAttendanceCard extends ConsumerWidget {
                         Text(
                           DateFormat('EEEE, MMMM d, y').format(attendance.date),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.white.withOpacity(0.9),
+                            color: AppColors.white.withAlpha(230),
                           ),
                         ),
                       ],
