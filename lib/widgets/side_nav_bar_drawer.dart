@@ -30,6 +30,8 @@ class SideNavItemKeys {
   static const String asmGiftApplications = 'asm_gift_applications';
   static const String asmTargets = 'asm_targets';
   static const String mrTargets = 'mr_targets';
+  static const String asmTripPlan = 'asm_trip_plan';
+  static const String mrTripPlan = 'mr_trip_plan';
   static const String logout = 'logout';
 }
 
@@ -55,7 +57,9 @@ class SideNavRouteIndex {
   static const int asmGiftApplications = 18;
   static const int asmTargets = 19;
   static const int mrTargets = 20;
-  static const int logout = 21;
+  static const int asmTripPlan = 21;
+  static const int mrTripPlan = 22;
+  static const int logout = 23;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -102,6 +106,10 @@ class SideNavRouteIndex {
         return asmTargets;
       case SideNavItemKeys.mrTargets:
         return mrTargets;
+      case SideNavItemKeys.asmTripPlan:
+        return asmTripPlan;
+      case SideNavItemKeys.mrTripPlan:
+        return mrTripPlan;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -221,6 +229,16 @@ class SideNavRouteIndex {
       case mrTargets:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.mrMonthlyTarget);
+        }
+        return true;
+      case asmTripPlan:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmMonthTripPlan);
+        }
+        return true;
+      case mrTripPlan:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrMonthTripPlan);
         }
         return true;
       case logout:
@@ -435,12 +453,12 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     children: const [
                       _NavChild(
-                        itemKey: 'asm_trip_plan',
+                        itemKey: SideNavItemKeys.asmTripPlan,
                         label: 'ASM Trip Plan',
                         icon: Iconsax.user_octagon,
                       ),
                       _NavChild(
-                        itemKey: 'mr_trip_plan',
+                        itemKey: SideNavItemKeys.mrTripPlan,
                         label: 'MR Trip Plan',
                         icon: Iconsax.profile_2user,
                       ),

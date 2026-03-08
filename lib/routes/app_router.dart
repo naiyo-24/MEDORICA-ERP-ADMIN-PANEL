@@ -18,6 +18,8 @@ import '../screens/gift/mr_gift_applications_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
 import '../screens/monthly_target/asm_monthly_target_screen.dart';
 import '../screens/monthly_target/mr_monthly_target_screen.dart';
+import '../screens/month_trip_plan/asm_month_trip_plan_screen.dart';
+import '../screens/month_trip_plan/mr_month_trip_plan_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/onboarding/asm_screen.dart';
 import '../screens/onboarding/mr_screen.dart';
@@ -48,6 +50,8 @@ class AppRoutePaths {
   static const String asmGiftApplications = '/asm-gift-applications';
   static const String mrMonthlyTarget = '/mr-monthly-target';
   static const String asmMonthlyTarget = '/asm-monthly-target';
+  static const String mrMonthTripPlan = '/mr-month-trip-plan';
+  static const String asmMonthTripPlan = '/asm-month-trip-plan';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -167,6 +171,16 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmMonthlyTarget,
       name: 'asm-monthly-target',
       builder: (context, state) => const ASMMonthlyTargetScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.mrMonthTripPlan,
+      name: 'mr-month-trip-plan',
+      builder: (context, state) => const MRMonthTripPlanScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.asmMonthTripPlan,
+      name: 'asm-month-trip-plan',
+      builder: (context, state) => const ASMMonthTripPlanScreen(),
     ),
   ],
 );
