@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../cards/gift/mr/mr_gift_application_card.dart';
-import '../../cards/gift/mr/mr_gift_application_filter_card.dart';
-import '../../providers/mr_gift_application_provider.dart';
-import '../../providers/mr_onboarding_provider.dart';
+import '../../cards/gift/asm/asm_gift_application_card.dart';
+import '../../cards/gift/asm/asm_gift_application_filter_card.dart';
+import '../../providers/asm_gift_application_provider.dart';
+import '../../providers/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
-class MRGiftApplicationsScreen extends ConsumerStatefulWidget {
-  const MRGiftApplicationsScreen({super.key});
+class ASMGiftApplicationsScreen extends ConsumerStatefulWidget {
+  const ASMGiftApplicationsScreen({super.key});
 
   @override
-  ConsumerState<MRGiftApplicationsScreen> createState() =>
-      _MRGiftApplicationsScreenState();
+  ConsumerState<ASMGiftApplicationsScreen> createState() =>
+      _ASMGiftApplicationsScreenState();
 }
 
-class _MRGiftApplicationsScreenState
-    extends ConsumerState<MRGiftApplicationsScreen> {
+class _ASMGiftApplicationsScreenState
+    extends ConsumerState<ASMGiftApplicationsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _selectedNavKey = SideNavItemKeys.mrGiftApplications;
+  String _selectedNavKey = SideNavItemKeys.asmGiftApplications;
 
   void _onMenuTap() => _scaffoldKey.currentState?.openDrawer();
 
@@ -31,7 +31,7 @@ class _MRGiftApplicationsScreenState
       context: context,
       ref: ref,
       itemKey: itemKey,
-      currentItemKey: SideNavItemKeys.mrGiftApplications,
+      currentItemKey: SideNavItemKeys.asmGiftApplications,
     );
 
     if (!handled) {
@@ -44,19 +44,19 @@ class _MRGiftApplicationsScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final applications = ref.watch(mrGiftApplicationListProvider);
-    final count = ref.watch(mrGiftApplicationCountProvider);
-    final mrOptions = ref.watch(mrListProvider);
-    final doctorOptions = ref.watch(mrGiftDoctorOptionsProvider);
-    final state = ref.watch(mrGiftApplicationNotifierProvider);
-    final notifier = ref.read(mrGiftApplicationNotifierProvider.notifier);
+    final applications = ref.watch(asmGiftApplicationListProvider);
+    final count = ref.watch(asmGiftApplicationCountProvider);
+    final asmOptions = ref.watch(asmListProvider);
+    final doctorOptions = ref.watch(asmGiftDoctorOptionsProvider);
+    final state = ref.watch(asmGiftApplicationNotifierProvider);
+    final notifier = ref.read(asmGiftApplicationNotifierProvider.notifier);
 
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.surface,
       appBar: MedoricaAppBar(
-        title: 'MR Gift Applications',
-        subtitle: 'Review and update gift requests raised by MRs',
+        title: 'ASM Gift Applications',
+        subtitle: 'Review and update gift requests raised by ASMs',
         showLogo: false,
         showMenuButton: true,
         onMenuTap: _onMenuTap,
@@ -78,13 +78,13 @@ class _MRGiftApplicationsScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                MRGiftApplicationFilterCard(
-                  mrOptions: mrOptions,
+                ASMGiftApplicationFilterCard(
+                  asmOptions: asmOptions,
                   doctorOptions: doctorOptions,
-                  selectedMRId: state.selectedMRId,
+                  selectedASMId: state.selectedASMId,
                   selectedDoctor: state.selectedDoctorName,
                   onSearchChanged: notifier.setSearchQuery,
-                  onMRChanged: notifier.setSelectedMRId,
+                  onASMChanged: notifier.setSelectedASMId,
                   onDoctorChanged: notifier.setSelectedDoctorName,
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -108,7 +108,7 @@ class _MRGiftApplicationsScreenState
                     ),
                     child: Center(
                       child: Text(
-                        'No MR gift applications found',
+                        'No ASM gift applications found',
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: AppColors.quaternary,
                         ),
@@ -124,7 +124,7 @@ class _MRGiftApplicationsScreenState
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
                       final app = applications[index];
-                      return MRGiftApplicationCard(
+                      return ASMGiftApplicationCard(
                         application: app,
                         onStatusChanged: (status) {
                           notifier.updateStatus(

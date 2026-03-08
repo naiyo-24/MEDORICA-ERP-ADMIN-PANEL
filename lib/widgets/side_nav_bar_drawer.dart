@@ -203,6 +203,16 @@ class SideNavRouteIndex {
           context.go(AppRoutePaths.giftManagement);
         }
         return true;
+      case mrGiftApplications:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrGiftApplications);
+        }
+        return true;
+      case asmGiftApplications:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmGiftApplications);
+        }
+        return true;
       case asmTargets:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.asmMonthlyTarget);
