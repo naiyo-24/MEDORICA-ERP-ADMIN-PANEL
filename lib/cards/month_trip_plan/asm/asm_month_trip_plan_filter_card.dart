@@ -80,7 +80,7 @@ class ASMMonthTripPlanFilterCard extends StatelessWidget {
             items: [
               const DropdownMenuItem(value: '', child: Text('All ASMs')),
               ...asmOptions.map(
-                (asm) => DropdownMenuItem(value: asm.id, child: Text(asm.name)),
+                (asm) => DropdownMenuItem(value: asm.asmId, child: Text(asm.name)),
               ),
             ],
             onChanged: (value) => onASMChanged(value ?? ''),

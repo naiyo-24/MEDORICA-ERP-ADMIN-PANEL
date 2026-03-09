@@ -72,7 +72,7 @@ class ASMSalarySlipFilterCard extends StatelessWidget {
                         ),
                         items: asmOptions.map((asm) {
                           return DropdownMenuItem(
-                            value: asm.id,
+                            value: asm.asmId,
                             child: Text(asm.name),
                           );
                         }).toList(),

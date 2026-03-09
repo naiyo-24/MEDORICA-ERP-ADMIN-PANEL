@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/asm.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMCard extends StatelessWidget {
@@ -70,6 +71,37 @@ class ASMCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
+                          : (asm.profilePhoto != null &&
+                                asm.profilePhoto!.isNotEmpty)
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(AppRadius.md),
+                              child: Image.network(
+                                ApiUrl.getProfilePhotoUrl(asm.profilePhoto),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Text(
+                                      initials,
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primary,
+                                          strokeWidth: 2,
+                                        ),
+                                      );
+                                    },
+                              ),
+                            )
                           : Center(
                               child: Text(
                                 initials,
@@ -127,7 +159,7 @@ class ASMCard extends StatelessWidget {
                               const SizedBox(width: 3),
                               Expanded(
                                 child: Text(
-                                  asm.headquarterAssigned,
+                                  asm.headquarterAssigned ?? 'Not assigned',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: AppColors.quaternary,
                                     fontSize: 12,

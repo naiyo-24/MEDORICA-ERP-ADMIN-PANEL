@@ -162,7 +162,7 @@ class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
                         ),
                         items: asmList.map((ASM asm) {
                           return DropdownMenuItem<String>(
-                            value: asm.id,
+                            value: asm.asmId,
                             child: Text(
                               '${asm.name} - ${asm.headquarterAssigned}',
                               style: theme.textTheme.bodyMedium,

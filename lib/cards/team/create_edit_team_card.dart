@@ -250,7 +250,7 @@ class _CreateEditTeamCardState extends State<CreateEditTeamCard> {
                           items: widget.asmList
                               .map(
                                 (asm) => DropdownMenuItem<String>(
-                                  value: asm.id,
+                                  value: asm.asmId,
                                   child: Text(asm.name),
                                 ),
                               )

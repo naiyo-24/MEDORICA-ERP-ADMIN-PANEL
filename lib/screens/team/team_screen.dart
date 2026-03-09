@@ -65,14 +65,14 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
               final notifier = ref.read(teamNotifierProvider.notifier);
 
               final leader = asmList.firstWhere(
-                (asm) => asm.id == data.leaderASMId,
+                (asm) => asm.asmId == data.leaderASMId,
                 orElse: () => asmList.first,
               );
 
               final members = data.memberMRIds
                   .map((id) {
                     final mr = mrList.firstWhere(
-                      (item) => item.id == id,
+                      (item) => item.mrId == id,
                       orElse: () => mrList.first,
                     );
                     return TeamMemberRef(mrId: mr.mrId, mrName: mr.name);
@@ -84,7 +84,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   name: data.name,
                   description: data.description,
                   whatsappGroupLink: data.whatsappGroupLink,
-                  leaderASMId: leader.id,
+                  leaderASMId: leader.asmId,
                   leaderASMName: leader.name,
                   members: members,
                 );
@@ -94,7 +94,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   name: data.name,
                   description: data.description,
                   whatsappGroupLink: data.whatsappGroupLink,
-                  leaderASMId: leader.id,
+                  leaderASMId: leader.asmId,
                   leaderASMName: leader.name,
                   members: members,
                 );

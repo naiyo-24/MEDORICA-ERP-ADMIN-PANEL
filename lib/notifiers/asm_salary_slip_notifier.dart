@@ -42,7 +42,7 @@ class ASMSalarySlipNotifier extends Notifier<ASMSalarySlipState> {
   @override
   ASMSalarySlipState build() {
     final asmList = ref.watch(asmListProvider);
-    final firstASMId = asmList.isNotEmpty ? asmList.first.id : 'asm_001';
+    final firstASMId = asmList.isNotEmpty ? asmList.first.asmId : 'asm_001';
     final currentYear = DateTime.now().year;
 
     return ASMSalarySlipState(
@@ -58,8 +58,8 @@ class ASMSalarySlipNotifier extends Notifier<ASMSalarySlipState> {
       for (int month = 1; month <= 12; month++) {
         slips.add(
           ASMSalarySlip(
-            id: '${asm.id}_${year}_$month',
-            asmId: asm.id,
+            id: '${asm.asmId}_${year}_$month',
+            asmId: asm.asmId,
             asmName: asm.name,
             month: month,
             year: year,
@@ -86,8 +86,8 @@ class ASMSalarySlipNotifier extends Notifier<ASMSalarySlipState> {
         for (int month = 1; month <= 12; month++) {
           newSlips.add(
             ASMSalarySlip(
-              id: '${asm.id}_${year}_$month',
-              asmId: asm.id,
+              id: '${asm.asmId}_${year}_$month',
+              asmId: asm.asmId,
               asmName: asm.name,
               month: month,
               year: year,

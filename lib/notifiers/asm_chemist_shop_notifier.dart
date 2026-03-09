@@ -104,7 +104,7 @@ class ASMChemistShopNotifier extends Notifier<ASMChemistShopState> {
               ? doctorList[i].phone
               : fallbackDoctorPhone,
           asmAddedBy: asmList[i].name,
-          asmAddedById: asmList[i].id,
+          asmAddedById: asmList[i].asmId,
           createdAt: created.subtract(Duration(days: 16 - i * 2)),
         ),
     ];

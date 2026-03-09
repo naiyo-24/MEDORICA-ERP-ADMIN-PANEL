@@ -1,27 +1,36 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/asm.dart';
+import '../services/onboarding/asm_onboarding_services.dart';
 
 class ASMOnboardingState {
   const ASMOnboardingState({
     this.asmList = const [],
     this.searchQuery = '',
+    this.isLoading = false,
     this.isSaving = false,
+    this.error,
   });
 
   final List<ASM> asmList;
   final String searchQuery;
+  final bool isLoading;
   final bool isSaving;
+  final String? error;
 
   ASMOnboardingState copyWith({
     List<ASM>? asmList,
     String? searchQuery,
+    bool? isLoading,
     bool? isSaving,
+    String? error,
   }) {
     return ASMOnboardingState(
       asmList: asmList ?? this.asmList,
       searchQuery: searchQuery ?? this.searchQuery,
+      isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
   }
 
@@ -34,72 +43,34 @@ class ASMOnboardingState {
           (asm) =>
               asm.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
               asm.phone.contains(searchQuery) ||
-              asm.email.toLowerCase().contains(searchQuery.toLowerCase()),
+              (asm.email?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+                  false),
         )
         .toList();
   }
 }
 
 class ASMOnboardingNotifier extends Notifier<ASMOnboardingState> {
+  late final ASMOnboardingServices _services;
+
   @override
   ASMOnboardingState build() {
-    return ASMOnboardingState(asmList: _mockASMData());
+    _services = ref.read(asmOnboardingServicesProvider);
+    return const ASMOnboardingState();
   }
 
-  List<ASM> _mockASMData() {
-    return [
-      ASM(
-        id: 'asm_1',
-        name: 'Vikram Singh',
-        phone: '+919123456789',
-        altPhone: '+919123456788',
-        email: 'vikram.singh@medorica.com',
-        address: '789 Corporate Plaza, Delhi, India',
-        headquarterAssigned: 'Delhi HQ',
-        territoriesOfWork: 'East Delhi, North Delhi, Central Delhi',
-        bankName: 'Punjab National Bank',
-        bankBranchName: 'Delhi Main Branch',
-        bankAccountNumber: '54321098765432',
-        ifscCode: 'PNB0001234',
-        monthlyTarget: 150000,
-        password: 'SecurePass@ASM1',
-        createdAt: DateTime.now().subtract(const Duration(days: 100)),
-      ),
-      ASM(
-        id: 'asm_2',
-        name: 'Neha Gupta',
-        phone: '+919234567890',
-        altPhone: '+919234567891',
-        email: 'neha.gupta@medorica.com',
-        address: '456 Business Center, Bangalore, Karnataka',
-        headquarterAssigned: 'Bangalore HQ',
-        territoriesOfWork: 'Bangalore City, Suburbs',
-        bankName: 'Axis Bank',
-        bankBranchName: 'Bangalore Tech Park',
-        bankAccountNumber: '65432109876543',
-        ifscCode: 'AXIS0000789',
-        monthlyTarget: 180000,
-        password: 'SecurePass@ASM2',
-        createdAt: DateTime.now().subtract(const Duration(days: 70)),
-      ),
-      ASM(
-        id: 'asm_3',
-        name: 'Arun Kumar',
-        phone: '+919345678901',
-        altPhone: '+919345678902',
-        email: 'arun.kumar@medorica.com',
-        address: '321 Medical Square, Hyderabad, Telangana',
-        headquarterAssigned: 'Hyderabad HQ',
-        territoriesOfWork: 'Hyderabad Urban, Hyderabad Rural',
-        bankName: 'IDBI Bank',
-        bankBranchName: 'Hyderabad Central',
-        bankAccountNumber: '76543210987654',
-        ifscCode: 'IDBI0001111',
-        monthlyTarget: 160000,
-        password: 'SecurePass@ASM3',
-        createdAt: DateTime.now().subtract(const Duration(days: 50)),
-      ),
-    ];
+  Future<void> loadASMList() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final asmList = await _services.getAllASM();
+      state = state.copyWith(asmList: asmList, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load ASM list: $e',
+      );
+    }
   }
 
   void setSearchQuery(String value) {
@@ -107,34 +78,69 @@ class ASMOnboardingNotifier extends Notifier<ASMOnboardingState> {
   }
 
   Future<void> addASM({required ASM asm}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final newASM = await _services.createASM(
+        asm: asm,
+        profilePhotoBytes: asm.photoBytes,
+        profilePhotoFileName: asm.photoFileName,
+      );
 
-    final newASMList = [...state.asmList, asm];
-    state = state.copyWith(asmList: newASMList, isSaving: false);
+      final newASMList = [...state.asmList, newASM];
+      state = state.copyWith(asmList: newASMList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to create ASM: $e',
+      );
+      rethrow;
+    }
   }
 
   Future<void> updateASM({required ASM asm}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final updatedASM = await _services.updateASM(
+        asmId: asm.asmId,
+        asm: asm,
+        profilePhotoBytes: asm.photoBytes,
+        profilePhotoFileName: asm.photoFileName,
+      );
 
-    final newASMList = state.asmList
-        .map((a) => a.id == asm.id ? asm : a)
-        .toList();
-    state = state.copyWith(asmList: newASMList, isSaving: false);
+      final newASMList = state.asmList
+          .map((a) => a.asmId == updatedASM.asmId ? updatedASM : a)
+          .toList();
+      state = state.copyWith(asmList: newASMList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to update ASM: $e',
+      );
+      rethrow;
+    }
   }
 
   Future<void> deleteASM({required String asmId}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      await _services.deleteASM(asmId);
 
-    final newASMList = state.asmList.where((a) => a.id != asmId).toList();
-    state = state.copyWith(asmList: newASMList, isSaving: false);
+      final newASMList = state.asmList.where((a) => a.asmId != asmId).toList();
+      state = state.copyWith(asmList: newASMList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to delete ASM: $e',
+      );
+      rethrow;
+    }
   }
 }
+
+// Provider for ASM onboarding services
+final asmOnboardingServicesProvider = Provider<ASMOnboardingServices>((ref) {
+  return ASMOnboardingServices();
+});

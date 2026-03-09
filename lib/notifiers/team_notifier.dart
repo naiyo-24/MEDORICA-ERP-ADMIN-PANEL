@@ -49,7 +49,7 @@ class TeamNotifier extends Notifier<TeamState> {
         description:
             'Focused on expanding prescription reach and conversion in priority northern cities with weekly call planning and KPI tracking.',
         whatsappGroupLink: 'https://chat.whatsapp.com/NorthGrowthSquad',
-        leaderASMId: firstASM.id,
+        leaderASMId: firstASM.asmId,
         leaderASMName: firstASM.name,
         members: [
           for (final member in mrList.take(2))
@@ -63,7 +63,7 @@ class TeamNotifier extends Notifier<TeamState> {
         description:
             'A high-velocity city team designed for doctor engagement, chemist follow-up and fast order movement with same-week closures.',
         whatsappGroupLink: 'https://chat.whatsapp.com/MetroOutreachUnit',
-        leaderASMId: secondASM.id,
+        leaderASMId: secondASM.asmId,
         leaderASMName: secondASM.name,
         members: [
           for (final member in mrList.skip(1).take(2))

@@ -27,6 +27,21 @@ class ApiUrl {
   static String mrOnboardingDeleteById(String mrId) =>
       '$mrOnboardingBase/delete-by/$mrId';
 
+  // ASM Onboarding
+  static const String asmOnboardingBase = '/onboarding/asm';
+  static const String asmOnboardingPost = '$asmOnboardingBase/post';
+  static const String asmOnboardingGetAll = '$asmOnboardingBase/get-all';
+  static const String asmOnboardingLogin = '$asmOnboardingBase/login';
+
+  static String asmOnboardingGetById(String asmId) =>
+      '$asmOnboardingBase/get-by/$asmId';
+
+  static String asmOnboardingUpdateById(String asmId) =>
+      '$asmOnboardingBase/update-by/$asmId';
+
+  static String asmOnboardingDeleteById(String asmId) =>
+      '$asmOnboardingBase/delete-by/$asmId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

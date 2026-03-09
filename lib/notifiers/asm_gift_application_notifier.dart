@@ -94,7 +94,7 @@ class ASMGiftApplicationNotifier extends Notifier<ASMGiftApplicationState> {
         doctorName: doctors[i].doctorName,
         giftId: gifts[i].id,
         giftItemRequired: gifts[i].itemName,
-        asmRequestedById: asms[i].id,
+        asmRequestedById: asms[i].asmId,
         asmRequestedBy: asms[i].name,
         date: now.subtract(Duration(days: i * 2 + 2)),
         occasion: i.isEven ? 'Quarterly Camp' : 'Specialist Visit',

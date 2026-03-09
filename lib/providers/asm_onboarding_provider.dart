@@ -15,3 +15,7 @@ final asmListProvider = Provider<List<ASM>>((ref) {
 final asmCountProvider = Provider<int>((ref) {
   return ref.watch(asmOnboardingNotifierProvider).asmList.length;
 });
+
+final asmLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(asmOnboardingNotifierProvider).isLoading;
+});

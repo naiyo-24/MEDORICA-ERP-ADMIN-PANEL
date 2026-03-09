@@ -61,7 +61,7 @@ class _ASMMonthTripPlanScreenState
             onCancel: () => Navigator.of(dialogContext).pop(),
             onSave: (date, time, description) {
               notifier.addTripPlanItem(
-                asmId: selectedASM.id,
+                asmId: selectedASM.asmId,
                 date: date,
                 time: time,
                 description: description,
@@ -109,7 +109,7 @@ class _ASMMonthTripPlanScreenState
 
   ASM? _selectedASM(List<ASM> asmList, String selectedASMId) {
     for (final asm in asmList) {
-      if (asm.id == selectedASMId) {
+      if (asm.asmId == selectedASMId) {
         return asm;
       }
     }

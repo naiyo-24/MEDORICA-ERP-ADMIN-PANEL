@@ -22,6 +22,16 @@ class ASMFormData {
     required this.ifscCode,
     required this.monthlyTarget,
     required this.password,
+    this.joiningDate,
+    this.basicSalary,
+    this.dailyAllowances,
+    this.hra,
+    this.phoneAllowances,
+    this.childrenAllowances,
+    this.esic,
+    this.specialAllowances,
+    this.medicalAllowances,
+    this.totalMonthlyCompensation,
     this.photoBytes,
     this.photoFileName,
   });
@@ -39,6 +49,16 @@ class ASMFormData {
   final String ifscCode;
   final double monthlyTarget;
   final String password;
+  final DateTime? joiningDate;
+  final double? basicSalary;
+  final double? dailyAllowances;
+  final double? hra;
+  final double? phoneAllowances;
+  final double? childrenAllowances;
+  final double? esic;
+  final double? specialAllowances;
+  final double? medicalAllowances;
+  final double? totalMonthlyCompensation;
   final Uint8List? photoBytes;
   final String? photoFileName;
 }
@@ -73,6 +93,16 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
   late final TextEditingController _ifscCodeController;
   late final TextEditingController _targetController;
   late final TextEditingController _passwordController;
+  late final TextEditingController _joiningDateController;
+  late final TextEditingController _basicSalaryController;
+  late final TextEditingController _dailyAllowancesController;
+  late final TextEditingController _hraController;
+  late final TextEditingController _phoneAllowancesController;
+  late final TextEditingController _childrenAllowancesController;
+  late final TextEditingController _esicController;
+  late final TextEditingController _specialAllowancesController;
+  late final TextEditingController _medicalAllowancesController;
+  late final TextEditingController _totalCompensationController;
 
   Uint8List? _photoBytes;
   String? _photoFileName;
@@ -80,6 +110,15 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
   bool _isPasswordVisible = false;
 
   bool get _isEditing => widget.initialASM != null;
+
+  String _territoriesWorkToString(dynamic territories) {
+    if (territories == null) return '';
+    if (territories is String) return territories;
+    if (territories is List) {
+      return territories.join(', ');
+    }
+    return territories.toString();
+  }
 
   @override
   void initState() {
@@ -94,7 +133,7 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
       text: asm?.headquarterAssigned ?? '',
     );
     _territoriesController = TextEditingController(
-      text: asm?.territoriesOfWork ?? '',
+      text: _territoriesWorkToString(asm?.territoriesOfWork),
     );
     _bankNameController = TextEditingController(text: asm?.bankName ?? '');
     _bankBranchController = TextEditingController(
@@ -105,9 +144,43 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
     );
     _ifscCodeController = TextEditingController(text: asm?.ifscCode ?? '');
     _targetController = TextEditingController(
-      text: asm != null ? asm.monthlyTarget.toStringAsFixed(0) : '',
+      text: asm?.monthlyTarget != null
+          ? asm!.monthlyTarget!.toStringAsFixed(0)
+          : '',
     );
     _passwordController = TextEditingController(text: asm?.password ?? '');
+    _joiningDateController = TextEditingController(
+      text: asm?.joiningDate != null
+          ? '${asm!.joiningDate!.year}-${asm.joiningDate!.month.toString().padLeft(2, '0')}-${asm.joiningDate!.day.toString().padLeft(2, '0')}'
+          : '',
+    );
+    _basicSalaryController = TextEditingController(
+      text: asm?.basicSalary?.toStringAsFixed(0) ?? '',
+    );
+    _dailyAllowancesController = TextEditingController(
+      text: asm?.dailyAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _hraController = TextEditingController(
+      text: asm?.hra?.toStringAsFixed(0) ?? '',
+    );
+    _phoneAllowancesController = TextEditingController(
+      text: asm?.phoneAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _childrenAllowancesController = TextEditingController(
+      text: asm?.childrenAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _esicController = TextEditingController(
+      text: asm?.esic?.toStringAsFixed(0) ?? '',
+    );
+    _specialAllowancesController = TextEditingController(
+      text: asm?.specialAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _medicalAllowancesController = TextEditingController(
+      text: asm?.medicalAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _totalCompensationController = TextEditingController(
+      text: asm?.totalMonthlyCompensation?.toStringAsFixed(0) ?? '',
+    );
     _photoBytes = asm?.photoBytes;
     _photoFileName = asm?.photoFileName;
   }
@@ -127,6 +200,16 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
     _ifscCodeController.dispose();
     _targetController.dispose();
     _passwordController.dispose();
+    _joiningDateController.dispose();
+    _basicSalaryController.dispose();
+    _dailyAllowancesController.dispose();
+    _hraController.dispose();
+    _phoneAllowancesController.dispose();
+    _childrenAllowancesController.dispose();
+    _esicController.dispose();
+    _specialAllowancesController.dispose();
+    _medicalAllowancesController.dispose();
+    _totalCompensationController.dispose();
     super.dispose();
   }
 
@@ -174,6 +257,37 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
         ifscCode: _ifscCodeController.text.trim(),
         monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
         password: _passwordController.text.trim(),
+        joiningDate: _joiningDateController.text.trim().isNotEmpty
+            ? DateTime.tryParse(_joiningDateController.text.trim())
+            : null,
+        basicSalary: _basicSalaryController.text.trim().isNotEmpty
+            ? double.tryParse(_basicSalaryController.text.trim())
+            : null,
+        dailyAllowances: _dailyAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_dailyAllowancesController.text.trim())
+            : null,
+        hra: _hraController.text.trim().isNotEmpty
+            ? double.tryParse(_hraController.text.trim())
+            : null,
+        phoneAllowances: _phoneAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_phoneAllowancesController.text.trim())
+            : null,
+        childrenAllowances: _childrenAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_childrenAllowancesController.text.trim())
+            : null,
+        esic: _esicController.text.trim().isNotEmpty
+            ? double.tryParse(_esicController.text.trim())
+            : null,
+        specialAllowances: _specialAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_specialAllowancesController.text.trim())
+            : null,
+        medicalAllowances: _medicalAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_medicalAllowancesController.text.trim())
+            : null,
+        totalMonthlyCompensation:
+            _totalCompensationController.text.trim().isNotEmpty
+            ? double.tryParse(_totalCompensationController.text.trim())
+            : null,
         photoBytes: _photoBytes,
         photoFileName: _photoFileName,
       ),
@@ -448,8 +562,13 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                         // Other Details
                         _buildSectionTitle(theme, 'Other Details'),
                         _buildTextField(
+                          controller: _joiningDateController,
+                          label: 'Joining Date (YYYY-MM-DD)',
+                          icon: Iconsax.calendar,
+                        ),
+                        _buildTextField(
                           controller: _targetController,
-                          label: 'Monthly Target',
+                          label: 'Monthly Target (₹)',
                           icon: Iconsax.chart_1,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
@@ -465,6 +584,82 @@ class _OnboardEditASMCardState extends State<OnboardEditASMCard> {
                           },
                         ),
                         _buildPasswordField(theme),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Salary & Compensation
+                        _buildSectionTitle(theme, 'Salary & Compensation'),
+                        _buildTextField(
+                          controller: _basicSalaryController,
+                          label: 'Basic Salary (₹)',
+                          icon: Iconsax.money,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _dailyAllowancesController,
+                          label: 'Daily Allowances (₹)',
+                          icon: Iconsax.money_2,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _hraController,
+                          label: 'HRA (₹)',
+                          icon: Iconsax.house,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _phoneAllowancesController,
+                          label: 'Phone Allowances (₹)',
+                          icon: Iconsax.mobile,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _childrenAllowancesController,
+                          label: 'Children Allowances (₹)',
+                          icon: Iconsax.people,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _esicController,
+                          label: 'ESIC (₹)',
+                          icon: Iconsax.health,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _specialAllowancesController,
+                          label: 'Special Allowances (₹)',
+                          icon: Iconsax.dollar_circle,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _medicalAllowancesController,
+                          label: 'Medical Allowances (₹)',
+                          icon: Iconsax.hospital,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _totalCompensationController,
+                          label: 'Total Monthly Compensation (₹)',
+                          icon: Iconsax.money_4,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
                         const SizedBox(height: AppSpacing.lg),
 
                         // Submit Button

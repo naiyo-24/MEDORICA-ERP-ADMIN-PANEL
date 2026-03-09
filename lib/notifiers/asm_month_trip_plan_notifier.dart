@@ -86,7 +86,7 @@ class ASMMonthTripPlanNotifier extends Notifier<ASMMonthTripPlanState> {
     );
 
     _upsertTripPlanItem(
-      asmId: asm.id,
+      asmId: asm.asmId,
       asmName: asm.name,
       date: DateTime(date.year, date.month, date.day),
       item: item,
@@ -125,7 +125,7 @@ class ASMMonthTripPlanNotifier extends Notifier<ASMMonthTripPlanState> {
     state = state.copyWith(tripPlans: current);
 
     _upsertTripPlanItem(
-      asmId: asm.id,
+      asmId: asm.asmId,
       asmName: asm.name,
       date: DateTime(date.year, date.month, date.day),
       item: ASMTripPlanItem(id: itemId, time: time, description: description),
@@ -200,8 +200,8 @@ class ASMMonthTripPlanNotifier extends Notifier<ASMMonthTripPlanState> {
 
     return [
       ASMMonthTripPlan(
-        id: 'asm_plan_${asms.first.id}_${today.year}_${today.month}_${today.day}',
-        asmId: asms.first.id,
+        id: 'asm_plan_${asms.first.asmId}_${today.year}_${today.month}_${today.day}',
+        asmId: asms.first.asmId,
         asmName: asms.first.name,
         date: today,
         plans: const [
@@ -218,8 +218,8 @@ class ASMMonthTripPlanNotifier extends Notifier<ASMMonthTripPlanState> {
         ],
       ),
       ASMMonthTripPlan(
-        id: 'asm_plan_${secondASM.id}_${today.add(const Duration(days: 2)).year}_${today.add(const Duration(days: 2)).month}_${today.add(const Duration(days: 2)).day}',
-        asmId: secondASM.id,
+        id: 'asm_plan_${secondASM.asmId}_${today.add(const Duration(days: 2)).year}_${today.add(const Duration(days: 2)).month}_${today.add(const Duration(days: 2)).day}',
+        asmId: secondASM.asmId,
         asmName: secondASM.name,
         date: today.add(const Duration(days: 2)),
         plans: const [
@@ -236,7 +236,7 @@ class ASMMonthTripPlanNotifier extends Notifier<ASMMonthTripPlanState> {
   ASM? _findASM(String asmId) {
     final asms = ref.read(asmOnboardingNotifierProvider).asmList;
     for (final asm in asms) {
-      if (asm.id == asmId) {
+      if (asm.asmId == asmId) {
         return asm;
       }
     }

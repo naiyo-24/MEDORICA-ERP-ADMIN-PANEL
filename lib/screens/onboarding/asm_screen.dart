@@ -9,6 +9,7 @@ import '../../models/asm.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
 class ASMOnboardingScreen extends ConsumerStatefulWidget {
@@ -22,6 +23,14 @@ class ASMOnboardingScreen extends ConsumerStatefulWidget {
 class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.dashboard;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(asmOnboardingNotifierProvider.notifier).loadASMList();
+    });
+  }
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -71,6 +80,7 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                 altPhone: formData.altPhone,
                 email: formData.email,
                 address: formData.address,
+                joiningDate: formData.joiningDate,
                 headquarterAssigned: formData.headquarterAssigned,
                 territoriesOfWork: formData.territoriesOfWork,
                 bankName: formData.bankName,
@@ -78,6 +88,15 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                 bankAccountNumber: formData.bankAccountNumber,
                 ifscCode: formData.ifscCode,
                 monthlyTarget: formData.monthlyTarget,
+                basicSalary: formData.basicSalary,
+                dailyAllowances: formData.dailyAllowances,
+                hra: formData.hra,
+                phoneAllowances: formData.phoneAllowances,
+                childrenAllowances: formData.childrenAllowances,
+                esic: formData.esic,
+                specialAllowances: formData.specialAllowances,
+                medicalAllowances: formData.medicalAllowances,
+                totalMonthlyCompensation: formData.totalMonthlyCompensation,
                 password: formData.password,
                 photoBytes: formData.photoBytes,
                 photoFileName: formData.photoFileName,
@@ -88,12 +107,13 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
             } else {
               // Add new ASM
               final newASM = ASM(
-                id: 'asm_${DateTime.now().millisecondsSinceEpoch}',
+                asmId: 'ASM${DateTime.now().millisecondsSinceEpoch}',
                 name: formData.name,
                 phone: formData.phone,
                 altPhone: formData.altPhone,
                 email: formData.email,
                 address: formData.address,
+                joiningDate: formData.joiningDate,
                 headquarterAssigned: formData.headquarterAssigned,
                 territoriesOfWork: formData.territoriesOfWork,
                 bankName: formData.bankName,
@@ -101,6 +121,15 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
                 bankAccountNumber: formData.bankAccountNumber,
                 ifscCode: formData.ifscCode,
                 monthlyTarget: formData.monthlyTarget,
+                basicSalary: formData.basicSalary,
+                dailyAllowances: formData.dailyAllowances,
+                hra: formData.hra,
+                phoneAllowances: formData.phoneAllowances,
+                childrenAllowances: formData.childrenAllowances,
+                esic: formData.esic,
+                specialAllowances: formData.specialAllowances,
+                medicalAllowances: formData.medicalAllowances,
+                totalMonthlyCompensation: formData.totalMonthlyCompensation,
                 password: formData.password,
                 photoBytes: formData.photoBytes,
                 photoFileName: formData.photoFileName,
@@ -143,7 +172,7 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
             onPressed: () async {
               await ref
                   .read(asmOnboardingNotifierProvider.notifier)
-                  .deleteASM(asmId: asm.id);
+                  .deleteASM(asmId: asm.asmId);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -163,8 +192,21 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asmList = ref.watch(asmListProvider);
+    final asmState = ref.watch(asmOnboardingNotifierProvider);
+    final asmList = asmState.filteredASMList;
     final notifier = ref.read(asmOnboardingNotifierProvider.notifier);
+
+    // Listen for errors
+    ref.listen(asmOnboardingNotifierProvider, (previous, next) {
+      if (next.error != null && next.error!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       key: _scaffoldKey,
@@ -185,63 +227,70 @@ class _ASMOnboardingScreenState extends ConsumerState<ASMOnboardingScreen> {
           onItemTap: _onNavTap,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: AppLayout.screenPadding(context),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: AppLayout.maxContentWidth,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ASMSearchFilterCard(
-                  onSearchChanged: (query) {
-                    notifier.setSearchQuery(query);
-                  },
-                  onOnboardPressed: () => _showOnboardEditForm(),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                if (asmList.isEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.xl,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'No ASMs found',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(color: AppColors.quaternary),
-                      ),
-                    ),
-                  )
-                else
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 8 / 1,
-                          mainAxisSpacing: AppSpacing.sm,
-                        ),
-                    itemCount: asmList.length,
-                    itemBuilder: (context, index) {
-                      final asm = asmList[index];
-                      return ASMCard(
-                        asm: asm,
-                        onTap: () => _showASMDetails(asm),
-                        onEdit: () => _showOnboardEditForm(asm: asm),
-                        onDelete: () => _deleteASM(asm),
-                      );
-                    },
+      body: asmState.isLoading
+          ? const Center(
+              child: MedoricaLoader(
+                title: 'Loading ASM Data',
+                subtitle: 'Fetching area sales managers from server',
+              ),
+            )
+          : SingleChildScrollView(
+              padding: AppLayout.screenPadding(context),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: AppLayout.maxContentWidth,
                   ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ASMSearchFilterCard(
+                        onSearchChanged: (query) {
+                          notifier.setSearchQuery(query);
+                        },
+                        onOnboardPressed: () => _showOnboardEditForm(),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      if (asmList.isEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xl,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'No ASMs found',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(color: AppColors.quaternary),
+                            ),
+                          ),
+                        )
+                      else
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 1,
+                                childAspectRatio: 8 / 1,
+                                mainAxisSpacing: AppSpacing.sm,
+                              ),
+                          itemCount: asmList.length,
+                          itemBuilder: (context, index) {
+                            final asm = asmList[index];
+                            return ASMCard(
+                              asm: asm,
+                              onTap: () => _showASMDetails(asm),
+                              onEdit: () => _showOnboardEditForm(asm: asm),
+                              onDelete: () => _deleteASM(asm),
+                            );
+                          },
+                        ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

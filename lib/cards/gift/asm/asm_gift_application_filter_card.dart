@@ -62,7 +62,7 @@ class ASMGiftApplicationFilterCard extends StatelessWidget {
                     const DropdownMenuItem(value: '', child: Text('All ASMs')),
                     ...asmOptions.map(
                       (asm) => DropdownMenuItem(
-                        value: asm.id,
+                        value: asm.asmId,
                         child: Text(asm.name),
                       ),
                     ),

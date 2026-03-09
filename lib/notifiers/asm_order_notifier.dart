@@ -115,7 +115,7 @@ class ASMOrderNotifier extends Notifier<ASMOrderState> {
           deliveryDateTime: now
               .subtract(Duration(days: i))
               .add(Duration(hours: 13 + (i % 5))),
-          asmId: asmList[i].id,
+          asmId: asmList[i].asmId,
           asmName: asmList[i].name,
           doctorName: doctorList.length > i
               ? doctorList[i].doctorName

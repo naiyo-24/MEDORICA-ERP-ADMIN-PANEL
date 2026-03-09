@@ -70,7 +70,7 @@ class ASMChemistShopFilterCard extends StatelessWidget {
                     const DropdownMenuItem(value: '', child: Text('All ASMs')),
                     ...asmList.map(
                       (asm) => DropdownMenuItem(
-                        value: asm.id,
+                        value: asm.asmId,
                         child: Text(asm.name),
                       ),
                     ),

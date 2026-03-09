@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/asm.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMDetailsCard extends StatelessWidget {
@@ -109,6 +110,48 @@ class ASMDetailsCard extends StatelessWidget {
                                       fit: BoxFit.cover,
                                     ),
                                   )
+                                : (asm.profilePhoto != null &&
+                                      asm.profilePhoto!.isNotEmpty)
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.md,
+                                    ),
+                                    child: Image.network(
+                                      ApiUrl.getProfilePhotoUrl(
+                                        asm.profilePhoto,
+                                      ),
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
+                                              child: Text(
+                                                initials,
+                                                style: theme
+                                                    .textTheme
+                                                    .headlineMedium
+                                                    ?.copyWith(
+                                                      color: AppColors.white,
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.white,
+                                                strokeWidth: 2,
+                                              ),
+                                            );
+                                          },
+                                    ),
+                                  )
                                 : Center(
                                     child: Text(
                                       initials,
@@ -136,7 +179,7 @@ class ASMDetailsCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  asm.headquarterAssigned,
+                                  asm.headquarterAssigned ?? 'Not assigned',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: AppColors.white.withValues(
                                       alpha: 0.8,
@@ -169,52 +212,125 @@ class ASMDetailsCard extends StatelessWidget {
                       _DetailRow(
                         icon: Iconsax.call,
                         label: 'Alt Phone',
-                        value: asm.altPhone,
+                        value: asm.altPhone ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.sms,
                         label: 'Email',
-                        value: asm.email,
+                        value: asm.email ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.location,
                         label: 'Address',
-                        value: asm.address,
+                        value: asm.address ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.building_4,
                         label: 'Headquarters',
-                        value: asm.headquarterAssigned,
+                        value: asm.headquarterAssigned ?? 'Not assigned',
                       ),
                       _DetailRow(
                         icon: Iconsax.map,
                         label: 'Territories',
-                        value: asm.territoriesOfWork,
+                        value:
+                            asm.territoriesOfWork?.toString() ?? 'Not assigned',
                       ),
                       _DetailRow(
                         icon: Iconsax.building,
                         label: 'Bank Name',
-                        value: asm.bankName,
+                        value: asm.bankName ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.building,
                         label: 'Bank Branch',
-                        value: asm.bankBranchName,
+                        value: asm.bankBranchName ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.card,
                         label: 'Account Number',
-                        value: asm.bankAccountNumber,
+                        value: asm.bankAccountNumber ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.code,
                         label: 'IFSC Code',
-                        value: asm.ifscCode,
+                        value: asm.ifscCode ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.chart_1,
                         label: 'Monthly Target',
-                        value: '₹${asm.monthlyTarget.toStringAsFixed(0)}',
+                        value: asm.monthlyTarget != null
+                            ? '₹${asm.monthlyTarget!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.calendar,
+                        label: 'Joining Date',
+                        value: asm.joiningDate != null
+                            ? '${asm.joiningDate!.day}-${asm.joiningDate!.month}-${asm.joiningDate!.year}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money,
+                        label: 'Basic Salary',
+                        value: asm.basicSalary != null
+                            ? '₹${asm.basicSalary!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money_2,
+                        label: 'Daily Allowances',
+                        value: asm.dailyAllowances != null
+                            ? '₹${asm.dailyAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.house,
+                        label: 'HRA',
+                        value: asm.hra != null
+                            ? '₹${asm.hra!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.mobile,
+                        label: 'Phone Allowances',
+                        value: asm.phoneAllowances != null
+                            ? '₹${asm.phoneAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.people,
+                        label: 'Children Allowances',
+                        value: asm.childrenAllowances != null
+                            ? '₹${asm.childrenAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.dollar_circle,
+                        label: 'Special Allowances',
+                        value: asm.specialAllowances != null
+                            ? '₹${asm.specialAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.hospital,
+                        label: 'Medical Allowances',
+                        value: asm.medicalAllowances != null
+                            ? '₹${asm.medicalAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.health,
+                        label: 'ESIC',
+                        value: asm.esic != null
+                            ? '₹${asm.esic!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money_4,
+                        label: 'Total Monthly Compensation',
+                        value: asm.totalMonthlyCompensation != null
+                            ? '₹${asm.totalMonthlyCompensation!.toStringAsFixed(0)}'
+                            : 'Not set',
                       ),
                       _DetailRow(
                         icon: Iconsax.lock,

@@ -78,7 +78,7 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
     final asmList = ref.read(asmListProvider);
     ASM? selectedASM;
     for (final asm in asmList) {
-      if (asm.id == state.selectedASMId) {
+      if (asm.asmId == state.selectedASMId) {
         selectedASM = asm;
         break;
       }
@@ -103,12 +103,12 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
     required int month,
     required int year,
   }) {
-    final totalTarget = asm.monthlyTarget;
-    final ratio = _achievementRatio(id: asm.id, month: month, year: year);
+    final totalTarget = asm.monthlyTarget ?? 0.0;
+    final ratio = _achievementRatio(id: asm.asmId, month: month, year: year);
 
     return ASMMonthlyTarget(
-      id: 'asm_target_${asm.id}_${year}_$month',
-      asmId: asm.id,
+      id: 'asm_target_${asm.asmId}_${year}_$month',
+      asmId: asm.asmId,
       asmName: asm.name,
       month: month,
       year: year,
