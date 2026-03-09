@@ -56,10 +56,10 @@ dependencies:
   intl: ^0.20.2
 
   # Charts and graphs
-  fl_chart: ^0.69.2
+  fl_chart: ^1.1.1
 
   # Media picking
-  file_picker: ^8.1.7
+  file_picker: ^10.3.10
 
   # Calendar
   table_calendar: ^3.2.0
