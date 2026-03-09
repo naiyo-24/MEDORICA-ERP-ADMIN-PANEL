@@ -20,6 +20,14 @@ class PortfolioScreen extends ConsumerStatefulWidget {
 class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(portfolioNotifierProvider.notifier).loadPortfolio();
+    });
+  }
+
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
   }
@@ -90,6 +98,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(portfolioNotifierProvider, (previous, next) {
+      final previousError = previous?.errorMessage;
+      final nextError = next.errorMessage;
+      if (nextError != null && nextError != previousError && mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(nextError)));
+      }
+    });
+
+    final portfolioState = ref.watch(portfolioNotifierProvider);
     final portfolio = ref.watch(portfolioDataProvider);
 
     return Scaffold(
@@ -120,6 +139,14 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (portfolioState.isLoading)
+                  const LinearProgressIndicator(minHeight: 2)
+                else
+                  const SizedBox.shrink(),
+                if (portfolioState.isLoading)
+                  const SizedBox(height: AppSpacing.md)
+                else
+                  const SizedBox.shrink(),
                 PortfolioDescriptionCard(
                   description: portfolio.description,
                   onEdit: () => _openEditDialog(PortfolioEditType.description),
