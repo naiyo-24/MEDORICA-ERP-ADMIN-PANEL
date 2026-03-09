@@ -12,6 +12,7 @@ class SideNavItemKeys {
   static const String dashboard = 'dashboard';
   static const String mrOnboarding = 'mr_onboarding';
   static const String asmOnboarding = 'asm_onboarding';
+  static const String teamManagement = 'team_management';
   static const String mrDoctorNetworks = 'mr_doctor_networks';
   static const String asmDoctorNetworks = 'asm_doctor_networks';
   static const String distributorManagement = 'distributor_management';
@@ -43,31 +44,32 @@ class SideNavRouteIndex {
   static const int dashboard = 0;
   static const int mrOnboarding = 1;
   static const int asmOnboarding = 2;
-  static const int mrDoctorNetworks = 3;
-  static const int asmDoctorNetworks = 4;
-  static const int distributor = 5;
-  static const int visualAds = 6;
-  static const int notifications = 7;
-  static const int portfolio = 8;
-  static const int helpCenter = 9;
-  static const int mrAttendance = 10;
-  static const int asmAttendance = 11;
-  static const int mrAppointments = 12;
-  static const int asmAppointments = 13;
-  static const int asmShopNetwork = 14;
-  static const int mrShopNetwork = 15;
-  static const int manageGifts = 16;
-  static const int mrGiftApplications = 17;
-  static const int asmGiftApplications = 18;
-  static const int asmTargets = 19;
-  static const int mrTargets = 20;
-  static const int asmTripPlan = 21;
-  static const int mrTripPlan = 22;
-  static const int mrSalarySlip = 23;
-  static const int asmSalarySlip = 24;
-  static const int mrOrders = 25;
-  static const int asmOrders = 26;
-  static const int logout = 27;
+  static const int teamManagement = 3;
+  static const int mrDoctorNetworks = 4;
+  static const int asmDoctorNetworks = 5;
+  static const int distributor = 6;
+  static const int visualAds = 7;
+  static const int notifications = 8;
+  static const int portfolio = 9;
+  static const int helpCenter = 10;
+  static const int mrAttendance = 11;
+  static const int asmAttendance = 12;
+  static const int mrAppointments = 13;
+  static const int asmAppointments = 14;
+  static const int asmShopNetwork = 15;
+  static const int mrShopNetwork = 16;
+  static const int manageGifts = 17;
+  static const int mrGiftApplications = 18;
+  static const int asmGiftApplications = 19;
+  static const int asmTargets = 20;
+  static const int mrTargets = 21;
+  static const int asmTripPlan = 22;
+  static const int mrTripPlan = 23;
+  static const int mrSalarySlip = 24;
+  static const int asmSalarySlip = 25;
+  static const int mrOrders = 26;
+  static const int asmOrders = 27;
+  static const int logout = 28;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -78,6 +80,8 @@ class SideNavRouteIndex {
         return mrOnboarding;
       case SideNavItemKeys.asmOnboarding:
         return asmOnboarding;
+      case SideNavItemKeys.teamManagement:
+        return teamManagement;
       case SideNavItemKeys.mrDoctorNetworks:
         return mrDoctorNetworks;
       case SideNavItemKeys.asmDoctorNetworks:
@@ -155,6 +159,11 @@ class SideNavRouteIndex {
       case asmOnboarding:
         if (currentItemKey != SideNavItemKeys.asmOnboarding) {
           context.go(AppRoutePaths.asmOnboarding);
+        }
+        return true;
+      case teamManagement:
+        if (currentItemKey != SideNavItemKeys.teamManagement) {
+          context.go(AppRoutePaths.team);
         }
         return true;
       case mrDoctorNetworks:
@@ -352,7 +361,7 @@ class SideNavBarDrawer extends StatelessWidget {
                   _NavTile(
                     icon: Iconsax.profile_2user,
                     title: 'Team Management',
-                    itemKey: 'team_management',
+                    itemKey: SideNavItemKeys.teamManagement,
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),

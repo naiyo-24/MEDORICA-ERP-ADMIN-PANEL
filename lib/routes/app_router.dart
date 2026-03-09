@@ -25,6 +25,7 @@ import '../screens/order/asm_order_screen.dart';
 import '../screens/order/mr_order_screen.dart';
 import '../screens/salary_slip/asm_salary_slip_screen.dart';
 import '../screens/salary_slip/mr_salary_slip_screen.dart';
+import '../screens/team/team_screen.dart';
 import '../screens/onboarding/asm_screen.dart';
 import '../screens/onboarding/mr_screen.dart';
 import '../screens/portfolio/portfolio_screen.dart';
@@ -60,6 +61,7 @@ class AppRoutePaths {
   static const String asmSalarySlip = '/asm-salary-slip';
   static const String mrOrder = '/mr-order';
   static const String asmOrder = '/asm-order';
+  static const String team = '/team';
 }
 
 final GoRouter appRouter = GoRouter(
@@ -209,6 +211,11 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutePaths.asmOrder,
       name: 'asm-order',
       builder: (context, state) => const ASMOrderScreen(),
+    ),
+    GoRoute(
+      path: AppRoutePaths.team,
+      name: 'team',
+      builder: (context, state) => const TeamScreen(),
     ),
   ],
 );
