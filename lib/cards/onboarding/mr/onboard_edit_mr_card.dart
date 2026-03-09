@@ -22,6 +22,14 @@ class MRFormData {
     required this.ifscCode,
     required this.monthlyTarget,
     required this.password,
+    this.joiningDate,
+    this.basicSalary,
+    this.dailyAllowances,
+    this.hra,
+    this.phoneAllowances,
+    this.childrenAllowances,
+    this.esic,
+    this.totalMonthlyCompensation,
     this.photoBytes,
     this.photoFileName,
   });
@@ -39,6 +47,14 @@ class MRFormData {
   final String ifscCode;
   final double monthlyTarget;
   final String password;
+  final DateTime? joiningDate;
+  final double? basicSalary;
+  final double? dailyAllowances;
+  final double? hra;
+  final double? phoneAllowances;
+  final double? childrenAllowances;
+  final double? esic;
+  final double? totalMonthlyCompensation;
   final Uint8List? photoBytes;
   final String? photoFileName;
 }
@@ -69,6 +85,14 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
   late final TextEditingController _ifscCodeController;
   late final TextEditingController _targetController;
   late final TextEditingController _passwordController;
+  late final TextEditingController _joiningDateController;
+  late final TextEditingController _basicSalaryController;
+  late final TextEditingController _dailyAllowancesController;
+  late final TextEditingController _hraController;
+  late final TextEditingController _phoneAllowancesController;
+  late final TextEditingController _childrenAllowancesController;
+  late final TextEditingController _esicController;
+  late final TextEditingController _totalCompensationController;
 
   Uint8List? _photoBytes;
   String? _photoFileName;
@@ -76,6 +100,15 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
   bool _isPasswordVisible = false;
 
   bool get _isEditing => widget.initialMR != null;
+
+  String _territoriesWorkToString(dynamic territories) {
+    if (territories == null) return '';
+    if (territories is String) return territories;
+    if (territories is List) {
+      return territories.join(', ');
+    }
+    return territories.toString();
+  }
 
   @override
   void initState() {
@@ -90,7 +123,7 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
       text: mr?.headquarterAssigned ?? '',
     );
     _territoriesController = TextEditingController(
-      text: mr?.territoriesOfWork ?? '',
+      text: _territoriesWorkToString(mr?.territoriesOfWork),
     );
     _bankNameController = TextEditingController(text: mr?.bankName ?? '');
     _bankBranchController = TextEditingController(
@@ -106,6 +139,32 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
           : '',
     );
     _passwordController = TextEditingController(text: mr?.password ?? '');
+    _joiningDateController = TextEditingController(
+      text: mr?.joiningDate != null
+          ? '${mr!.joiningDate!.year}-${mr.joiningDate!.month.toString().padLeft(2, '0')}-${mr.joiningDate!.day.toString().padLeft(2, '0')}'
+          : '',
+    );
+    _basicSalaryController = TextEditingController(
+      text: mr?.basicSalary?.toStringAsFixed(0) ?? '',
+    );
+    _dailyAllowancesController = TextEditingController(
+      text: mr?.dailyAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _hraController = TextEditingController(
+      text: mr?.hra?.toStringAsFixed(0) ?? '',
+    );
+    _phoneAllowancesController = TextEditingController(
+      text: mr?.phoneAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _childrenAllowancesController = TextEditingController(
+      text: mr?.childrenAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _esicController = TextEditingController(
+      text: mr?.esic?.toStringAsFixed(0) ?? '',
+    );
+    _totalCompensationController = TextEditingController(
+      text: mr?.totalMonthlyCompensation?.toStringAsFixed(0) ?? '',
+    );
     _photoBytes = mr?.photoBytes;
     _photoFileName = mr?.photoFileName;
   }
@@ -125,6 +184,14 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
     _ifscCodeController.dispose();
     _targetController.dispose();
     _passwordController.dispose();
+    _joiningDateController.dispose();
+    _basicSalaryController.dispose();
+    _dailyAllowancesController.dispose();
+    _hraController.dispose();
+    _phoneAllowancesController.dispose();
+    _childrenAllowancesController.dispose();
+    _esicController.dispose();
+    _totalCompensationController.dispose();
     super.dispose();
   }
 
@@ -172,6 +239,32 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
         ifscCode: _ifscCodeController.text.trim(),
         monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
         password: _passwordController.text.trim(),
+        joiningDate: _joiningDateController.text.trim().isNotEmpty
+            ? DateTime.tryParse(_joiningDateController.text.trim())
+            : null,
+        basicSalary: _basicSalaryController.text.trim().isNotEmpty
+            ? double.tryParse(_basicSalaryController.text.trim())
+            : null,
+        dailyAllowances: _dailyAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_dailyAllowancesController.text.trim())
+            : null,
+        hra: _hraController.text.trim().isNotEmpty
+            ? double.tryParse(_hraController.text.trim())
+            : null,
+        phoneAllowances: _phoneAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_phoneAllowancesController.text.trim())
+            : null,
+        childrenAllowances:
+            _childrenAllowancesController.text.trim().isNotEmpty
+                ? double.tryParse(_childrenAllowancesController.text.trim())
+                : null,
+        esic: _esicController.text.trim().isNotEmpty
+            ? double.tryParse(_esicController.text.trim())
+            : null,
+        totalMonthlyCompensation:
+            _totalCompensationController.text.trim().isNotEmpty
+                ? double.tryParse(_totalCompensationController.text.trim())
+                : null,
         photoBytes: _photoBytes,
         photoFileName: _photoFileName,
       ),
@@ -446,8 +539,13 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                         // Other Details
                         _buildSectionTitle(theme, 'Other Details'),
                         _buildTextField(
+                          controller: _joiningDateController,
+                          label: 'Joining Date (YYYY-MM-DD)',
+                          icon: Iconsax.calendar,
+                        ),
+                        _buildTextField(
                           controller: _targetController,
-                          label: 'Monthly Target',
+                          label: 'Monthly Target (₹)',
                           icon: Iconsax.chart_1,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
@@ -463,6 +561,66 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                           },
                         ),
                         _buildPasswordField(theme),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Salary & Compensation
+                        _buildSectionTitle(theme, 'Salary & Compensation'),
+                        _buildTextField(
+                          controller: _basicSalaryController,
+                          label: 'Basic Salary (₹)',
+                          icon: Iconsax.money,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _dailyAllowancesController,
+                          label: 'Daily Allowances (₹)',
+                          icon: Iconsax.money_2,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _hraController,
+                          label: 'HRA (₹)',
+                          icon: Iconsax.house,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _phoneAllowancesController,
+                          label: 'Phone Allowances (₹)',
+                          icon: Iconsax.mobile,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _childrenAllowancesController,
+                          label: 'Children Allowances (₹)',
+                          icon: Iconsax.people,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _esicController,
+                          label: 'ESIC (₹)',
+                          icon: Iconsax.health,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _totalCompensationController,
+                          label: 'Total Monthly Compensation (₹)',
+                          icon: Iconsax.money_4,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
                         const SizedBox(height: AppSpacing.lg),
 
                         // Submit Button
