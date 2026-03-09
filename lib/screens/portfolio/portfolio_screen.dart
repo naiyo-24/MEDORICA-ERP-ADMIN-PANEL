@@ -141,8 +141,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                 ? const Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
                     child: MedoricaLoader(
-                      title: 'Preparing Portfolio',
-                      subtitle: 'Syncing company profile from API',
+                      title: 'Loading your Company Portfolio',
+                      subtitle: 'Please wait while we fetch your company portfolio',
                     ),
                   )
                 : Column(
