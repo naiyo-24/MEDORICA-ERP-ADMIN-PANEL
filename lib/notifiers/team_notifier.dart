@@ -53,7 +53,7 @@ class TeamNotifier extends Notifier<TeamState> {
         leaderASMName: firstASM.name,
         members: [
           for (final member in mrList.take(2))
-            TeamMemberRef(mrId: member.id, mrName: member.name),
+            TeamMemberRef(mrId: member.mrId, mrName: member.name),
         ],
         createdAt: DateTime.now().subtract(const Duration(days: 30)),
       ),
@@ -67,7 +67,7 @@ class TeamNotifier extends Notifier<TeamState> {
         leaderASMName: secondASM.name,
         members: [
           for (final member in mrList.skip(1).take(2))
-            TeamMemberRef(mrId: member.id, mrName: member.name),
+            TeamMemberRef(mrId: member.mrId, mrName: member.name),
         ],
         createdAt: DateTime.now().subtract(const Duration(days: 18)),
       ),

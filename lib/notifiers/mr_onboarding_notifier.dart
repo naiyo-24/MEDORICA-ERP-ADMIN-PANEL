@@ -1,27 +1,36 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/mr.dart';
+import '../providers/mr_onboarding_provider.dart';
 
 class MROnboardingState {
   const MROnboardingState({
     this.mrList = const [],
     this.searchQuery = '',
+    this.isLoading = false,
     this.isSaving = false,
+    this.error,
   });
 
   final List<MR> mrList;
   final String searchQuery;
+  final bool isLoading;
   final bool isSaving;
+  final String? error;
 
   MROnboardingState copyWith({
     List<MR>? mrList,
     String? searchQuery,
+    bool? isLoading,
     bool? isSaving,
+    String? error,
   }) {
     return MROnboardingState(
       mrList: mrList ?? this.mrList,
       searchQuery: searchQuery ?? this.searchQuery,
+      isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
   }
 
@@ -34,7 +43,8 @@ class MROnboardingState {
           (mr) =>
               mr.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
               mr.phone.contains(searchQuery) ||
-              mr.email.toLowerCase().contains(searchQuery.toLowerCase()),
+              (mr.email?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+                  false),
         )
         .toList();
   }
@@ -43,63 +53,22 @@ class MROnboardingState {
 class MROnboardingNotifier extends Notifier<MROnboardingState> {
   @override
   MROnboardingState build() {
-    return MROnboardingState(mrList: _mockMRData());
+    return const MROnboardingState();
   }
 
-  List<MR> _mockMRData() {
-    return [
-      MR(
-        id: 'mr_1',
-        name: 'Rajesh Kumar',
-        phone: '+919876543210',
-        altPhone: '+919876543211',
-        email: 'rajesh.kumar@medorica.com',
-        address: '123 Main Street, Kolkata, West Bengal',
-        headquarterAssigned: 'Kolkata HQ',
-        territoriesOfWork: 'North Kolkata, South Kolkata',
-        bankName: 'State Bank of India',
-        bankBranchName: 'Kolkata Main Branch',
-        bankAccountNumber: '12345678901234',
-        ifscCode: 'SBIN0001234',
-        monthlyTarget: 50000,
-        password: 'SecurePass@123',
-        createdAt: DateTime.now().subtract(const Duration(days: 120)),
-      ),
-      MR(
-        id: 'mr_2',
-        name: 'Priya Sharma',
-        phone: '+919988776655',
-        altPhone: '+919988776656',
-        email: 'priya.sharma@medorica.com',
-        address: '456 Park Avenue, Mumbai, Maharashtra',
-        headquarterAssigned: 'Mumbai HQ',
-        territoriesOfWork: 'Central Mumbai, South Mumbai',
-        bankName: 'HDFC Bank',
-        bankBranchName: 'Mumbai Fort Branch',
-        bankAccountNumber: '98765432109876',
-        ifscCode: 'HDFC0000123',
-        monthlyTarget: 55000,
-        password: 'SecurePass@456',
-        createdAt: DateTime.now().subtract(const Duration(days: 90)),
-      ),
-      MR(
-        id: 'mr_3',
-        name: 'Amit Patel',
-        phone: '+919111222333',
-        altPhone: '+919111222334',
-        email: 'amit.patel@medorica.com',
-        address: '789 Business Park, Bangalore, Karnataka',
-        headquarterAssigned: 'Bangalore HQ',
-        territoriesOfWork: 'Indiranagar, Whitefield',
-        bankName: 'ICICI Bank',
-        bankBranchName: 'Bangalore Tech Park',
-        bankAccountNumber: '11223344556677',
-        ifscCode: 'ICIC0000456',
-        monthlyTarget: 60000,
-        password: 'SecurePass@789',
-        createdAt: DateTime.now().subtract(const Duration(days: 60)),
-      ),
-    ];
+  Future<void> loadMRList() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final services = ref.read(mrOnboardingServicesProvider);
+      final mrList = await services.getAllMR();
+      state = state.copyWith(mrList: mrList, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load MR list: $e',
+      );
+    }
   }
 
   void setSearchQuery(String value) {
@@ -107,32 +76,58 @@ class MROnboardingNotifier extends Notifier<MROnboardingState> {
   }
 
   Future<void> addMR({required MR mr}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final services = ref.read(mrOnboardingServicesProvider);
+      final createdMR = await services.createMR(
+        mr: mr,
+        profilePhotoBytes: mr.photoBytes,
+        profilePhotoFileName: mr.photoFileName,
+      );
 
-    final newMRList = [...state.mrList, mr];
-    state = state.copyWith(mrList: newMRList, isSaving: false);
+      final newMRList = [...state.mrList, createdMR];
+      state = state.copyWith(mrList: newMRList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: 'Failed to add MR: $e');
+      rethrow;
+    }
   }
 
   Future<void> updateMR({required MR mr}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final services = ref.read(mrOnboardingServicesProvider);
+      final updatedMR = await services.updateMR(
+        mrId: mr.mrId,
+        mr: mr,
+        profilePhotoBytes: mr.photoBytes,
+        profilePhotoFileName: mr.photoFileName,
+      );
 
-    final newMRList = state.mrList.map((m) => m.id == mr.id ? mr : m).toList();
-    state = state.copyWith(mrList: newMRList, isSaving: false);
+      final newMRList = state.mrList
+          .map((m) => m.mrId == updatedMR.mrId ? updatedMR : m)
+          .toList();
+      state = state.copyWith(mrList: newMRList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: 'Failed to update MR: $e');
+      rethrow;
+    }
   }
 
   Future<void> deleteMR({required String mrId}) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final services = ref.read(mrOnboardingServicesProvider);
+      await services.deleteMR(mrId);
 
-    final newMRList = state.mrList.where((m) => m.id != mrId).toList();
-    state = state.copyWith(mrList: newMRList, isSaving: false);
+      final newMRList = state.mrList.where((m) => m.mrId != mrId).toList();
+      state = state.copyWith(mrList: newMRList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: 'Failed to delete MR: $e');
+      rethrow;
+    }
   }
 }

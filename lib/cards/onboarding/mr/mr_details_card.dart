@@ -136,7 +136,7 @@ class MRDetailsCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  mr.headquarterAssigned,
+                                  mr.headquarterAssigned ?? 'Not assigned',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: AppColors.white.withValues(
                                       alpha: 0.8,
@@ -169,52 +169,55 @@ class MRDetailsCard extends StatelessWidget {
                       _DetailRow(
                         icon: Iconsax.call,
                         label: 'Alt Phone',
-                        value: mr.altPhone,
+                        value: mr.altPhone ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.sms,
                         label: 'Email',
-                        value: mr.email,
+                        value: mr.email ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.location,
                         label: 'Address',
-                        value: mr.address,
+                        value: mr.address ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.building_4,
                         label: 'Headquarters',
-                        value: mr.headquarterAssigned,
+                        value: mr.headquarterAssigned ?? 'Not assigned',
                       ),
                       _DetailRow(
                         icon: Iconsax.map,
                         label: 'Territories',
-                        value: mr.territoriesOfWork,
+                        value:
+                            mr.territoriesOfWork?.toString() ?? 'Not assigned',
                       ),
                       _DetailRow(
                         icon: Iconsax.building,
                         label: 'Bank Name',
-                        value: mr.bankName,
+                        value: mr.bankName ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.building,
                         label: 'Bank Branch',
-                        value: mr.bankBranchName,
+                        value: mr.bankBranchName ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.card,
                         label: 'Account Number',
-                        value: mr.bankAccountNumber,
+                        value: mr.bankAccountNumber ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.code,
                         label: 'IFSC Code',
-                        value: mr.ifscCode,
+                        value: mr.ifscCode ?? 'Not provided',
                       ),
                       _DetailRow(
                         icon: Iconsax.chart_1,
                         label: 'Monthly Target',
-                        value: '₹${mr.monthlyTarget.toStringAsFixed(0)}',
+                        value: mr.monthlyTarget != null
+                            ? '₹${mr.monthlyTarget!.toStringAsFixed(0)}'
+                            : 'Not set',
                       ),
                       _DetailRow(
                         icon: Iconsax.lock,

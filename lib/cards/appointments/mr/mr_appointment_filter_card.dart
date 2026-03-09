@@ -92,7 +92,7 @@ class MRAppointmentFilterCard extends StatelessWidget {
                 ),
                 ...mrList.map(
                   (mr) => DropdownMenuItem<String>(
-                    value: mr.id,
+                    value: mr.mrId,
                     child: Text(mr.name),
                   ),
                 ),

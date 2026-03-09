@@ -75,7 +75,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                       (item) => item.id == id,
                       orElse: () => mrList.first,
                     );
-                    return TeamMemberRef(mrId: mr.id, mrName: mr.name);
+                    return TeamMemberRef(mrId: mr.mrId, mrName: mr.name);
                   })
                   .toList(growable: false);
 

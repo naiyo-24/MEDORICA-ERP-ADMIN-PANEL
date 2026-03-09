@@ -70,7 +70,7 @@ class MRChemistShopFilterCard extends StatelessWidget {
                     const DropdownMenuItem(value: '', child: Text('All MRs')),
                     ...mrList.map(
                       (mr) =>
-                          DropdownMenuItem(value: mr.id, child: Text(mr.name)),
+                          DropdownMenuItem(value: mr.mrId, child: Text(mr.name)),
                     ),
                   ],
                   onChanged: (value) => onMRChanged(value ?? ''),

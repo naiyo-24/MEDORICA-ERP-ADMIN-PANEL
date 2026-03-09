@@ -40,7 +40,7 @@ class MRSalarySlipNotifier extends Notifier<MRSalarySlipState> {
   @override
   MRSalarySlipState build() {
     final mrList = ref.watch(mrListProvider);
-    final firstMRId = mrList.isNotEmpty ? mrList.first.id : 'mr_001';
+    final firstMRId = mrList.isNotEmpty ? mrList.first.mrId : 'mr_001';
     final currentYear = DateTime.now().year;
 
     return MRSalarySlipState(
@@ -56,8 +56,8 @@ class MRSalarySlipNotifier extends Notifier<MRSalarySlipState> {
       for (int month = 1; month <= 12; month++) {
         slips.add(
           MRSalarySlip(
-            id: '${mr.id}_${year}_$month',
-            mrId: mr.id,
+            id: '${mr.mrId}_${year}_$month',
+            mrId: mr.mrId,
             mrName: mr.name,
             month: month,
             year: year,
@@ -84,8 +84,8 @@ class MRSalarySlipNotifier extends Notifier<MRSalarySlipState> {
         for (int month = 1; month <= 12; month++) {
           newSlips.add(
             MRSalarySlip(
-              id: '${mr.id}_${year}_$month',
-              mrId: mr.id,
+              id: '${mr.mrId}_${year}_$month',
+              mrId: mr.mrId,
               mrName: mr.name,
               month: month,
               year: year,

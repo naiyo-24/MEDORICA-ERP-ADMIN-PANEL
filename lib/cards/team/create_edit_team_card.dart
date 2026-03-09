@@ -291,18 +291,18 @@ class _CreateEditTeamCardState extends State<CreateEditTeamCard> {
                                 (mr) => CheckboxListTile(
                                   dense: true,
                                   contentPadding: EdgeInsets.zero,
-                                  value: _selectedMemberMRIds.contains(mr.id),
+                                  value: _selectedMemberMRIds.contains(mr.mrId),
                                   title: Text(mr.name),
                                   subtitle: Text(
-                                    mr.headquarterAssigned,
+                                    mr.headquarterAssigned ?? 'Not assigned',
                                     style: theme.textTheme.bodySmall,
                                   ),
                                   onChanged: (checked) {
                                     setState(() {
                                       if (checked ?? false) {
-                                        _selectedMemberMRIds.add(mr.id);
+                                        _selectedMemberMRIds.add(mr.mrId);
                                       } else {
-                                        _selectedMemberMRIds.remove(mr.id);
+                                        _selectedMemberMRIds.remove(mr.mrId);
                                       }
                                     });
                                   },

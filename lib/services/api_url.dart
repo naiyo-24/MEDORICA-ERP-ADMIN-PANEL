@@ -11,4 +11,19 @@ class ApiUrl {
 
   static String aboutUsDeleteById(int aboutUsId) =>
       '$aboutUsBase/delete-by/$aboutUsId';
+
+  // MR Onboarding
+  static const String mrOnboardingBase = '/onboarding/mr';
+  static const String mrOnboardingPost = '$mrOnboardingBase/post';
+  static const String mrOnboardingGetAll = '$mrOnboardingBase/get-all';
+  static const String mrOnboardingLogin = '$mrOnboardingBase/login';
+
+  static String mrOnboardingGetById(String mrId) =>
+      '$mrOnboardingBase/get-by/$mrId';
+
+  static String mrOnboardingUpdateById(String mrId) =>
+      '$mrOnboardingBase/update-by/$mrId';
+
+  static String mrOnboardingDeleteById(String mrId) =>
+      '$mrOnboardingBase/delete-by/$mrId';
 }

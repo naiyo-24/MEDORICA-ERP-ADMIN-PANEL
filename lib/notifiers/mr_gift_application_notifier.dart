@@ -90,7 +90,7 @@ class MRGiftApplicationNotifier extends Notifier<MRGiftApplicationState> {
         doctorName: doctors[i].doctorName,
         giftId: gifts[i].id,
         giftItemRequired: gifts[i].itemName,
-        mrRequestedById: mrs[i].id,
+        mrRequestedById: mrs[i].mrId,
         mrRequestedBy: mrs[i].name,
         date: now.subtract(Duration(days: i * 2 + 1)),
         occasion: i.isEven ? 'Doctor Meet' : 'Clinic Milestone',

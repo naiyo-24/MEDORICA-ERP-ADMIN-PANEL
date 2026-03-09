@@ -72,7 +72,7 @@ class MRSalarySlipFilterCard extends StatelessWidget {
                         ),
                         items: mrOptions.map((mr) {
                           return DropdownMenuItem(
-                            value: mr.id,
+                            value: mr.mrId,
                             child: Text(mr.name),
                           );
                         }).toList(),

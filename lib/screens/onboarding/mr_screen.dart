@@ -9,6 +9,7 @@ import '../../models/mr.dart';
 import '../../providers/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
 class MROnboardingScreen extends ConsumerStatefulWidget {
@@ -21,6 +22,14 @@ class MROnboardingScreen extends ConsumerStatefulWidget {
 class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.dashboard;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(mrOnboardingNotifierProvider.notifier).loadMRList();
+    });
+  }
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -87,7 +96,7 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
             } else {
               // Add new MR
               final newMR = MR(
-                id: 'mr_${DateTime.now().millisecondsSinceEpoch}',
+                mrId: 'MR${DateTime.now().millisecondsSinceEpoch}',
                 name: formData.name,
                 phone: formData.phone,
                 altPhone: formData.altPhone,
@@ -103,7 +112,6 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
                 password: formData.password,
                 photoBytes: formData.photoBytes,
                 photoFileName: formData.photoFileName,
-                createdAt: DateTime.now(),
               );
               await ref
                   .read(mrOnboardingNotifierProvider.notifier)
@@ -142,7 +150,7 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
             onPressed: () async {
               await ref
                   .read(mrOnboardingNotifierProvider.notifier)
-                  .deleteMR(mrId: mr.id);
+                  .deleteMR(mrId: mr.mrId);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -162,8 +170,21 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mrList = ref.watch(mrListProvider);
+    final mrState = ref.watch(mrOnboardingNotifierProvider);
+    final mrList = mrState.filteredMRList;
     final notifier = ref.read(mrOnboardingNotifierProvider.notifier);
+
+    // Listen for errors
+    ref.listen(mrOnboardingNotifierProvider, (previous, next) {
+      if (next.error != null && next.error!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       key: _scaffoldKey,
@@ -184,63 +205,70 @@ class _MROnboardingScreenState extends ConsumerState<MROnboardingScreen> {
           onItemTap: _onNavTap,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: AppLayout.screenPadding(context),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: AppLayout.maxContentWidth,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                MRSearchFilterCard(
-                  onSearchChanged: (query) {
-                    notifier.setSearchQuery(query);
-                  },
-                  onOnboardPressed: () => _showOnboardEditForm(),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                if (mrList.isEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.xl,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'No MRs found',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(color: AppColors.quaternary),
-                      ),
-                    ),
-                  )
-                else
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 8 / 1,
-                          mainAxisSpacing: AppSpacing.sm,
-                        ),
-                    itemCount: mrList.length,
-                    itemBuilder: (context, index) {
-                      final mr = mrList[index];
-                      return MRCard(
-                        mr: mr,
-                        onTap: () => _showMRDetails(mr),
-                        onEdit: () => _showOnboardEditForm(mr: mr),
-                        onDelete: () => _deleteMR(mr),
-                      );
-                    },
+      body: mrState.isLoading
+          ? const Center(
+              child: MedoricaLoader(
+                title: 'Loading MR Data',
+                subtitle: 'Fetching medical representatives from server',
+              ),
+            )
+          : SingleChildScrollView(
+              padding: AppLayout.screenPadding(context),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: AppLayout.maxContentWidth,
                   ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      MRSearchFilterCard(
+                        onSearchChanged: (query) {
+                          notifier.setSearchQuery(query);
+                        },
+                        onOnboardPressed: () => _showOnboardEditForm(),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      if (mrList.isEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xl,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'No MRs found',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(color: AppColors.quaternary),
+                            ),
+                          ),
+                        )
+                      else
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 1,
+                                childAspectRatio: 8 / 1,
+                                mainAxisSpacing: AppSpacing.sm,
+                              ),
+                          itemCount: mrList.length,
+                          itemBuilder: (context, index) {
+                            final mr = mrList[index];
+                            return MRCard(
+                              mr: mr,
+                              onTap: () => _showMRDetails(mr),
+                              onEdit: () => _showOnboardEditForm(mr: mr),
+                              onDelete: () => _deleteMR(mr),
+                            );
+                          },
+                        ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

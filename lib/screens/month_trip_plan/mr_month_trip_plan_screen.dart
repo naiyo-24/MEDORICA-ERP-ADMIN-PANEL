@@ -60,7 +60,7 @@ class _MRMonthTripPlanScreenState extends ConsumerState<MRMonthTripPlanScreen> {
             onCancel: () => Navigator.of(dialogContext).pop(),
             onSave: (date, time, description) {
               notifier.addTripPlanItem(
-                mrId: selectedMR.id,
+                mrId: selectedMR.mrId,
                 date: date,
                 time: time,
                 description: description,

@@ -103,12 +103,12 @@ class MRMonthlyTargetNotifier extends Notifier<MRMonthlyTargetState> {
     required int month,
     required int year,
   }) {
-    final totalTarget = mr.monthlyTarget;
-    final ratio = _achievementRatio(id: mr.id, month: month, year: year);
+    final totalTarget = mr.monthlyTarget ?? 0.0;
+    final ratio = _achievementRatio(id: mr.mrId, month: month, year: year);
 
     return MRMonthlyTarget(
-      id: 'mr_target_${mr.id}_${year}_$month',
-      mrId: mr.id,
+      id: 'mr_target_${mr.mrId}_${year}_$month',
+      mrId: mr.mrId,
       mrName: mr.name,
       month: month,
       year: year,

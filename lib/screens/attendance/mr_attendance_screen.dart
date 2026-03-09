@@ -147,7 +147,7 @@ class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
                         ),
                         items: mrList.map((MR mr) {
                           return DropdownMenuItem<String>(
-                            value: mr.id,
+                            value: mr.mrId,
                             child: Text(mr.name),
                           );
                         }).toList(),

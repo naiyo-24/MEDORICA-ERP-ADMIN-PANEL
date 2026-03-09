@@ -127,7 +127,7 @@ class MRCard extends StatelessWidget {
                               const SizedBox(width: 3),
                               Expanded(
                                 child: Text(
-                                  mr.headquarterAssigned,
+                                  mr.headquarterAssigned ?? 'Not assigned',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: AppColors.quaternary,
                                     fontSize: 12,

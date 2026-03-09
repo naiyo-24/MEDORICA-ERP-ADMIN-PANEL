@@ -104,7 +104,7 @@ class MRChemistShopNotifier extends Notifier<MRChemistShopState> {
               ? doctorList[i].phone
               : fallbackDoctorPhone,
           mrAddedBy: mrList[i].name,
-          mrAddedById: mrList[i].id,
+          mrAddedById: mrList[i].mrId,
           createdAt: created.subtract(Duration(days: 20 - i * 2)),
         ),
     ];

@@ -86,7 +86,7 @@ class MRMonthTripPlanNotifier extends Notifier<MRMonthTripPlanState> {
     );
 
     _upsertTripPlanItem(
-      mrId: mr.id,
+      mrId: mr.mrId,
       mrName: mr.name,
       date: DateTime(date.year, date.month, date.day),
       item: item,
@@ -125,7 +125,7 @@ class MRMonthTripPlanNotifier extends Notifier<MRMonthTripPlanState> {
     state = state.copyWith(tripPlans: current);
 
     _upsertTripPlanItem(
-      mrId: mr.id,
+      mrId: mr.mrId,
       mrName: mr.name,
       date: DateTime(date.year, date.month, date.day),
       item: MRTripPlanItem(id: itemId, time: time, description: description),
@@ -200,8 +200,8 @@ class MRMonthTripPlanNotifier extends Notifier<MRMonthTripPlanState> {
 
     return [
       MRMonthTripPlan(
-        id: 'mr_plan_${mrs.first.id}_${today.year}_${today.month}_${today.day}',
-        mrId: mrs.first.id,
+        id: 'mr_plan_${mrs.first.mrId}_${today.year}_${today.month}_${today.day}',
+        mrId: mrs.first.mrId,
         mrName: mrs.first.name,
         date: today,
         plans: const [
@@ -218,8 +218,8 @@ class MRMonthTripPlanNotifier extends Notifier<MRMonthTripPlanState> {
         ],
       ),
       MRMonthTripPlan(
-        id: 'mr_plan_${secondMR.id}_${today.add(const Duration(days: 1)).year}_${today.add(const Duration(days: 1)).month}_${today.add(const Duration(days: 1)).day}',
-        mrId: secondMR.id,
+        id: 'mr_plan_${secondMR.mrId}_${today.add(const Duration(days: 1)).year}_${today.add(const Duration(days: 1)).month}_${today.add(const Duration(days: 1)).day}',
+        mrId: secondMR.mrId,
         mrName: secondMR.name,
         date: today.add(const Duration(days: 1)),
         plans: const [

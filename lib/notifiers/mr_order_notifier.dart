@@ -115,7 +115,7 @@ class MROrderNotifier extends Notifier<MROrderState> {
           deliveryDateTime: now
               .subtract(Duration(days: i))
               .add(Duration(hours: 14 + (i % 4))),
-          mrId: mrList[i].id,
+          mrId: mrList[i].mrId,
           mrName: mrList[i].name,
           doctorName: doctorList.length > i
               ? doctorList[i].doctorName

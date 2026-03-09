@@ -101,7 +101,9 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
     );
     _ifscCodeController = TextEditingController(text: mr?.ifscCode ?? '');
     _targetController = TextEditingController(
-      text: mr != null ? mr.monthlyTarget.toStringAsFixed(0) : '',
+      text: mr?.monthlyTarget != null
+          ? mr!.monthlyTarget!.toStringAsFixed(0)
+          : '',
     );
     _passwordController = TextEditingController(text: mr?.password ?? '');
     _photoBytes = mr?.photoBytes;
