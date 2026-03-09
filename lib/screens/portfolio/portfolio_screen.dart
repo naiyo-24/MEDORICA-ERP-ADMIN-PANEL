@@ -8,6 +8,7 @@ import '../../cards/portfolio/portfolio_director_message_card.dart';
 import '../../providers/portfolio_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
@@ -136,34 +137,36 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             constraints: const BoxConstraints(
               maxWidth: AppLayout.maxContentWidth,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (portfolioState.isLoading)
-                  const LinearProgressIndicator(minHeight: 2)
-                else
-                  const SizedBox.shrink(),
-                if (portfolioState.isLoading)
-                  const SizedBox(height: AppSpacing.md)
-                else
-                  const SizedBox.shrink(),
-                PortfolioDescriptionCard(
-                  description: portfolio.description,
-                  onEdit: () => _openEditDialog(PortfolioEditType.description),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                PortfolioDirectorMessageCard(
-                  message: portfolio.directorMessage,
-                  onEdit: () =>
-                      _openEditDialog(PortfolioEditType.directorMessage),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                PortfolioContactCard(
-                  data: portfolio,
-                  onEdit: () => _openEditDialog(PortfolioEditType.contacts),
-                ),
-              ],
-            ),
+            child: portfolioState.isLoading
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+                    child: MedoricaLoader(
+                      title: 'Preparing Portfolio',
+                      subtitle: 'Syncing company profile from API',
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PortfolioDescriptionCard(
+                        description: portfolio.description,
+                        onEdit: () =>
+                            _openEditDialog(PortfolioEditType.description),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      PortfolioDirectorMessageCard(
+                        message: portfolio.directorMessage,
+                        onEdit: () =>
+                            _openEditDialog(PortfolioEditType.directorMessage),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      PortfolioContactCard(
+                        data: portfolio,
+                        onEdit: () =>
+                            _openEditDialog(PortfolioEditType.contacts),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
