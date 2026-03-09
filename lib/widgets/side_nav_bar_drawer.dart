@@ -34,6 +34,8 @@ class SideNavItemKeys {
   static const String mrTripPlan = 'mr_trip_plan';
   static const String mrSalarySlip = 'mr_salary_slip';
   static const String asmSalarySlip = 'asm_salary_slip';
+  static const String mrOrders = 'mr_orders';
+  static const String asmOrders = 'asm_orders';
   static const String logout = 'logout';
 }
 
@@ -63,7 +65,9 @@ class SideNavRouteIndex {
   static const int mrTripPlan = 22;
   static const int mrSalarySlip = 23;
   static const int asmSalarySlip = 24;
-  static const int logout = 25;
+  static const int mrOrders = 25;
+  static const int asmOrders = 26;
+  static const int logout = 27;
   static const int unhandled = -1;
 
   static int fromItemKey(String itemKey) {
@@ -118,6 +122,10 @@ class SideNavRouteIndex {
         return mrSalarySlip;
       case SideNavItemKeys.asmSalarySlip:
         return asmSalarySlip;
+      case SideNavItemKeys.mrOrders:
+        return mrOrders;
+      case SideNavItemKeys.asmOrders:
+        return asmOrders;
       case SideNavItemKeys.logout:
         return logout;
       default:
@@ -257,6 +265,16 @@ class SideNavRouteIndex {
       case asmSalarySlip:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.asmSalarySlip);
+        }
+        return true;
+      case mrOrders:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.mrOrder);
+        }
+        return true;
+      case asmOrders:
+        if (currentItemKey != itemKey) {
+          context.go(AppRoutePaths.asmOrder);
         }
         return true;
       case logout:
@@ -458,11 +476,22 @@ class SideNavBarDrawer extends StatelessWidget {
                     selectedKey: selectedKey,
                     onTap: onItemTap,
                   ),
-                  _NavTile(
+                  _NavGroup(
                     icon: Iconsax.box,
                     title: 'Order Management',
-                    itemKey: 'order_management',
                     selectedKey: selectedKey,
+                    children: const [
+                      _NavChild(
+                        itemKey: SideNavItemKeys.mrOrders,
+                        label: 'MR Orders',
+                        icon: Iconsax.profile_2user,
+                      ),
+                      _NavChild(
+                        itemKey: SideNavItemKeys.asmOrders,
+                        label: 'ASM Orders',
+                        icon: Iconsax.user_octagon,
+                      ),
+                    ],
                     onTap: onItemTap,
                   ),
                   _NavGroup(
