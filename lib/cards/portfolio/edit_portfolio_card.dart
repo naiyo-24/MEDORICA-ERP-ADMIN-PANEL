@@ -12,6 +12,8 @@ class EditPortfolioResult {
     this.phone,
     this.email,
     this.website,
+    this.address,
+    this.officeAddress,
     this.instagram,
     this.facebook,
     this.linkedin,
@@ -23,6 +25,8 @@ class EditPortfolioResult {
   final String? phone;
   final String? email;
   final String? website;
+  final String? address;
+  final String? officeAddress;
   final String? instagram;
   final String? facebook;
   final String? linkedin;
@@ -47,6 +51,8 @@ class _EditPortfolioCardState extends State<EditPortfolioCard> {
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final TextEditingController _websiteController;
+  late final TextEditingController _addressController;
+  late final TextEditingController _officeAddressController;
   late final TextEditingController _instagramController;
   late final TextEditingController _facebookController;
   late final TextEditingController _linkedinController;
@@ -62,6 +68,8 @@ class _EditPortfolioCardState extends State<EditPortfolioCard> {
     _phoneController = TextEditingController(text: data.phone);
     _emailController = TextEditingController(text: data.email);
     _websiteController = TextEditingController(text: data.website);
+    _addressController = TextEditingController(text: data.address);
+    _officeAddressController = TextEditingController(text: data.officeAddress);
     _instagramController = TextEditingController(text: data.instagram);
     _facebookController = TextEditingController(text: data.facebook);
     _linkedinController = TextEditingController(text: data.linkedin);
@@ -74,6 +82,8 @@ class _EditPortfolioCardState extends State<EditPortfolioCard> {
     _phoneController.dispose();
     _emailController.dispose();
     _websiteController.dispose();
+    _addressController.dispose();
+    _officeAddressController.dispose();
     _instagramController.dispose();
     _facebookController.dispose();
     _linkedinController.dispose();
@@ -100,6 +110,8 @@ class _EditPortfolioCardState extends State<EditPortfolioCard> {
             phone: _phoneController.text.trim(),
             email: _emailController.text.trim(),
             website: _websiteController.text.trim(),
+            address: _addressController.text.trim(),
+            officeAddress: _officeAddressController.text.trim(),
             instagram: _instagramController.text.trim(),
             facebook: _facebookController.text.trim(),
             linkedin: _linkedinController.text.trim(),
@@ -196,6 +208,13 @@ class _EditPortfolioCardState extends State<EditPortfolioCard> {
           _textField(controller: _emailController, label: 'Email'),
           const SizedBox(height: AppSpacing.sm),
           _textField(controller: _websiteController, label: 'Website'),
+          const SizedBox(height: AppSpacing.sm),
+          _textField(controller: _addressController, label: 'Address'),
+          const SizedBox(height: AppSpacing.sm),
+          _textField(
+            controller: _officeAddressController,
+            label: 'Office address',
+          ),
           const SizedBox(height: AppSpacing.sm),
           _textField(controller: _instagramController, label: 'Instagram link'),
           const SizedBox(height: AppSpacing.sm),

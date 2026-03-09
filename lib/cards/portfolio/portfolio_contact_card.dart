@@ -56,6 +56,16 @@ class PortfolioContactCard extends StatelessWidget {
             value: data.website,
           ),
           _ContactRow(
+            icon: Iconsax.location,
+            label: 'Address',
+            value: data.address,
+          ),
+          _ContactRow(
+            icon: Iconsax.building,
+            label: 'Office Address',
+            value: data.officeAddress,
+          ),
+          _ContactRow(
             icon: Iconsax.instagram,
             label: 'Instagram',
             value: data.instagram,

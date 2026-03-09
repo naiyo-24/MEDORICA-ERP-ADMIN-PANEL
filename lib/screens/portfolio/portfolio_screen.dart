@@ -84,6 +84,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
           phone: result.phone ?? data.phone,
           email: result.email ?? data.email,
           website: result.website ?? data.website,
+          address: result.address ?? data.address,
+          officeAddress: result.officeAddress ?? data.officeAddress,
           instagram: result.instagram ?? data.instagram,
           facebook: result.facebook ?? data.facebook,
           linkedin: result.linkedin ?? data.linkedin,
@@ -142,7 +144,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
                     child: MedoricaLoader(
                       title: 'Loading your Company Portfolio',
-                      subtitle: 'Please wait while we fetch your company portfolio',
+                      subtitle:
+                          'Please wait while we fetch your company portfolio',
                     ),
                   )
                 : Column(
