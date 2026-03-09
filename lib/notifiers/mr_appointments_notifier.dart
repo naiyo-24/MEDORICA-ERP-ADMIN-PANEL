@@ -75,22 +75,29 @@ class MRAppointmentsNotifier extends Notifier<MRAppointmentsState> {
     final now = DateTime.now();
     final appointments = <MRAppointment>[];
 
+    String mrNameById(String mrId) {
+      final index = mrList.indexWhere((mr) => mr.mrId == mrId);
+      return index >= 0 ? mrList[index].name : 'Unknown MR';
+    }
+
     for (var i = 0; i < doctorList.length; i++) {
       final doctor = doctorList[i];
-      final chamber = doctor.chambers.first;
+      final chamber = (doctor.chambers != null && doctor.chambers!.isNotEmpty)
+          ? doctor.chambers!.first
+          : const Chamber(name: 'N/A', address: 'N/A', phone: 'N/A');
       final date = now.add(Duration(days: (i % 4) - 1, hours: 10 + (i % 4)));
 
       appointments.add(
         MRAppointment(
           id: 'MR-APT-${1000 + i}',
           dateTime: date,
-          mrId: doctor.mrAddedById,
-          mrName: doctor.mrAddedBy,
+          mrId: doctor.mrId,
+          mrName: mrNameById(doctor.mrId),
           doctorName: doctor.doctorName,
           chamberName: chamber.name,
           chamberAddress: chamber.address,
           chamberPhone: chamber.phone,
-          doctorPhone: doctor.phone,
+          doctorPhone: doctor.phoneNo,
           doctorSpecialization: doctor.specialization,
           status: AppointmentStatus.values[i % AppointmentStatus.values.length],
           appointmentProofImage: i % 3 == 0
@@ -101,18 +108,24 @@ class MRAppointmentsNotifier extends Notifier<MRAppointmentsState> {
     }
 
     if (appointments.length < 6) {
+      final firstDoctor = doctorList.first;
+      final firstChamber =
+          (firstDoctor.chambers != null && firstDoctor.chambers!.isNotEmpty)
+          ? firstDoctor.chambers!.first
+          : const Chamber(name: 'N/A', address: 'N/A', phone: 'N/A');
+
       appointments.add(
         MRAppointment(
           id: 'MR-APT-2001',
           dateTime: now.add(const Duration(days: 2, hours: 11)),
-          mrId: doctorList.first.mrAddedById,
-          mrName: doctorList.first.mrAddedBy,
-          doctorName: doctorList.first.doctorName,
-          chamberName: doctorList.first.chambers.first.name,
-          chamberAddress: doctorList.first.chambers.first.address,
-          chamberPhone: doctorList.first.chambers.first.phone,
-          doctorPhone: doctorList.first.phone,
-          doctorSpecialization: doctorList.first.specialization,
+          mrId: firstDoctor.mrId,
+          mrName: mrNameById(firstDoctor.mrId),
+          doctorName: firstDoctor.doctorName,
+          chamberName: firstChamber.name,
+          chamberAddress: firstChamber.address,
+          chamberPhone: firstChamber.phone,
+          doctorPhone: firstDoctor.phoneNo,
+          doctorSpecialization: firstDoctor.specialization,
           status: AppointmentStatus.scheduled,
           appointmentProofImage:
               'https://via.placeholder.com/600x400.png?text=Appointment+Proof+2001',

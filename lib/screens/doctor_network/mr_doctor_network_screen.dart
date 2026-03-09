@@ -10,6 +10,8 @@ import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
+import '../../widgets/loader.dart';
+
 class MRDoctorNetworkScreen extends ConsumerStatefulWidget {
   const MRDoctorNetworkScreen({super.key});
 
@@ -21,6 +23,14 @@ class MRDoctorNetworkScreen extends ConsumerStatefulWidget {
 class _MRDoctorNetworkScreenState extends ConsumerState<MRDoctorNetworkScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.dashboard;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(mrDoctorNetworkNotifierProvider.notifier).loadAllDoctors();
+    });
+  }
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -62,6 +72,18 @@ class _MRDoctorNetworkScreenState extends ConsumerState<MRDoctorNetworkScreen> {
     final departmentOptions = ref.watch(uniqueDepartmentsProvider);
     final notifier = ref.read(mrDoctorNetworkNotifierProvider.notifier);
     final state = ref.watch(mrDoctorNetworkNotifierProvider);
+    final isLoading = ref.watch(mrDoctorNetworkIsLoadingProvider);
+
+    ref.listen(mrDoctorNetworkNotifierProvider.select((s) => s.error), (
+      prev,
+      next,
+    ) {
+      if (next != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next), backgroundColor: Colors.red),
+        );
+      }
+    });
 
     return Scaffold(
       key: _scaffoldKey,
@@ -82,81 +104,83 @@ class _MRDoctorNetworkScreenState extends ConsumerState<MRDoctorNetworkScreen> {
           onItemTap: _onNavTap,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: AppLayout.screenPadding(context),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: AppLayout.maxContentWidth,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                MRDoctorSearchFilterCard(
-                  onSearchChanged: (query) {
-                    notifier.setSearchQuery(query);
-                  },
-                  onMRFilterChanged: (mr) {
-                    notifier.setSelectedMR(mr);
-                  },
-                  onDepartmentFilterChanged: (dept) {
-                    notifier.setSelectedDepartment(dept);
-                  },
-                  mrOptions: mrOptions,
-                  departmentOptions: departmentOptions,
-                  selectedMR: state.selectedMR.isEmpty
-                      ? 'All MRs'
-                      : state.selectedMR,
-                  selectedDepartment: state.selectedDepartment.isEmpty
-                      ? 'All Departments'
-                      : state.selectedDepartment,
-                ),
-                const SizedBox(height: AppSpacing.lg),
-
-                // Doctor Count
-                Text(
-                  '$doctorCount ${doctorCount == 1 ? 'Doctor' : 'Doctors'}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.quaternary,
-                    fontWeight: FontWeight.w600,
+      body: isLoading
+          ? const Center(child: MedoricaLoader())
+          : SingleChildScrollView(
+              padding: AppLayout.screenPadding(context),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: AppLayout.maxContentWidth,
                   ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-
-                if (doctorList.isEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.xl,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'No doctors found',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(color: AppColors.quaternary),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      MRDoctorSearchFilterCard(
+                        onSearchChanged: (query) {
+                          notifier.setSearchQuery(query);
+                        },
+                        onMRFilterChanged: (mr) {
+                          notifier.setSelectedMR(mr);
+                        },
+                        onDepartmentFilterChanged: (dept) {
+                          notifier.setSelectedDepartment(dept);
+                        },
+                        mrOptions: mrOptions,
+                        departmentOptions: departmentOptions,
+                        selectedMR: state.selectedMR.isEmpty
+                            ? 'All MRs'
+                            : state.selectedMR,
+                        selectedDepartment: state.selectedDepartment.isEmpty
+                            ? 'All Departments'
+                            : state.selectedDepartment,
                       ),
-                    ),
-                  )
-                else
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: doctorList.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (context, index) {
-                      final doctor = doctorList[index];
-                      return MRDoctorCard(
-                        doctor: doctor,
-                        onTap: () => _showDoctorDetails(doctor),
-                      );
-                    },
+                      const SizedBox(height: AppSpacing.lg),
+
+                      // Doctor Count
+                      Text(
+                        '$doctorCount ${doctorCount == 1 ? 'Doctor' : 'Doctors'}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.quaternary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+
+                      if (doctorList.isEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xl,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'No doctors found',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(color: AppColors.quaternary),
+                            ),
+                          ),
+                        )
+                      else
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: doctorList.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: AppSpacing.sm),
+                          itemBuilder: (context, index) {
+                            final doctor = doctorList[index];
+                            return MRDoctorCard(
+                              doctor: doctor,
+                              onTap: () => _showDoctorDetails(doctor),
+                            );
+                          },
+                        ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
                   ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

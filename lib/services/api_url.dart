@@ -42,6 +42,19 @@ class ApiUrl {
   static String asmOnboardingDeleteById(String asmId) =>
       '$asmOnboardingBase/delete-by/$asmId';
 
+  // MR Doctor Network
+  static const String mrDoctorNetworkBase = '/doctor-network/mr';
+  static const String mrDoctorNetworkGetAll = '$mrDoctorNetworkBase/get-all';
+
+  static String mrDoctorNetworkGetByDoctor(String doctorId) =>
+      '$mrDoctorNetworkBase/get-by-doctor/$doctorId';
+
+  static String mrDoctorNetworkGetAllByMr(String mrId) =>
+      '$mrDoctorNetworkBase/get-all-by-mr/$mrId';
+
+  static String mrDoctorNetworkGetByMrAndDoctor(String mrId, String doctorId) =>
+      '$mrDoctorNetworkBase/get-by-mr/$mrId/doctor/$doctorId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

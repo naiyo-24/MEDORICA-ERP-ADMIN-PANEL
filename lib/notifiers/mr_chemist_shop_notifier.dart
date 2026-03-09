@@ -81,7 +81,7 @@ class MRChemistShopNotifier extends Notifier<MRChemistShopState> {
 
     final fallbackDoctor = doctorList.isNotEmpty ? doctorList.first : null;
     final fallbackDoctorName = fallbackDoctor?.doctorName ?? 'Dr. Sunil Roy';
-    final fallbackDoctorPhone = fallbackDoctor?.phone ?? '+919800000001';
+    final fallbackDoctorPhone = fallbackDoctor?.phoneNo ?? '+919800000001';
 
     final created = DateTime.now();
 
@@ -101,7 +101,7 @@ class MRChemistShopNotifier extends Notifier<MRChemistShopState> {
               ? doctorList[i].doctorName
               : fallbackDoctorName,
           doctorPhone: doctorList.length > i
-              ? doctorList[i].phone
+              ? doctorList[i].phoneNo
               : fallbackDoctorPhone,
           mrAddedBy: mrList[i].name,
           mrAddedById: mrList[i].mrId,

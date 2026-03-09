@@ -3,6 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/mr_doctor_network.dart';
 import '../notifiers/mr_doctor_network_notifier.dart';
 
+import '../services/doctor_network/mr/mr_doctor_network_services.dart';
+
+final mrDoctorNetworkServicesProvider = Provider<MRDoctorNetworkServices>((
+  ref,
+) {
+  return MRDoctorNetworkServices();
+});
+
 final mrDoctorNetworkNotifierProvider =
     NotifierProvider<MRDoctorNetworkNotifier, MRDoctorNetworkState>(
       () => MRDoctorNetworkNotifier(),
@@ -26,4 +34,8 @@ final uniqueMRsProvider = Provider<List<String>>((ref) {
 final uniqueDepartmentsProvider = Provider<List<String>>((ref) {
   final state = ref.watch(mrDoctorNetworkNotifierProvider);
   return state.uniqueDepartments;
+});
+
+final mrDoctorNetworkIsLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(mrDoctorNetworkNotifierProvider).isLoading;
 });

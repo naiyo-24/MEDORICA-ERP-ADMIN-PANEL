@@ -100,7 +100,7 @@ class MRDoctorCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        doctor.phone,
+                        doctor.phoneNo,
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontSize: 12,
                           color: AppColors.quaternary,
@@ -110,7 +110,7 @@ class MRDoctorCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Added by ${doctor.mrAddedBy}',
+                    'MR: ${doctor.mrId}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontSize: 11,
                       color: AppColors.quaternary,

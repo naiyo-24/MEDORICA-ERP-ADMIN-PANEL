@@ -115,19 +115,19 @@ class MRDoctorDetailsCard extends StatelessWidget {
                         theme,
                         Iconsax.call,
                         'Phone',
-                        doctor.phone,
+                        doctor.phoneNo,
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.sms,
                         'Email',
-                        doctor.email,
+                        doctor.email ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.location,
                         'Address',
-                        doctor.address,
+                        doctor.address ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
@@ -139,19 +139,19 @@ class MRDoctorDetailsCard extends StatelessWidget {
                         theme,
                         Iconsax.timer_1,
                         'Experience',
-                        '${doctor.experience.toStringAsFixed(0)} years',
+                        '${doctor.experience ?? 'N/A'} years',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.award,
                         'Qualification',
-                        doctor.qualification,
+                        doctor.qualification ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.user,
-                        'Added by MR',
-                        doctor.mrAddedBy,
+                        'MR ID',
+                        doctor.mrId,
                       ),
                       const SizedBox(height: AppSpacing.md),
 
@@ -173,7 +173,7 @@ class MRDoctorDetailsCard extends StatelessWidget {
                           border: Border.all(color: AppColors.border),
                         ),
                         child: Text(
-                          doctor.description,
+                          doctor.description ?? 'No description available',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.quaternary,
                           ),
@@ -190,7 +190,7 @@ class MRDoctorDetailsCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      ...doctor.chambers.asMap().entries.map((entry) {
+                      ...(doctor.chambers ?? []).asMap().entries.map((entry) {
                         final chamber = entry.value;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
