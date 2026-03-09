@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/mr.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class MRDetailsCard extends StatelessWidget {
@@ -109,17 +110,57 @@ class MRDetailsCard extends StatelessWidget {
                                       fit: BoxFit.cover,
                                     ),
                                   )
-                                : Center(
-                                    child: Text(
-                                      initials,
-                                      style: theme.textTheme.headlineMedium
-                                          ?.copyWith(
+                                : (mr.profilePhoto != null &&
+                                        mr.profilePhoto!.isNotEmpty)
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          AppRadius.md,
+                                        ),
+                                        child: Image.network(
+                                          ApiUrl.getProfilePhotoUrl(
+                                            mr.profilePhoto,
+                                          ),
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Center(
+                                              child: Text(
+                                                initials,
+                                                style: theme
+                                                    .textTheme.headlineMedium
+                                                    ?.copyWith(
+                                                  color: AppColors.white,
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.white,
+                                                strokeWidth: 2,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          initials,
+                                          style: theme.textTheme.headlineMedium
+                                              ?.copyWith(
                                             color: AppColors.white,
                                             fontSize: 24,
                                             fontWeight: FontWeight.w700,
                                           ),
-                                    ),
-                                  ),
+                                        ),
+                                      ),
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
@@ -217,6 +258,76 @@ class MRDetailsCard extends StatelessWidget {
                         label: 'Monthly Target',
                         value: mr.monthlyTarget != null
                             ? '₹${mr.monthlyTarget!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.calendar,
+                        label: 'Joining Date',
+                        value: mr.joiningDate != null
+                            ? '${mr.joiningDate!.day}-${mr.joiningDate!.month}-${mr.joiningDate!.year}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money,
+                        label: 'Basic Salary',
+                        value: mr.basicSalary != null
+                            ? '₹${mr.basicSalary!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money_2,
+                        label: 'Daily Allowances',
+                        value: mr.dailyAllowances != null
+                            ? '₹${mr.dailyAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.house,
+                        label: 'HRA',
+                        value: mr.hra != null
+                            ? '₹${mr.hra!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.mobile,
+                        label: 'Phone Allowances',
+                        value: mr.phoneAllowances != null
+                            ? '₹${mr.phoneAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.people,
+                        label: 'Children Allowances',
+                        value: mr.childrenAllowances != null
+                            ? '₹${mr.childrenAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.dollar_circle,
+                        label: 'Special Allowances',
+                        value: mr.specialAllowances != null
+                            ? '₹${mr.specialAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.hospital,
+                        label: 'Medical Allowances',
+                        value: mr.medicalAllowances != null
+                            ? '₹${mr.medicalAllowances!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.health,
+                        label: 'ESIC',
+                        value: mr.esic != null
+                            ? '₹${mr.esic!.toStringAsFixed(0)}'
+                            : 'Not set',
+                      ),
+                      _DetailRow(
+                        icon: Iconsax.money_4,
+                        label: 'Total Monthly Compensation',
+                        value: mr.totalMonthlyCompensation != null
+                            ? '₹${mr.totalMonthlyCompensation!.toStringAsFixed(0)}'
                             : 'Not set',
                       ),
                       _DetailRow(

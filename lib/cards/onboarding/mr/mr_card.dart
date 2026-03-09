@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/mr.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class MRCard extends StatelessWidget {
@@ -70,14 +71,47 @@ class MRCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                               ),
                             )
-                          : Center(
-                              child: Text(
-                                initials,
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                          : (mr.profilePhoto != null &&
+                                  mr.profilePhoto!.isNotEmpty)
+                              ? ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadius.md),
+                                  child: Image.network(
+                                    ApiUrl.getProfilePhotoUrl(mr.profilePhoto),
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Center(
+                                        child: Text(
+                                          initials,
+                                          style: theme.textTheme.headlineSmall
+                                              ?.copyWith(
+                                            color: AppColors.primary,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.primary,
+                                          strokeWidth: 2,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    initials,
+                                    style:
+                                        theme.textTheme.headlineSmall?.copyWith(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                             ),
                     ),
                     const SizedBox(width: AppSpacing.sm),

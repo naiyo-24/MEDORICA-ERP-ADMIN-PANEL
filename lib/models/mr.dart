@@ -26,6 +26,8 @@ class MR {
     this.phoneAllowances,
     this.childrenAllowances,
     this.esic,
+    this.specialAllowances,
+    this.medicalAllowances,
     this.totalMonthlyCompensation,
     this.active = true,
     this.photoBytes,
@@ -57,6 +59,8 @@ class MR {
   final double? phoneAllowances;
   final double? childrenAllowances;
   final double? esic;
+  final double? specialAllowances;
+  final double? medicalAllowances;
   final double? totalMonthlyCompensation;
   final bool active;
   final Uint8List? photoBytes;
@@ -92,6 +96,10 @@ class MR {
       childrenAllowances: (json['children_allowances_rupees'] as num?)
           ?.toDouble(),
       esic: (json['esic_rupees'] as num?)?.toDouble(),
+      specialAllowances: (json['special_allowances_rupees'] as num?)
+          ?.toDouble(),
+      medicalAllowances: (json['medical_allowances_rupees'] as num?)
+          ?.toDouble(),
       totalMonthlyCompensation:
           (json['total_monthly_compensation_rupees'] as num?)?.toDouble(),
       active: json['active'] as bool? ?? true,
@@ -143,6 +151,12 @@ class MR {
       map['children_allowances_rupees'] = childrenAllowances;
     }
     if (esic != null) map['esic_rupees'] = esic;
+    if (specialAllowances != null) {
+      map['special_allowances_rupees'] = specialAllowances;
+    }
+    if (medicalAllowances != null) {
+      map['medical_allowances_rupees'] = medicalAllowances;
+    }
     if (totalMonthlyCompensation != null) {
       map['total_monthly_compensation_rupees'] = totalMonthlyCompensation;
     }
@@ -174,6 +188,8 @@ class MR {
     double? phoneAllowances,
     double? childrenAllowances,
     double? esic,
+    double? specialAllowances,
+    double? medicalAllowances,
     double? totalMonthlyCompensation,
     bool? active,
     Uint8List? photoBytes,
@@ -206,6 +222,8 @@ class MR {
       phoneAllowances: phoneAllowances ?? this.phoneAllowances,
       childrenAllowances: childrenAllowances ?? this.childrenAllowances,
       esic: esic ?? this.esic,
+      specialAllowances: specialAllowances ?? this.specialAllowances,
+      medicalAllowances: medicalAllowances ?? this.medicalAllowances,
       totalMonthlyCompensation:
           totalMonthlyCompensation ?? this.totalMonthlyCompensation,
       active: active ?? this.active,

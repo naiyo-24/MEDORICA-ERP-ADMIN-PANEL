@@ -26,4 +26,15 @@ class ApiUrl {
 
   static String mrOnboardingDeleteById(String mrId) =>
       '$mrOnboardingBase/delete-by/$mrId';
+
+  // Helper to get full profile photo URL
+  static String getProfilePhotoUrl(String? photoPath) {
+    if (photoPath == null || photoPath.isEmpty) return '';
+    // If it's already a full URL, return as is
+    if (photoPath.startsWith('http://') || photoPath.startsWith('https://')) {
+      return photoPath;
+    }
+    // Otherwise, prepend the base URL
+    return '$baseUrl/$photoPath';
+  }
 }

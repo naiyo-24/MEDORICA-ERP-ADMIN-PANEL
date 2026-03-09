@@ -29,6 +29,8 @@ class MRFormData {
     this.phoneAllowances,
     this.childrenAllowances,
     this.esic,
+    this.specialAllowances,
+    this.medicalAllowances,
     this.totalMonthlyCompensation,
     this.photoBytes,
     this.photoFileName,
@@ -54,6 +56,8 @@ class MRFormData {
   final double? phoneAllowances;
   final double? childrenAllowances;
   final double? esic;
+  final double? specialAllowances;
+  final double? medicalAllowances;
   final double? totalMonthlyCompensation;
   final Uint8List? photoBytes;
   final String? photoFileName;
@@ -92,6 +96,8 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
   late final TextEditingController _phoneAllowancesController;
   late final TextEditingController _childrenAllowancesController;
   late final TextEditingController _esicController;
+  late final TextEditingController _specialAllowancesController;
+  late final TextEditingController _medicalAllowancesController;
   late final TextEditingController _totalCompensationController;
 
   Uint8List? _photoBytes;
@@ -162,6 +168,12 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
     _esicController = TextEditingController(
       text: mr?.esic?.toStringAsFixed(0) ?? '',
     );
+    _specialAllowancesController = TextEditingController(
+      text: mr?.specialAllowances?.toStringAsFixed(0) ?? '',
+    );
+    _medicalAllowancesController = TextEditingController(
+      text: mr?.medicalAllowances?.toStringAsFixed(0) ?? '',
+    );
     _totalCompensationController = TextEditingController(
       text: mr?.totalMonthlyCompensation?.toStringAsFixed(0) ?? '',
     );
@@ -191,6 +203,8 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
     _phoneAllowancesController.dispose();
     _childrenAllowancesController.dispose();
     _esicController.dispose();
+    _specialAllowancesController.dispose();
+    _medicalAllowancesController.dispose();
     _totalCompensationController.dispose();
     super.dispose();
   }
@@ -260,6 +274,12 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                 : null,
         esic: _esicController.text.trim().isNotEmpty
             ? double.tryParse(_esicController.text.trim())
+            : null,
+        specialAllowances: _specialAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_specialAllowancesController.text.trim())
+            : null,
+        medicalAllowances: _medicalAllowancesController.text.trim().isNotEmpty
+            ? double.tryParse(_medicalAllowancesController.text.trim())
             : null,
         totalMonthlyCompensation:
             _totalCompensationController.text.trim().isNotEmpty
@@ -609,6 +629,22 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
                           controller: _esicController,
                           label: 'ESIC (₹)',
                           icon: Iconsax.health,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _specialAllowancesController,
+                          label: 'Special Allowances (₹)',
+                          icon: Iconsax.dollar_circle,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                        ),
+                        _buildTextField(
+                          controller: _medicalAllowancesController,
+                          label: 'Medical Allowances (₹)',
+                          icon: Iconsax.hospital,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,
                           ),
