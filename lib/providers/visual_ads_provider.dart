@@ -9,3 +9,11 @@ final visualAdsNotifierProvider =
 final visualAdsListProvider = Provider<List<VisualAd>>((ref) {
   return ref.watch(visualAdsNotifierProvider).ads;
 });
+
+final visualAdsLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(visualAdsNotifierProvider).isLoading;
+});
+
+final visualAdsErrorProvider = Provider<String?>((ref) {
+  return ref.watch(visualAdsNotifierProvider).error;
+});

@@ -73,6 +73,20 @@ class ApiUrl {
   static String distributorDeleteById(String distId) =>
       '$distributorBase/delete-by/$distId';
 
+  // Visual Ads Management
+  static const String visualAdsBase = '/visual-ads';
+  static const String visualAdsPost = '$visualAdsBase/post';
+  static const String visualAdsGetAll = '$visualAdsBase/get-all';
+
+  static String visualAdsGetById(String adId) =>
+      '$visualAdsBase/get-by/$adId';
+
+  static String visualAdsUpdateById(String adId) =>
+      '$visualAdsBase/update-by/$adId';
+
+  static String visualAdsDeleteById(String adId) =>
+      '$visualAdsBase/delete-by/$adId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

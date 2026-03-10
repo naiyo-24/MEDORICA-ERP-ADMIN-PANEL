@@ -42,6 +42,15 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
     );
   }
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.error,
+      ),
+    );
+  }
+
   Future<void> _showCreateOrEditDialog({VisualAd? ad}) async {
     await showDialog<void>(
       context: context,
@@ -55,29 +64,40 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
             onSubmit: (data) async {
               final notifier = ref.read(visualAdsNotifierProvider.notifier);
 
-              if (ad == null) {
-                await notifier.createAd(
-                  name: data.name,
-                  imageBytes: data.imageBytes,
-                  imageFileName: data.imageFileName,
-                );
-              } else {
-                await notifier.updateAd(
-                  id: ad.id,
-                  name: data.name,
-                  imageBytes: data.imageBytes,
-                  imageFileName: data.imageFileName,
-                );
-              }
+              try {
+                if (ad == null) {
+                  await notifier.createAd(
+                    name: data.name,
+                    imageBytes: data.imageBytes!,
+                    imageFileName: data.imageFileName!,
+                  );
+                } else {
+                  await notifier.updateAd(
+                    adId: ad.adId,
+                    name: data.name,
+                    imageBytes: data.imageBytes,
+                    imageFileName: data.imageFileName,
+                  );
+                }
 
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      ad == null ? 'Visual ad created.' : 'Visual ad updated.',
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        ad == null
+                            ? 'Visual ad created successfully.'
+                            : 'Visual ad updated successfully.',
+                      ),
+                      backgroundColor: AppColors.primary,
                     ),
-                  ),
-                );
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  _showErrorSnackBar(
+                    'Error: ${e.toString().replaceFirst('Exception: ', '')}',
+                  );
+                }
               }
             },
           ),
@@ -87,15 +107,49 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
   }
 
   void _deleteAd(VisualAd ad) {
-    ref.read(visualAdsNotifierProvider.notifier).deleteAd(ad.id);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Visual ad deleted.')));
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Visual Ad'),
+        content: Text('Are you sure you want to delete "${ad.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final notifier = ref.read(visualAdsNotifierProvider.notifier);
+
+              try {
+                await notifier.deleteAd(ad.adId);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Visual ad deleted successfully.'),
+                      backgroundColor: AppColors.primary,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  _showErrorSnackBar(
+                    'Error: ${e.toString().replaceFirst('Exception: ', '')}',
+                  );
+                }
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final ads = ref.watch(visualAdsListProvider);
+    final state = ref.watch(visualAdsNotifierProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -140,7 +194,9 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
                       ],
                     ),
                     child: ElevatedButton.icon(
-                      onPressed: () => _showCreateOrEditDialog(),
+                      onPressed: state.isSaving
+                          ? null
+                          : () => _showCreateOrEditDialog(),
                       icon: SizedBox(
                         width: 20,
                         height: 20,
@@ -170,11 +226,40 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                VisualAdsCards(
-                  ads: ads,
-                  onEdit: (ad) => _showCreateOrEditDialog(ad: ad),
-                  onDelete: _deleteAd,
-                ),
+                if (state.error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Iconsax.warning_2, color: AppColors.error),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: Text(
+                            state.error!.replaceFirst('Exception: ', ''),
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: AppColors.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
+                if (state.isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                else
+                  VisualAdsCards(
+                    ads: state.ads,
+                    onEdit: (ad) => _showCreateOrEditDialog(ad: ad),
+                    onDelete: _deleteAd,
+                  ),
               ],
             ),
           ),

@@ -85,18 +85,31 @@ class _CreateEditVisualAdsCardState extends State<CreateEditVisualAdsCard> {
       return;
     }
 
+    // For creating new ads, image is required
+    if (!_isEditing && _imageBytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select an image for the ad.')),
+      );
+      return;
+    }
+
     setState(() => _submitting = true);
 
-    await widget.onSubmit(
-      VisualAdFormData(
-        name: _nameController.text.trim(),
-        imageBytes: _imageBytes,
-        imageFileName: _imageName,
-      ),
-    );
+    try {
+      await widget.onSubmit(
+        VisualAdFormData(
+          name: _nameController.text.trim(),
+          imageBytes: _imageBytes,
+          imageFileName: _imageName,
+        ),
+      );
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      setState(() => _submitting = false);
+      // Error is handled in the caller
     }
   }
 
@@ -156,7 +169,7 @@ class _CreateEditVisualAdsCardState extends State<CreateEditVisualAdsCard> {
               const SizedBox(height: AppSpacing.md),
               InkWell(
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                onTap: _pickImage,
+                onTap: _submitting ? null : _pickImage,
                 child: Container(
                   width: double.infinity,
                   height: 170,

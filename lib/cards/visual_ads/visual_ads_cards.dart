@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../models/visual_ads.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 
 class VisualAdsCards extends StatelessWidget {
@@ -107,26 +108,63 @@ class _VisualAdCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.md),
                     child: Image.memory(ad.imageBytes!, fit: BoxFit.cover),
                   )
-                : const Center(
-                    child: Icon(
-                      Iconsax.gallery,
-                      size: 36,
-                      color: AppColors.quaternary,
-                    ),
-                  ),
+                : ad.imageUrl != null && ad.imageUrl!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        child: Image.network(
+                          ApiUrl.getProfilePhotoUrl(ad.imageUrl),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Iconsax.gallery,
+                                size: 36,
+                                color: AppColors.quaternary,
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        ),
+                      )
+                    : const Center(
+                        child: Icon(
+                          Iconsax.gallery,
+                          size: 36,
+                          color: AppColors.quaternary,
+                        ),
+                      ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Expanded(
-                child: Text(
-                  ad.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontSize: 20,
-                    color: AppColors.primary,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      ad.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontSize: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'ID: ${ad.adId}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.quaternary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               IconButton(
