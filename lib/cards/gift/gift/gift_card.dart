@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../../models/gift.dart';
 import '../../../theme/app_theme.dart';
 
-class GiftCard extends StatelessWidget {
+class GiftCard extends StatefulWidget {
   const GiftCard({
     super.key,
     required this.gift,
@@ -16,86 +16,184 @@ class GiftCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
+  @override
+  State<GiftCard> createState() => _GiftCardState();
+}
+
+class _GiftCardState extends State<GiftCard> {
+  bool _isHovered = false;
+
   String _formatPrice(double price) => 'INR ${price.toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  gift.itemName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(
+            color: _isHovered ? AppColors.primary : AppColors.border,
+            width: _isHovered ? 1.5 : 1,
+          ),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withAlpha(15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(8),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  )
+                ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with title and action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withAlpha(26),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                        ),
+                        child: const Icon(
+                          Iconsax.gift,
+                          size: 20,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          widget.gift.itemName,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                AnimatedOpacity(
+                  opacity: _isHovered ? 1 : 0.7,
+                  duration: const Duration(milliseconds: 200),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: Tooltip(
+                          message: 'Edit gift',
+                          child: IconButton(
+                            onPressed: widget.onEdit,
+                            icon: const Icon(
+                              Iconsax.edit_2,
+                              size: 18,
+                              color: AppColors.primary,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                            hoverColor:
+                                AppColors.primary.withAlpha(13),
+                          ),
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: Tooltip(
+                          message: 'Delete gift',
+                          child: IconButton(
+                            onPressed: widget.onDelete,
+                            icon: const Icon(
+                              Iconsax.trash,
+                              size: 18,
+                              color: AppColors.error,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(
+                              minWidth: 36,
+                              minHeight: 36,
+                            ),
+                            hoverColor: AppColors.error.withAlpha(13),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            // Description
+            if (widget.gift.description.isNotEmpty) ...[
+              Text(
+                widget.gift.description,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.quaternary,
+                  height: 1.4,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              IconButton(
-                tooltip: 'Edit gift',
-                onPressed: onEdit,
-                icon: const Icon(
-                  Iconsax.edit,
-                  size: 18,
+              const SizedBox(height: AppSpacing.md),
+            ],
+            // Tags section
+            Wrap(
+              spacing: AppSpacing.xs,
+              runSpacing: AppSpacing.xs,
+              children: [
+                
+                _TagWithIcon(
+                  icon: Iconsax.box_2,
+                  label: 'Inventory: ${widget.gift.quantityInInventory}',
                   color: AppColors.primary,
                 ),
-              ),
-              IconButton(
-                tooltip: 'Delete gift',
-                onPressed: onDelete,
-                icon: const Icon(
-                  Iconsax.trash,
-                  size: 18,
-                  color: AppColors.error,
+                _TagWithIcon(
+                  icon: Iconsax.money,
+                  label: _formatPrice(widget.gift.price),
+                  color: Colors.green,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          if (gift.description.isNotEmpty)
-            Text(
-              gift.description,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.quaternary,
-              ),
+              ],
             ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              
-              const SizedBox(width: AppSpacing.xs),
-              _Tag(
-                label: 'Inventory: ${gift.quantityInInventory}',
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              _Tag(
-                label: 'Price: ${_formatPrice(gift.price)}',
-                color: Colors.green,
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _Tag extends StatelessWidget {
-  const _Tag({required this.label, required this.color});
+class _TagWithIcon extends StatelessWidget {
+  const _TagWithIcon({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
 
+  final IconData icon;
   final String label;
   final Color color;
 
@@ -110,13 +208,29 @@ class _Tag extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w600,
+        border: Border.all(
+          color: color.withAlpha(51),
+          width: 0.5,
         ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
