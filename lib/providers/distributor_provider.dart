@@ -16,7 +16,9 @@ final filteredDistributorsProvider = Provider<List<Distributor>>((ref) {
       .where((item) {
         final matchesState = state.selectedState == 'All States'
             ? true
-            : item.state == state.selectedState;
+            : (item.distLocation?.toLowerCase().contains(
+                    state.selectedState.toLowerCase()) ??
+                false);
 
         if (!matchesState) {
           return false;
@@ -26,17 +28,36 @@ final filteredDistributorsProvider = Provider<List<Distributor>>((ref) {
           return true;
         }
 
-        return item.name.toLowerCase().contains(query) ||
-            item.city.toLowerCase().contains(query) ||
-            item.state.toLowerCase().contains(query);
+        return item.distName.toLowerCase().contains(query) ||
+            (item.distLocation?.toLowerCase().contains(query) ?? false);
       })
       .toList(growable: false);
 });
 
 final distributorStatesProvider = Provider<List<String>>((ref) {
-  final distributors = ref.watch(distributorNotifierProvider).distributors;
-  final states = distributors.map((item) => item.state).toSet().toList()
-    ..sort();
+  final distributors =
+      ref.watch(distributorNotifierProvider).distributors;
+  final states = <String>{};
 
-  return ['All States', ...states];
+  for (final distributor in distributors) {
+    if (distributor.distLocation != null) {
+      states.add(distributor.distLocation!);
+    }
+  }
+
+  final stateList = states.toList()..sort();
+  return ['All States', ...stateList];
+});
+
+final distributorIsLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(distributorNotifierProvider).isLoading;
+});
+
+final distributorErrorProvider = Provider<String?>((ref) {
+  return ref.watch(distributorNotifierProvider).error;
+});
+
+final distributorRefreshProvider = FutureProvider<void>((ref) async {
+  final notifier = ref.read(distributorNotifierProvider.notifier);
+  await notifier.refreshDistributors();
 });

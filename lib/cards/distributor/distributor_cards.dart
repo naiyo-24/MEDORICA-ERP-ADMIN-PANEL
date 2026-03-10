@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../models/distributor.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 
 class DistributorCards extends StatelessWidget {
@@ -77,6 +78,54 @@ class _DistributorCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
+  Widget _buildDistributorPhoto(Distributor distributor) {
+    // Try to use API photo first, then fall back to in-memory bytes
+    if (distributor.distPhoto != null && distributor.distPhoto!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Image.network(
+          ApiUrl.getProfilePhotoUrl(distributor.distPhoto!),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(
+              Iconsax.profile_circle,
+              size: 30,
+              color: AppColors.quaternary,
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 2,
+              ),
+            );
+          },
+        ),
+      );
+    } else if (distributor.imageBytes != null) {
+      // Fall back to in-memory bytes if available (for newly added distributors)
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Image.memory(
+          distributor.imageBytes!,
+          fit: BoxFit.cover,
+        ),
+      );
+    } else {
+      // Default placeholder
+      return const Icon(
+        Iconsax.profile_circle,
+        size: 30,
+        color: AppColors.quaternary,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -111,19 +160,7 @@ class _DistributorCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppRadius.md),
                   border: Border.all(color: AppColors.border),
                 ),
-                child: distributor.imageBytes != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                        child: Image.memory(
-                          distributor.imageBytes!,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : const Icon(
-                        Iconsax.profile_circle,
-                        size: 30,
-                        color: AppColors.quaternary,
-                      ),
+                child: _buildDistributorPhoto(distributor),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
@@ -131,7 +168,7 @@ class _DistributorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      distributor.name,
+                      distributor.distName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.headlineMedium?.copyWith(

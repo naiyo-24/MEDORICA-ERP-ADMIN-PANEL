@@ -3,90 +3,56 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/distributor.dart';
+import '../services/distributor/distributor_services.dart';
 
 class DistributorState {
   const DistributorState({
     this.distributors = const [],
     this.searchQuery = '',
     this.selectedState = 'All States',
+    this.isLoading = false,
     this.isSaving = false,
+    this.error,
+    this.hasLoadedOnce = false,
   });
 
   final List<Distributor> distributors;
   final String searchQuery;
   final String selectedState;
+  final bool isLoading;
   final bool isSaving;
+  final String? error;
+  final bool hasLoadedOnce;
 
   DistributorState copyWith({
     List<Distributor>? distributors,
     String? searchQuery,
     String? selectedState,
+    bool? isLoading,
     bool? isSaving,
+    String? error,
+    bool? hasLoadedOnce,
   }) {
     return DistributorState(
       distributors: distributors ?? this.distributors,
       searchQuery: searchQuery ?? this.searchQuery,
       selectedState: selectedState ?? this.selectedState,
+      isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      error: error,
+      hasLoadedOnce: hasLoadedOnce ?? this.hasLoadedOnce,
     );
   }
 }
 
 class DistributorNotifier extends Notifier<DistributorState> {
+  late final DistributorService _service;
+
   @override
   DistributorState build() {
-    return DistributorState(
-      distributors: [
-        Distributor(
-          id: 'dist_1',
-          name: 'Astra Medisupply',
-          city: 'Kolkata',
-          state: 'West Bengal',
-          address: '2nd Floor, Park Street Trade Tower',
-          email: 'contact@astramedisupply.com',
-          phone: '+919830001122',
-          expectedDeliveryTime: '24-36 hours',
-          minimumOrderValue: 5000,
-          createdAt: DateTime.now().subtract(const Duration(days: 150)),
-        ),
-        Distributor(
-          id: 'dist_2',
-          name: 'HealthBridge Distribution Co.',
-          city: 'Bhubaneswar',
-          state: 'Odisha',
-          address: 'Unit 6, Janpath Commercial Complex',
-          email: 'ops@healthbridge.in',
-          phone: '+919876543210',
-          expectedDeliveryTime: '48 hours',
-          minimumOrderValue: 7000,
-          createdAt: DateTime.now().subtract(const Duration(days: 96)),
-        ),
-        Distributor(
-          id: 'dist_3',
-          name: 'NorthStar Pharma Logistics',
-          city: 'Guwahati',
-          state: 'Assam',
-          address: 'GS Road, Ambari Business Hub',
-          email: 'info@northstarpharma.in',
-          phone: '+919954441100',
-          expectedDeliveryTime: '36-48 hours',
-          minimumOrderValue: 6500,
-          createdAt: DateTime.now().subtract(const Duration(days: 68)),
-        ),
-        Distributor(
-          id: 'dist_4',
-          name: 'Sanjeevani Medline',
-          city: 'Patna',
-          state: 'Bihar',
-          address: 'Boring Road, Medico Trade Plaza',
-          email: 'hello@sanjeevanimedline.in',
-          phone: '+919888117700',
-          expectedDeliveryTime: '24 hours',
-          minimumOrderValue: 4500,
-          createdAt: DateTime.now().subtract(const Duration(days: 31)),
-        ),
-      ],
-    );
+    _service = DistributorService();
+    _loadDistributors();
+    return const DistributorState();
   }
 
   void setSearchQuery(String value) {
@@ -97,86 +63,176 @@ class DistributorNotifier extends Notifier<DistributorState> {
     state = state.copyWith(selectedState: value);
   }
 
+  Future<void> _loadDistributors() async {
+    if (state.hasLoadedOnce) return;
+
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final distributors = await _service.getAllDistributors();
+      state = state.copyWith(
+        isLoading: false,
+        distributors: distributors,
+        hasLoadedOnce: true,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load distributors: $e',
+        hasLoadedOnce: true,
+      );
+    }
+  }
+
+  Future<void> refreshDistributors() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final distributors = await _service.getAllDistributors();
+      state = state.copyWith(
+        isLoading: false,
+        distributors: distributors,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to refresh distributors: $e',
+      );
+    }
+  }
+
   Future<void> createDistributor({
-    required String name,
-    required String city,
-    required String stateName,
-    required String address,
-    required String email,
-    required String phone,
-    required String expectedDeliveryTime,
-    required double minimumOrderValue,
-    Uint8List? imageBytes,
-    String? imageFileName,
+    required String distName,
+    required String distPhoneNo,
+    required String distLocation,
+    required String distProducts,
+    required String paymentTerms,
+    String? distEmail,
+    String? distDescription,
+    double? distMinOrderValueRupees,
+    int? distExpectedDeliveryTimeDays,
+    String? bankName,
+    String? bankAcNo,
+    String? branchName,
+    String? ifscCode,
+    String? deliveryTerritories,
+    Uint8List? photoBytes,
+    String? photoFileName,
   }) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    final now = DateTime.now();
-    final distributor = Distributor(
-      id: 'dist_${now.microsecondsSinceEpoch}',
-      name: name,
-      city: city,
-      state: stateName,
-      address: address,
-      email: email,
-      phone: phone,
-      expectedDeliveryTime: expectedDeliveryTime,
-      minimumOrderValue: minimumOrderValue,
-      imageBytes: imageBytes,
-      imageFileName: imageFileName,
-      createdAt: now,
-    );
+    try {
+      final newDistributor = await _service.createDistributor(
+        distName: distName,
+        distPhoneNo: distPhoneNo,
+        distLocation: distLocation,
+        distProducts: distProducts,
+        paymentTerms: paymentTerms,
+        distEmail: distEmail,
+        distDescription: distDescription,
+        distMinOrderValueRupees: distMinOrderValueRupees,
+        distExpectedDeliveryTimeDays: distExpectedDeliveryTimeDays,
+        bankName: bankName,
+        bankAcNo: bankAcNo,
+        branchName: branchName,
+        ifscCode: ifscCode,
+        deliveryTerritories: deliveryTerritories,
+        photoBytes: photoBytes,
+        photoFileName: photoFileName,
+      );
 
-    state = state.copyWith(
-      isSaving: false,
-      distributors: [distributor, ...state.distributors],
-    );
+      state = state.copyWith(
+        isSaving: false,
+        distributors: [newDistributor, ...state.distributors],
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to create distributor: $e',
+      );
+      rethrow;
+    }
   }
 
   Future<void> updateDistributor({
-    required String id,
-    required String name,
-    required String city,
-    required String stateName,
-    required String address,
-    required String email,
-    required String phone,
-    required String expectedDeliveryTime,
-    required double minimumOrderValue,
-    Uint8List? imageBytes,
-    String? imageFileName,
+    required String distId,
+    required String distName,
+    required String distPhoneNo,
+    required String distLocation,
+    String? distEmail,
+    String? distDescription,
+    double? distMinOrderValueRupees,
+    String? distProducts,
+    int? distExpectedDeliveryTimeDays,
+    String? paymentTerms,
+    String? bankName,
+    String? bankAcNo,
+    String? branchName,
+    String? ifscCode,
+    String? deliveryTerritories,
+    Uint8List? photoBytes,
+    String? photoFileName,
   }) async {
-    state = state.copyWith(isSaving: true);
+    state = state.copyWith(isSaving: true, error: null);
 
-    final updated = state.distributors
-        .map((item) {
-          if (item.id != id) {
-            return item;
-          }
+    try {
+      final updatedDistributor = await _service.updateDistributor(
+        distId: distId,
+        distName: distName,
+        distPhoneNo: distPhoneNo,
+        distLocation: distLocation,
+        distEmail: distEmail,
+        distDescription: distDescription,
+        distMinOrderValueRupees: distMinOrderValueRupees,
+        distProducts: distProducts,
+        distExpectedDeliveryTimeDays: distExpectedDeliveryTimeDays,
+        paymentTerms: paymentTerms,
+        bankName: bankName,
+        bankAcNo: bankAcNo,
+        branchName: branchName,
+        ifscCode: ifscCode,
+        deliveryTerritories: deliveryTerritories,
+        photoBytes: photoBytes,
+        photoFileName: photoFileName,
+      );
 
-          return item.copyWith(
-            name: name,
-            city: city,
-            state: stateName,
-            address: address,
-            email: email,
-            phone: phone,
-            expectedDeliveryTime: expectedDeliveryTime,
-            minimumOrderValue: minimumOrderValue,
-            imageBytes: imageBytes,
-            imageFileName: imageFileName,
-          );
-        })
-        .toList(growable: false);
+      final updated = state.distributors
+          .map((item) {
+            if (item.distId != distId) {
+              return item;
+            }
+            return updatedDistributor;
+          })
+          .toList(growable: false);
 
-    state = state.copyWith(isSaving: false, distributors: updated);
+      state = state.copyWith(isSaving: false, distributors: updated);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to update distributor: $e',
+      );
+      rethrow;
+    }
   }
 
-  void deleteDistributor(String id) {
-    state = state.copyWith(
-      distributors: state.distributors
-          .where((item) => item.id != id)
-          .toList(growable: false),
-    );
+  Future<void> deleteDistributor(String distId) async {
+    state = state.copyWith(isSaving: true, error: null);
+
+    try {
+      await _service.deleteDistributor(distId);
+
+      state = state.copyWith(
+        isSaving: false,
+        distributors: state.distributors
+            .where((item) => item.distId != distId)
+            .toList(growable: false),
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to delete distributor: $e',
+      );
+      rethrow;
+    }
   }
 }

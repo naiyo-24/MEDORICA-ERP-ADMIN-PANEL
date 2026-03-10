@@ -9,28 +9,40 @@ import '../../theme/app_theme.dart';
 
 class DistributorFormData {
   const DistributorFormData({
-    required this.name,
-    required this.city,
-    required this.state,
-    required this.address,
-    required this.email,
-    required this.phone,
-    required this.expectedDeliveryTime,
-    required this.minimumOrderValue,
-    this.imageBytes,
-    this.imageFileName,
+    required this.distName,
+    required this.distPhoneNo,
+    required this.distLocation,
+    required this.distProducts,
+    required this.paymentTerms,
+    this.distEmail,
+    this.distDescription,
+    this.distMinOrderValueRupees,
+    this.distExpectedDeliveryTimeDays,
+    this.bankName,
+    this.bankAcNo,
+    this.branchName,
+    this.ifscCode,
+    this.deliveryTerritories,
+    this.photoBytes,
+    this.photoFileName,
   });
 
-  final String name;
-  final String city;
-  final String state;
-  final String address;
-  final String email;
-  final String phone;
-  final String expectedDeliveryTime;
-  final double minimumOrderValue;
-  final Uint8List? imageBytes;
-  final String? imageFileName;
+  final String distName;
+  final String distPhoneNo;
+  final String distLocation;
+  final String distProducts;
+  final String paymentTerms;
+  final String? distEmail;
+  final String? distDescription;
+  final double? distMinOrderValueRupees;
+  final int? distExpectedDeliveryTimeDays;
+  final String? bankName;
+  final String? bankAcNo;
+  final String? branchName;
+  final String? ifscCode;
+  final String? deliveryTerritories;
+  final Uint8List? photoBytes;
+  final String? photoFileName;
 }
 
 class AddEditDistributorCard extends StatefulWidget {
@@ -51,16 +63,22 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _nameController;
-  late final TextEditingController _cityController;
-  late final TextEditingController _stateController;
-  late final TextEditingController _addressController;
-  late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
-  late final TextEditingController _expectedDeliveryTimeController;
-  late final TextEditingController _minimumOrderValueController;
+  late final TextEditingController _locationController;
+  late final TextEditingController _productsController;
+  late final TextEditingController _paymentTermsController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _minOrderValueController;
+  late final TextEditingController _deliveryTimeController;
+  late final TextEditingController _bankNameController;
+  late final TextEditingController _bankAcNoController;
+  late final TextEditingController _branchNameController;
+  late final TextEditingController _ifscCodeController;
+  late final TextEditingController _deliveryTerritoriesController;
 
-  Uint8List? _imageBytes;
-  String? _imageFileName;
+  Uint8List? _photoBytes;
+  String? _photoFileName;
   bool _submitting = false;
 
   bool get _isEditing => widget.initialDistributor != null;
@@ -84,36 +102,69 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
   void initState() {
     super.initState();
     final distributor = widget.initialDistributor;
-    _nameController = TextEditingController(text: distributor?.name ?? '');
-    _cityController = TextEditingController(text: distributor?.city ?? '');
-    _stateController = TextEditingController(text: distributor?.state ?? '');
-    _addressController = TextEditingController(
-      text: distributor?.address ?? '',
-    );
-    _emailController = TextEditingController(text: distributor?.email ?? '');
-    _phoneController = TextEditingController(text: distributor?.phone ?? '');
-    _expectedDeliveryTimeController = TextEditingController(
-      text: distributor?.expectedDeliveryTime ?? '',
-    );
-    _minimumOrderValueController = TextEditingController(
-      text: distributor != null
-          ? distributor.minimumOrderValue.toStringAsFixed(0)
+    _nameController =
+        TextEditingController(text: distributor?.distName ?? '');
+    _phoneController =
+        TextEditingController(text: distributor?.distPhoneNo ?? '');
+    _locationController =
+        TextEditingController(text: distributor?.distLocation ?? '');
+    _productsController = TextEditingController(
+      text: distributor?.distProducts != null
+          ? (distributor!.distProducts is List
+              ? (distributor.distProducts as List).join(', ')
+              : distributor.distProducts.toString())
           : '',
     );
-    _imageBytes = distributor?.imageBytes;
-    _imageFileName = distributor?.imageFileName;
+    _paymentTermsController =
+        TextEditingController(text: distributor?.paymentTerms ?? '');
+    _emailController =
+        TextEditingController(text: distributor?.distEmail ?? '');
+    _descriptionController =
+        TextEditingController(text: distributor?.distDescription ?? '');
+    _minOrderValueController = TextEditingController(
+      text: distributor?.distMinOrderValueRupees != null
+          ? distributor!.distMinOrderValueRupees.toString()
+          : '',
+    );
+    _deliveryTimeController = TextEditingController(
+      text:
+          distributor?.distExpectedDeliveryTimeDays?.toString() ?? '',
+    );
+    _bankNameController =
+        TextEditingController(text: distributor?.bankName ?? '');
+    _bankAcNoController =
+        TextEditingController(text: distributor?.bankAcNo ?? '');
+    _branchNameController =
+        TextEditingController(text: distributor?.branchName ?? '');
+    _ifscCodeController =
+        TextEditingController(text: distributor?.ifscCode ?? '');
+    _deliveryTerritoriesController = TextEditingController(
+      text: distributor?.deliveryTerritories != null
+          ? (distributor!.deliveryTerritories is List
+              ? (distributor.deliveryTerritories as List).join(', ')
+              : distributor.deliveryTerritories.toString())
+          : '',
+    );
+    _photoBytes = distributor?.imageBytes;
+    _photoFileName = distributor?.imageFileName;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _cityController.dispose();
-    _stateController.dispose();
-    _addressController.dispose();
-    _emailController.dispose();
     _phoneController.dispose();
-    _expectedDeliveryTimeController.dispose();
-    _minimumOrderValueController.dispose();
+    _locationController.dispose();
+    _productsController.dispose();
+    _paymentTermsController.dispose();
+    _emailController.dispose();
+    _descriptionController.dispose();
+    _minOrderValueController.dispose();
+    _deliveryTimeController.dispose();
+    _bankNameController.dispose();
+    _bankAcNoController.dispose();
+    _branchNameController.dispose();
+    _ifscCodeController.dispose();
+    _deliveryTerritoriesController.dispose();
     super.dispose();
   }
 
@@ -134,8 +185,8 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
     }
 
     setState(() {
-      _imageBytes = file.bytes;
-      _imageFileName = file.name;
+      _photoBytes = file.bytes;
+      _photoFileName = file.name;
     });
   }
 
@@ -146,24 +197,53 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
 
     setState(() => _submitting = true);
 
-    await widget.onSubmit(
-      DistributorFormData(
-        name: _nameController.text.trim(),
-        city: _cityController.text.trim(),
-        state: _stateController.text.trim(),
-        address: _addressController.text.trim(),
-        email: _emailController.text.trim(),
-        phone: _phoneController.text.trim(),
-        expectedDeliveryTime: _expectedDeliveryTimeController.text.trim(),
-        minimumOrderValue:
-            double.tryParse(_minimumOrderValueController.text.trim()) ?? 0,
-        imageBytes: _imageBytes,
-        imageFileName: _imageFileName,
-      ),
-    );
+    try {
+      await widget.onSubmit(
+        DistributorFormData(
+          distName: _nameController.text.trim(),
+          distPhoneNo: _phoneController.text.trim(),
+          distLocation: _locationController.text.trim(),
+          distProducts: _productsController.text.trim(),
+          paymentTerms: _paymentTermsController.text.trim(),
+          distEmail: _emailController.text.trim().isNotEmpty
+              ? _emailController.text.trim()
+              : null,
+          distDescription:
+              _descriptionController.text.trim().isNotEmpty
+                  ? _descriptionController.text.trim()
+                  : null,
+          distMinOrderValueRupees:
+              double.tryParse(_minOrderValueController.text.trim()),
+          distExpectedDeliveryTimeDays:
+              int.tryParse(_deliveryTimeController.text.trim()),
+          bankName: _bankNameController.text.trim().isNotEmpty
+              ? _bankNameController.text.trim()
+              : null,
+          bankAcNo: _bankAcNoController.text.trim().isNotEmpty
+              ? _bankAcNoController.text.trim()
+              : null,
+          branchName: _branchNameController.text.trim().isNotEmpty
+              ? _branchNameController.text.trim()
+              : null,
+          ifscCode: _ifscCodeController.text.trim().isNotEmpty
+              ? _ifscCodeController.text.trim()
+              : null,
+          deliveryTerritories:
+              _deliveryTerritoriesController.text.trim().isNotEmpty
+                  ? _deliveryTerritoriesController.text.trim()
+                  : null,
+          photoBytes: _photoBytes,
+          photoFileName: _photoFileName,
+        ),
+      );
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _submitting = false);
+      }
     }
   }
 
@@ -176,7 +256,7 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
       color: Colors.transparent,
       child: Container(
         width: 700,
-        constraints: const BoxConstraints(maxHeight: 760),
+        constraints: const BoxConstraints(maxHeight: 900),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -319,13 +399,13 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                             child: Stack(
                               children: [
                                 Positioned.fill(
-                                  child: _imageBytes != null
+                                  child: _photoBytes != null
                                       ? ClipRRect(
                                           borderRadius: BorderRadius.circular(
                                             AppRadius.lg,
                                           ),
                                           child: Image.memory(
-                                            _imageBytes!,
+                                            _photoBytes!,
                                             fit: BoxFit.cover,
                                           ),
                                         )
@@ -369,7 +449,7 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                                         ),
                                         const SizedBox(width: AppSpacing.xs),
                                         Text(
-                                          _imageBytes == null
+                                          _photoBytes == null
                                               ? 'Upload'
                                               : 'Change',
                                           style: theme.textTheme.bodySmall
@@ -386,10 +466,10 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                             ),
                           ),
                         ),
-                        if (_imageFileName != null) ...[
+                        if (_photoFileName != null) ...[
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            _imageFileName!,
+                            _photoFileName!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall,
@@ -419,14 +499,16 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: _cityController,
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
                                 decoration: const InputDecoration(
-                                  labelText: 'City',
-                                  prefixIcon: Icon(Iconsax.building),
+                                  labelText: 'Phone',
+                                  prefixIcon: Icon(Iconsax.call),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Enter city.';
+                                  if (value == null ||
+                                      value.trim().length < 10) {
+                                    return 'Enter valid phone.';
                                   }
                                   return null;
                                 },
@@ -435,14 +517,14 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: TextFormField(
-                                controller: _stateController,
+                                controller: _locationController,
                                 decoration: const InputDecoration(
-                                  labelText: 'State',
+                                  labelText: 'Location',
                                   prefixIcon: Icon(Iconsax.map),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Enter state.';
+                                    return 'Enter location.';
                                   }
                                   return null;
                                 },
@@ -451,20 +533,67 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                           ],
                         ),
                         const SizedBox(height: AppSpacing.sm),
-                        TextFormField(
-                          controller: _addressController,
-                          minLines: 2,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: 'Address',
-                            prefixIcon: Icon(Iconsax.location),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Please enter address.';
-                            }
-                            return null;
-                          },
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _productsController,
+                                minLines: 2,
+                                maxLines: 3,
+                                decoration: const InputDecoration(
+                                  labelText: 'Products (comma-separated)',
+                                  prefixIcon: Icon(Iconsax.box_1),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter products.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    controller: _paymentTermsController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Payment Terms',
+                                      prefixIcon: Icon(Iconsax.money),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.trim().isEmpty) {
+                                        return 'Enter payment terms.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: AppSpacing.sm),
+                                  TextFormField(
+                                    controller: _minOrderValueController,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                    decoration: const InputDecoration(
+                                      labelText: 'Min order value (₹)',
+                                      prefixIcon: Icon(Iconsax.money_3),
+                                    ),
+                                  ),
+                                  const SizedBox(height: AppSpacing.sm),
+                                  TextFormField(
+                                    controller: _deliveryTimeController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Delivery time (days)',
+                                      prefixIcon: Icon(Iconsax.timer_1),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         const _SectionLabel(
@@ -482,31 +611,45 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                                   labelText: 'Email',
                                   prefixIcon: Icon(Iconsax.sms),
                                 ),
-                                validator: (value) {
-                                  final text = value?.trim() ?? '';
-                                  if (text.isEmpty || !text.contains('@')) {
-                                    return 'Enter a valid email.';
-                                  }
-                                  return null;
-                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        TextFormField(
+                          controller: _descriptionController,
+                          minLines: 2,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText: 'Description',
+                            prefixIcon: Icon(Iconsax.note),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        const _SectionLabel(
+                          icon: Iconsax.building_4,
+                          label: 'Bank Information',
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _bankNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Bank Name',
+                                  prefixIcon: Icon(Iconsax.building),
+                                ),
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: TextFormField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
+                                controller: _bankAcNoController,
                                 decoration: const InputDecoration(
-                                  labelText: 'Phone',
-                                  prefixIcon: Icon(Iconsax.call),
+                                  labelText: 'Account Number',
+                                  prefixIcon: Icon(Iconsax.wallet_3),
                                 ),
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.trim().length < 10) {
-                                    return 'Enter valid phone.';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ],
@@ -516,45 +659,35 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                controller: _expectedDeliveryTimeController,
+                                controller: _branchNameController,
                                 decoration: const InputDecoration(
-                                  labelText: 'Expected delivery time',
-                                  prefixIcon: Icon(Iconsax.timer_1),
-                                  hintText: 'e.g. 24-48 hours',
+                                  labelText: 'Branch Name',
+                                  prefixIcon: Icon(Iconsax.location),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Enter delivery time.';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: TextFormField(
-                                controller: _minimumOrderValueController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
+                                controller: _ifscCodeController,
                                 decoration: const InputDecoration(
-                                  labelText: 'Minimum order value',
-                                  prefixIcon: Icon(Iconsax.money_3),
-                                  hintText: 'e.g. 5000',
+                                  labelText: 'IFSC Code',
+                                  prefixIcon: Icon(Iconsax.security_card),
                                 ),
-                                validator: (value) {
-                                  final parsed = double.tryParse(
-                                    value?.trim() ?? '',
-                                  );
-                                  if (parsed == null || parsed <= 0) {
-                                    return 'Enter valid amount.';
-                                  }
-                                  return null;
-                                },
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        TextFormField(
+                          controller: _deliveryTerritoriesController,
+                          minLines: 2,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText:
+                                'Delivery Territories (comma-separated)',
+                            prefixIcon: Icon(Iconsax.map),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         Row(

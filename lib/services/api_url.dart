@@ -2,6 +2,7 @@ class ApiUrl {
   // Update this base URL to your deployed backend host.
   static const String baseUrl = 'http://0.0.0.0:8000';
 
+  // About Us
   static const String aboutUsBase = '/about-us';
   static const String aboutUsPost = '$aboutUsBase/post';
   static const String aboutUsGetAll = '$aboutUsBase/get-all';
@@ -11,6 +12,7 @@ class ApiUrl {
 
   static String aboutUsDeleteById(int aboutUsId) =>
       '$aboutUsBase/delete-by/$aboutUsId';
+
 
   // MR Onboarding
   static const String mrOnboardingBase = '/onboarding/mr';
@@ -27,6 +29,7 @@ class ApiUrl {
   static String mrOnboardingDeleteById(String mrId) =>
       '$mrOnboardingBase/delete-by/$mrId';
 
+
   // ASM Onboarding
   static const String asmOnboardingBase = '/onboarding/asm';
   static const String asmOnboardingPost = '$asmOnboardingBase/post';
@@ -42,6 +45,7 @@ class ApiUrl {
   static String asmOnboardingDeleteById(String asmId) =>
       '$asmOnboardingBase/delete-by/$asmId';
 
+
   // MR Doctor Network
   static const String mrDoctorNetworkBase = '/doctor-network/mr';
   static const String mrDoctorNetworkGetAll = '$mrDoctorNetworkBase/get-all';
@@ -54,6 +58,20 @@ class ApiUrl {
 
   static String mrDoctorNetworkGetByMrAndDoctor(String mrId, String doctorId) =>
       '$mrDoctorNetworkBase/get-by-mr/$mrId/doctor/$doctorId';
+
+  // Distributor Management
+  static const String distributorBase = '/distributor';
+  static const String distributorPost = '$distributorBase/post';
+  static const String distributorGetAll = '$distributorBase/get-all';
+
+  static String distributorGetById(String distId) =>
+      '$distributorBase/get-by/$distId';
+
+  static String distributorUpdateById(String distId) =>
+      '$distributorBase/update-by/$distId';
+
+  static String distributorDeleteById(String distId) =>
+      '$distributorBase/delete-by/$distId';
 
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {

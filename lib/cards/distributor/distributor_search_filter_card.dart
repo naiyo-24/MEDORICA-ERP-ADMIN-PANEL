@@ -7,18 +7,12 @@ class DistributorSearchFilterCard extends StatelessWidget {
   const DistributorSearchFilterCard({
     super.key,
     required this.searchController,
-    required this.availableStates,
-    required this.selectedState,
     required this.onSearchChanged,
-    required this.onStateChanged,
     required this.onOnboardPressed,
   });
 
   final TextEditingController searchController;
-  final List<String> availableStates;
-  final String selectedState;
   final ValueChanged<String> onSearchChanged;
-  final ValueChanged<String> onStateChanged;
   final VoidCallback onOnboardPressed;
 
   @override
@@ -45,7 +39,6 @@ class DistributorSearchFilterCard extends StatelessWidget {
           ? Row(
               children: [
                 Expanded(
-                  flex: 5,
                   child: TextField(
                     onChanged: onSearchChanged,
                     controller: searchController,
@@ -53,30 +46,6 @@ class DistributorSearchFilterCard extends StatelessWidget {
                       labelText: 'Search distributor or city',
                       prefixIcon: Icon(Iconsax.search_normal),
                     ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  flex: 3,
-                  child: DropdownButtonFormField<String>(
-                    initialValue: availableStates.contains(selectedState)
-                        ? selectedState
-                        : availableStates.first,
-                    decoration: const InputDecoration(
-                      labelText: 'Filter by state',
-                      prefixIcon: Icon(Iconsax.location),
-                    ),
-                    items: availableStates
-                        .map(
-                          (item) =>
-                              DropdownMenuItem(value: item, child: Text(item)),
-                        )
-                        .toList(growable: false),
-                    onChanged: (value) {
-                      if (value != null) {
-                        onStateChanged(value);
-                      }
-                    },
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
@@ -104,27 +73,6 @@ class DistributorSearchFilterCard extends StatelessWidget {
                     labelText: 'Search distributor or city',
                     prefixIcon: Icon(Iconsax.search_normal),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                DropdownButtonFormField<String>(
-                  initialValue: availableStates.contains(selectedState)
-                      ? selectedState
-                      : availableStates.first,
-                  decoration: const InputDecoration(
-                    labelText: 'Filter by state',
-                    prefixIcon: Icon(Iconsax.location),
-                  ),
-                  items: availableStates
-                      .map(
-                        (item) =>
-                            DropdownMenuItem(value: item, child: Text(item)),
-                      )
-                      .toList(growable: false),
-                  onChanged: (value) {
-                    if (value != null) {
-                      onStateChanged(value);
-                    }
-                  },
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 SizedBox(

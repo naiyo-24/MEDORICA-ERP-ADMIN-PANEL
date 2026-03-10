@@ -104,7 +104,7 @@ class MROrderNotifier extends Notifier<MROrderState> {
         ? shops.first.shopName
         : 'WellCare Pharmacy Central';
     final fallbackDistributor = distributors.isNotEmpty
-        ? distributors.first.name
+        ? distributors.first.distName
         : 'Astra Medisupply';
 
     return [
@@ -122,7 +122,7 @@ class MROrderNotifier extends Notifier<MROrderState> {
               : fallbackDoctor,
           chemistShopName: shops.length > i ? shops[i].shopName : fallbackShop,
           distributorName: distributors.isNotEmpty
-              ? distributors[i % distributors.length].name
+              ? distributors[i % distributors.length].distName
               : fallbackDistributor,
           status: MROrderStatus.values[i % MROrderStatus.values.length],
         ),

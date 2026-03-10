@@ -35,10 +35,33 @@ class DistributorDetailCard extends StatelessWidget {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
+  String _formatProducts(dynamic products) {
+    if (products == null) return 'N/A';
+    if (products is List) {
+      return products.join(', ');
+    }
+    return products.toString();
+  }
+
+  String _formatTerritories(dynamic territories) {
+    if (territories == null) return 'N/A';
+    if (territories is List) {
+      return territories.join(', ');
+    }
+    return territories.toString();
+  }
+
+  bool _hasBankInfo(Distributor distributor) {
+    return distributor.bankName != null ||
+        distributor.bankAcNo != null ||
+        distributor.branchName != null ||
+        distributor.ifscCode != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final initials = _initialsFromName(distributor.name);
+    final initials = _initialsFromName(distributor.distName);
 
     return Material(
       color: Colors.transparent,
@@ -141,7 +164,7 @@ class DistributorDetailCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  distributor.name,
+                                  distributor.distName,
                                   style: theme.textTheme.headlineMedium
                                       ?.copyWith(
                                         color: AppColors.white,
@@ -201,13 +224,15 @@ class DistributorDetailCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Key Metrics
                       Row(
                         children: [
                           Expanded(
                             child: _MetricCard(
                               icon: Iconsax.timer_1,
                               label: 'Expected Delivery',
-                              value: distributor.expectedDeliveryTime,
+                              value:
+                                  '${distributor.distExpectedDeliveryTimeDays ?? 'N/A'} days',
                             ),
                           ),
                           const SizedBox(width: AppSpacing.sm),
@@ -216,14 +241,15 @@ class DistributorDetailCard extends StatelessWidget {
                               icon: Iconsax.money_3,
                               label: 'Minimum Order',
                               value:
-                                  'INR ${distributor.minimumOrderValue.toStringAsFixed(0)}',
+                                  'INR ${(distributor.distMinOrderValueRupees ?? 0).toStringAsFixed(0)}',
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.lg),
+                      // Contact Information
                       Text(
-                        'Distributor Information',
+                        'Contact Information',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: AppColors.quaternary,
                           fontWeight: FontWeight.w700,
@@ -243,26 +269,160 @@ class DistributorDetailCard extends StatelessWidget {
                           children: [
                             _PremiumInfoTile(
                               icon: Iconsax.location,
-                              title: 'Address',
-                              value:
-                                  '${distributor.address}, ${distributor.locationLabel}',
+                              title: 'Location',
+                              value: distributor.distLocation ?? 'N/A',
                             ),
                             const SizedBox(height: AppSpacing.sm),
                             _PremiumInfoTile(
                               icon: Iconsax.sms,
                               title: 'Email',
-                              value: distributor.email,
+                              value: distributor.distEmail ?? 'N/A',
                             ),
                             const SizedBox(height: AppSpacing.sm),
                             _PremiumInfoTile(
                               icon: Iconsax.call,
                               title: 'Phone',
-                              value: distributor.phone,
+                              value: distributor.distPhoneNo,
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: AppSpacing.lg),
+                      // Products and Terms
+                      Text(
+                        'Products & Terms',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppColors.quaternary,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _PremiumInfoTile(
+                              icon: Iconsax.box_1,
+                              title: 'Products',
+                              value: _formatProducts(distributor.distProducts),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            _PremiumInfoTile(
+                              icon: Iconsax.receipt_1,
+                              title: 'Payment Terms',
+                              value: distributor.paymentTerms ?? 'N/A',
+                            ),
+                            if (distributor.distDescription != null &&
+                                distributor.distDescription!.isNotEmpty) ...[
+                              const SizedBox(height: AppSpacing.sm),
+                              _PremiumInfoTile(
+                                icon: Iconsax.note,
+                                title: 'Description',
+                                value: distributor.distDescription!,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      // Bank Information
+                      if (_hasBankInfo(distributor)) ...[
+                        Text(
+                          'Bank Information',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Column(
+                            children: [
+                              if (distributor.bankName != null)
+                                _PremiumInfoTile(
+                                  icon: Iconsax.building,
+                                  title: 'Bank Name',
+                                  value: distributor.bankName!,
+                                ),
+                              if (distributor.bankName != null &&
+                                  (distributor.bankAcNo != null ||
+                                      distributor.branchName != null ||
+                                      distributor.ifscCode != null))
+                                const SizedBox(height: AppSpacing.sm),
+                              if (distributor.bankAcNo != null)
+                                _PremiumInfoTile(
+                                  icon: Iconsax.wallet_3,
+                                  title: 'Account Number',
+                                  value: distributor.bankAcNo!,
+                                ),
+                              if (distributor.bankAcNo != null &&
+                                  (distributor.branchName != null ||
+                                      distributor.ifscCode != null))
+                                const SizedBox(height: AppSpacing.sm),
+                              if (distributor.branchName != null)
+                                _PremiumInfoTile(
+                                  icon: Iconsax.location,
+                                  title: 'Branch',
+                                  value: distributor.branchName!,
+                                ),
+                              if (distributor.branchName != null &&
+                                  distributor.ifscCode != null)
+                                const SizedBox(height: AppSpacing.sm),
+                              if (distributor.ifscCode != null)
+                                _PremiumInfoTile(
+                                  icon: Iconsax.security_card,
+                                  title: 'IFSC Code',
+                                  value: distributor.ifscCode!,
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                      ],
+                      // Delivery Territories
+                      if (distributor.deliveryTerritories != null) ...[
+                        Text(
+                          'Delivery Territories',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Text(
+                            _formatTerritories(
+                                distributor.deliveryTerritories),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                      ],
+                      // Action Buttons
                       Wrap(
                         spacing: AppSpacing.sm,
                         runSpacing: AppSpacing.sm,
@@ -270,14 +430,17 @@ class DistributorDetailCard extends StatelessWidget {
                           _ActionButton(
                             label: 'Mail',
                             icon: Iconsax.sms,
-                            onTap: () =>
-                                _launch('mailto:${distributor.email}', context),
+                            onTap: () => distributor.distEmail != null
+                                ? _launch('mailto:${distributor.distEmail}',
+                                    context)
+                                : null,
                           ),
                           _ActionButton(
                             label: 'Call',
                             icon: Iconsax.call,
                             onTap: () =>
-                                _launch('tel:${distributor.phone}', context),
+                                _launch('tel:${distributor.distPhoneNo}',
+                                    context),
                           ),
                           _ActionButton(
                             label: 'Open In Maps',
