@@ -51,7 +51,8 @@ class DistributorNotifier extends Notifier<DistributorState> {
   @override
   DistributorState build() {
     _service = DistributorService();
-    _loadDistributors();
+    // Defer initial fetch until after the provider state is initialized.
+    Future.microtask(_loadDistributors);
     return const DistributorState();
   }
 

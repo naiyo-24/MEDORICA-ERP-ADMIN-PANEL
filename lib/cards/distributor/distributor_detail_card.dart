@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/distributor.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 
 class DistributorDetailCard extends StatelessWidget {
@@ -56,6 +57,51 @@ class DistributorDetailCard extends StatelessWidget {
         distributor.bankAcNo != null ||
         distributor.branchName != null ||
         distributor.ifscCode != null;
+  }
+
+  Widget _buildDistributorPhoto(BuildContext context, String initials) {
+    if (distributor.distPhoto != null && distributor.distPhoto!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Image.network(
+          ApiUrl.getProfilePhotoUrl(distributor.distPhoto!),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Text(
+                initials,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: AppColors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    if (distributor.imageBytes != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Image.memory(
+          distributor.imageBytes!,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    return Center(
+      child: Text(
+        initials,
+        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppColors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+            ),
+      ),
+    );
   }
 
   @override
@@ -136,27 +182,7 @@ class DistributorDetailCard extends StatelessWidget {
                                 color: AppColors.white.withValues(alpha: 0.4),
                               ),
                             ),
-                            child: distributor.imageBytes != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      AppRadius.md,
-                                    ),
-                                    child: Image.memory(
-                                      distributor.imageBytes!,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Center(
-                                    child: Text(
-                                      initials,
-                                      style: theme.textTheme.headlineMedium
-                                          ?.copyWith(
-                                            color: AppColors.white,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                    ),
-                                  ),
+                            child: _buildDistributorPhoto(context, initials),
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
@@ -320,15 +346,15 @@ class DistributorDetailCard extends StatelessWidget {
                               title: 'Payment Terms',
                               value: distributor.paymentTerms ?? 'N/A',
                             ),
-                            if (distributor.distDescription != null &&
-                                distributor.distDescription!.isNotEmpty) ...[
-                              const SizedBox(height: AppSpacing.sm),
-                              _PremiumInfoTile(
-                                icon: Iconsax.note,
-                                title: 'Description',
-                                value: distributor.distDescription!,
-                              ),
-                            ],
+                            const SizedBox(height: AppSpacing.sm),
+                            _PremiumInfoTile(
+                              icon: Iconsax.note,
+                              title: 'Description',
+                              value: (distributor.distDescription != null &&
+                                      distributor.distDescription!.trim().isNotEmpty)
+                                  ? distributor.distDescription!
+                                  : 'N/A',
+                            ),
                           ],
                         ),
                       ),

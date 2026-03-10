@@ -103,6 +103,8 @@ class Distributor {
   }
 
   factory Distributor.fromJson(Map<String, dynamic> json) {
+    final minOrderRaw = json['dist_min_order_value_rupees'];
+
     return Distributor(
       id: json['id'] as int,
       distId: json['dist_id'] as String,
@@ -112,8 +114,11 @@ class Distributor {
       distEmail: json['dist_email'] as String?,
       distDescription: json['dist_description'] as String?,
       distPhoto: json['dist_photo'] as String?,
-      distMinOrderValueRupees:
-          json['dist_min_order_value_rupees'] as double?,
+      distMinOrderValueRupees: minOrderRaw == null
+          ? null
+          : minOrderRaw is num
+              ? minOrderRaw.toDouble()
+              : double.tryParse(minOrderRaw.toString()),
       distProducts: json['dist_products'],
       distExpectedDeliveryTimeDays:
           json['dist_expected_delivery_time_days'] as int?,

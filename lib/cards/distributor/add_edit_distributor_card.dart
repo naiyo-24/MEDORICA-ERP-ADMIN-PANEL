@@ -81,6 +81,21 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
   String? _photoFileName;
   bool _submitting = false;
 
+  double? _parseAmount(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+
+    // Accept common formats such as 5000, 5,000, Rs 5000, and ₹5000.
+    final normalized = trimmed.replaceAll(RegExp(r'[^0-9.]'), '');
+    if (normalized.isEmpty) {
+      return null;
+    }
+
+    return double.tryParse(normalized);
+  }
+
   bool get _isEditing => widget.initialDistributor != null;
 
   String _nameInitials(String input) {
@@ -213,7 +228,7 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                   ? _descriptionController.text.trim()
                   : null,
           distMinOrderValueRupees:
-              double.tryParse(_minOrderValueController.text.trim()),
+              _parseAmount(_minOrderValueController.text),
           distExpectedDeliveryTimeDays:
               int.tryParse(_deliveryTimeController.text.trim()),
           bankName: _bankNameController.text.trim().isNotEmpty
@@ -580,6 +595,16 @@ class _AddEditDistributorCardState extends State<AddEditDistributorCard> {
                                       labelText: 'Min order value (₹)',
                                       prefixIcon: Icon(Iconsax.money_3),
                                     ),
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return null;
+                                      }
+                                      if (_parseAmount(value) == null) {
+                                        return 'Enter a valid amount.';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                   const SizedBox(height: AppSpacing.sm),
                                   TextFormField(
