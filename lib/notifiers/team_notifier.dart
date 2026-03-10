@@ -1,77 +1,58 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm.dart';
-import '../models/mr.dart';
 import '../models/team.dart';
-import '../providers/asm_onboarding_provider.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/team_provider.dart';
+import '../services/team/team_services.dart';
 
 class TeamState {
-  const TeamState({this.teams = const [], this.isSaving = false});
+  const TeamState({
+    this.teams = const [],
+    this.isLoading = false,
+    this.isSaving = false,
+    this.error,
+  });
 
   final List<Team> teams;
+  final bool isLoading;
   final bool isSaving;
+  final String? error;
 
-  TeamState copyWith({List<Team>? teams, bool? isSaving}) {
+  TeamState copyWith({
+    List<Team>? teams,
+    bool? isLoading,
+    bool? isSaving,
+    String? error,
+  }) {
     return TeamState(
       teams: teams ?? this.teams,
+      isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
   }
 }
 
 class TeamNotifier extends Notifier<TeamState> {
+  late final TeamServices _services;
+
   @override
   TeamState build() {
-    final mrList = ref.watch(mrOnboardingNotifierProvider).mrList;
-    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
-
-    return TeamState(
-      teams: _mockTeams(mrList: mrList, asmList: asmList),
-    );
+    _services = ref.read(teamServicesProvider);
+    return const TeamState();
   }
 
-  List<Team> _mockTeams({
-    required List<MR> mrList,
-    required List<ASM> asmList,
-  }) {
-    if (mrList.isEmpty || asmList.isEmpty) {
-      return const [];
+  Future<void> loadTeams() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final teams = await _services.getAllTeams();
+      state = state.copyWith(teams: teams, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load teams: $e',
+      );
     }
-
-    final firstASM = asmList.first;
-    final secondASM = asmList.length > 1 ? asmList[1] : asmList.first;
-
-    return [
-      Team(
-        id: 'team_1',
-        name: 'North Growth Squad',
-        description:
-            'Focused on expanding prescription reach and conversion in priority northern cities with weekly call planning and KPI tracking.',
-        whatsappGroupLink: 'https://chat.whatsapp.com/NorthGrowthSquad',
-        leaderASMId: firstASM.asmId,
-        leaderASMName: firstASM.name,
-        members: [
-          for (final member in mrList.take(2))
-            TeamMemberRef(mrId: member.mrId, mrName: member.name),
-        ],
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-      ),
-      Team(
-        id: 'team_2',
-        name: 'Metro Outreach Unit',
-        description:
-            'A high-velocity city team designed for doctor engagement, chemist follow-up and fast order movement with same-week closures.',
-        whatsappGroupLink: 'https://chat.whatsapp.com/MetroOutreachUnit',
-        leaderASMId: secondASM.asmId,
-        leaderASMName: secondASM.name,
-        members: [
-          for (final member in mrList.skip(1).take(2))
-            TeamMemberRef(mrId: member.mrId, mrName: member.name),
-        ],
-        createdAt: DateTime.now().subtract(const Duration(days: 18)),
-      ),
-    ];
   }
 
   Future<void> createTeam({
@@ -79,79 +60,110 @@ class TeamNotifier extends Notifier<TeamState> {
     required String description,
     required String whatsappGroupLink,
     required String leaderASMId,
-    required String leaderASMName,
-    required List<TeamMemberRef> members,
+    required List<String> memberMRIds,
   }) async {
-    state = state.copyWith(isSaving: true);
-    await Future.delayed(const Duration(milliseconds: 350));
+    state = state.copyWith(isSaving: true, error: null);
 
-    final team = Team(
-      id: 'team_${DateTime.now().millisecondsSinceEpoch}',
-      name: name,
-      description: description,
-      whatsappGroupLink: whatsappGroupLink,
-      leaderASMId: leaderASMId,
-      leaderASMName: leaderASMName,
-      members: members,
-      createdAt: DateTime.now(),
-    );
-
-    state = state.copyWith(isSaving: false, teams: [team, ...state.teams]);
+    try {
+      final created = await _services.createTeam(
+        name: name,
+        description: description,
+        whatsappGroupLink: whatsappGroupLink,
+        leaderASMId: leaderASMId,
+        memberMRIds: memberMRIds,
+      );
+      state = state.copyWith(isSaving: false, teams: [created, ...state.teams]);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to create team: $e',
+      );
+      rethrow;
+    }
   }
 
   Future<void> updateTeam({
-    required String id,
+    required String teamId,
     required String name,
     required String description,
     required String whatsappGroupLink,
     required String leaderASMId,
-    required String leaderASMName,
-    required List<TeamMemberRef> members,
+    required List<String> memberMRIds,
   }) async {
-    state = state.copyWith(isSaving: true);
-    await Future.delayed(const Duration(milliseconds: 350));
+    state = state.copyWith(isSaving: true, error: null);
 
-    final updated = state.teams
-        .map((team) {
-          if (team.id != id) {
-            return team;
-          }
-          return team.copyWith(
-            name: name,
-            description: description,
-            whatsappGroupLink: whatsappGroupLink,
-            leaderASMId: leaderASMId,
-            leaderASMName: leaderASMName,
-            members: members,
-          );
-        })
-        .toList(growable: false);
+    try {
+      final updatedTeam = await _services.updateTeam(
+        teamId: int.parse(teamId),
+        name: name,
+        description: description,
+        whatsappGroupLink: whatsappGroupLink,
+        leaderASMId: leaderASMId,
+        memberMRIds: memberMRIds,
+      );
 
-    state = state.copyWith(isSaving: false, teams: updated);
+      final updatedTeams = state.teams
+          .map((team) => team.id == updatedTeam.id ? updatedTeam : team)
+          .toList(growable: false);
+
+      state = state.copyWith(isSaving: false, teams: updatedTeams);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to update team: $e',
+      );
+      rethrow;
+    }
   }
 
-  void deleteTeam(String teamId) {
-    state = state.copyWith(
-      teams: state.teams
-          .where((team) => team.id != teamId)
-          .toList(growable: false),
+  Future<void> deleteTeam(String teamId) async {
+    state = state.copyWith(isSaving: true, error: null);
+
+    try {
+      await _services.deleteTeam(int.parse(teamId));
+      state = state.copyWith(
+        isSaving: false,
+        teams: state.teams
+            .where((team) => team.id != teamId)
+            .toList(growable: false),
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to delete team: $e',
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> removeMember({
+    required String teamId,
+    required String mrId,
+  }) async {
+    Team? team;
+    for (final item in state.teams) {
+      if (item.id == teamId) {
+        team = item;
+        break;
+      }
+    }
+
+    if (team == null) {
+      return;
+    }
+
+    final updatedMemberIds = team.members
+        .where((member) => member.mrId != mrId)
+        .map((member) => member.mrId)
+        .toList(growable: false);
+
+    await updateTeam(
+      teamId: teamId,
+      name: team.name,
+      description: team.description,
+      whatsappGroupLink: team.whatsappGroupLink,
+      leaderASMId: team.leaderASMId,
+      memberMRIds: updatedMemberIds,
     );
-  }
-
-  void removeMember({required String teamId, required String mrId}) {
-    final updated = state.teams
-        .map((team) {
-          if (team.id != teamId) {
-            return team;
-          }
-          return team.copyWith(
-            members: team.members
-                .where((member) => member.mrId != mrId)
-                .toList(growable: false),
-          );
-        })
-        .toList(growable: false);
-
-    state = state.copyWith(teams: updated);
   }
 }

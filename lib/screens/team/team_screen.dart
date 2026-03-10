@@ -24,6 +24,16 @@ class TeamScreen extends ConsumerStatefulWidget {
 class _TeamScreenState extends ConsumerState<TeamScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await ref.read(asmOnboardingNotifierProvider.notifier).loadASMList();
+      await ref.read(mrOnboardingNotifierProvider.notifier).loadMRList();
+      await ref.read(teamNotifierProvider.notifier).loadTeams();
+    });
+  }
+
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
   }
@@ -50,6 +60,17 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
     final asmList = ref.read(asmOnboardingNotifierProvider).asmList;
     final mrList = ref.read(mrOnboardingNotifierProvider).mrList;
 
+    if (asmList.isEmpty || mrList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please wait for ASM and MR data to load before creating a team.',
+          ),
+        ),
+      );
+      return;
+    }
+
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -64,39 +85,22 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             onSubmit: (data) async {
               final notifier = ref.read(teamNotifierProvider.notifier);
 
-              final leader = asmList.firstWhere(
-                (asm) => asm.asmId == data.leaderASMId,
-                orElse: () => asmList.first,
-              );
-
-              final members = data.memberMRIds
-                  .map((id) {
-                    final mr = mrList.firstWhere(
-                      (item) => item.mrId == id,
-                      orElse: () => mrList.first,
-                    );
-                    return TeamMemberRef(mrId: mr.mrId, mrName: mr.name);
-                  })
-                  .toList(growable: false);
-
               if (team == null) {
                 await notifier.createTeam(
                   name: data.name,
                   description: data.description,
                   whatsappGroupLink: data.whatsappGroupLink,
-                  leaderASMId: leader.asmId,
-                  leaderASMName: leader.name,
-                  members: members,
+                  leaderASMId: data.leaderASMId,
+                  memberMRIds: data.memberMRIds,
                 );
               } else {
                 await notifier.updateTeam(
-                  id: team.id,
+                  teamId: team.id,
                   name: data.name,
                   description: data.description,
                   whatsappGroupLink: data.whatsappGroupLink,
-                  leaderASMId: leader.asmId,
-                  leaderASMName: leader.name,
-                  members: members,
+                  leaderASMId: data.leaderASMId,
+                  memberMRIds: data.memberMRIds,
                 );
               }
             },
@@ -161,14 +165,15 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
     );
 
     if (shouldDelete ?? false) {
-      ref.read(teamNotifierProvider.notifier).deleteTeam(team.id);
+      await ref.read(teamNotifierProvider.notifier).deleteTeam(team.id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final teams = ref.watch(teamListProvider);
+    final teamState = ref.watch(teamNotifierProvider);
+    final teams = teamState.teams;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -269,7 +274,35 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                if (teams.isEmpty)
+                if (teamState.error != null) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(
+                        color: AppColors.error.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Text(
+                      teamState.error!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (teamState.isLoading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppSpacing.lg),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (teams.isEmpty)
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(AppSpacing.xl),

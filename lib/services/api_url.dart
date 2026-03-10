@@ -13,7 +13,6 @@ class ApiUrl {
   static String aboutUsDeleteById(int aboutUsId) =>
       '$aboutUsBase/delete-by/$aboutUsId';
 
-
   // MR Onboarding
   static const String mrOnboardingBase = '/onboarding/mr';
   static const String mrOnboardingPost = '$mrOnboardingBase/post';
@@ -29,7 +28,6 @@ class ApiUrl {
   static String mrOnboardingDeleteById(String mrId) =>
       '$mrOnboardingBase/delete-by/$mrId';
 
-
   // ASM Onboarding
   static const String asmOnboardingBase = '/onboarding/asm';
   static const String asmOnboardingPost = '$asmOnboardingBase/post';
@@ -44,7 +42,6 @@ class ApiUrl {
 
   static String asmOnboardingDeleteById(String asmId) =>
       '$asmOnboardingBase/delete-by/$asmId';
-
 
   // MR Doctor Network
   static const String mrDoctorNetworkBase = '/doctor-network/mr';
@@ -92,14 +89,24 @@ class ApiUrl {
   static const String visualAdsPost = '$visualAdsBase/post';
   static const String visualAdsGetAll = '$visualAdsBase/get-all';
 
-  static String visualAdsGetById(String adId) =>
-      '$visualAdsBase/get-by/$adId';
+  static String visualAdsGetById(String adId) => '$visualAdsBase/get-by/$adId';
 
   static String visualAdsUpdateById(String adId) =>
       '$visualAdsBase/update-by/$adId';
 
   static String visualAdsDeleteById(String adId) =>
       '$visualAdsBase/delete-by/$adId';
+
+  // Team Management
+  static const String teamBase = '/team';
+  static const String teamPost = '$teamBase/post';
+  static const String teamGetAll = '$teamBase/get-all';
+
+  static String teamGetById(int teamId) => '$teamBase/get-by/$teamId';
+
+  static String teamUpdateById(int teamId) => '$teamBase/update-by/$teamId';
+
+  static String teamDeleteById(int teamId) => '$teamBase/delete-by/$teamId';
 
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {

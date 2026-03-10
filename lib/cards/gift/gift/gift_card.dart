@@ -168,7 +168,7 @@ class _GiftCardState extends State<GiftCard> {
               children: [
                 
                 _TagWithIcon(
-                  icon: Iconsax.box_2,
+                  icon: Iconsax.box,
                   label: 'Inventory: ${widget.gift.quantityInInventory}',
                   color: AppColors.primary,
                 ),
