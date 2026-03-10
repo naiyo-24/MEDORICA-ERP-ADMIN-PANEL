@@ -53,7 +53,7 @@ class _EditCreateGiftCardState extends State<EditCreateGiftCard> {
       text: gift == null ? '' : gift.quantityInInventory.toString(),
     );
     _priceController = TextEditingController(
-      text: gift == null ? '' : gift.price.toStringAsFixed(0),
+      text: gift == null ? '' : gift.price.toStringAsFixed(2),
     );
   }
 
@@ -71,17 +71,24 @@ class _EditCreateGiftCardState extends State<EditCreateGiftCard> {
       return;
     }
     setState(() => _saving = true);
-    await widget.onSubmit(
-      GiftFormData(
-        itemName: _itemNameController.text.trim(),
-        description: _descriptionController.text.trim(),
-        quantityInInventory: int.parse(_quantityController.text.trim()),
-        price: double.parse(_priceController.text.trim()),
-      ),
-    );
-    if (mounted) {
-      setState(() => _saving = false);
-      Navigator.of(context).pop();
+    try {
+      await widget.onSubmit(
+        GiftFormData(
+          itemName: _itemNameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          quantityInInventory: int.parse(_quantityController.text.trim()),
+          price: double.parse(_priceController.text.trim()),
+        ),
+      );
+      if (mounted) {
+        setState(() => _saving = false);
+        Navigator.of(context).pop();
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _saving = false);
+      }
+      rethrow;
     }
   }
 

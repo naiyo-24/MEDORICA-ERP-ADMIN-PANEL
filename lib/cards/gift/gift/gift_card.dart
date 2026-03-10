@@ -16,7 +16,7 @@ class GiftCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  String _formatPrice(double price) => 'INR ${price.toStringAsFixed(0)}';
+  String _formatPrice(double price) => 'INR ${price.toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +64,18 @@ class GiftCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text(
-            gift.description,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.quaternary,
+          if (gift.description.isNotEmpty)
+            Text(
+              gift.description,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.quaternary,
+              ),
             ),
-          ),
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
+              
+              const SizedBox(width: AppSpacing.xs),
               _Tag(
                 label: 'Inventory: ${gift.quantityInInventory}',
                 color: AppColors.primary,

@@ -42,6 +42,12 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
     }
   }
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: AppColors.error),
+    );
+  }
+
   void _showGiftForm({Gift? gift}) {
     showDialog(
       context: context,
@@ -50,47 +56,54 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
         child: EditCreateGiftCard(
           initialGift: gift,
           onSubmit: (formData) async {
-            if (gift != null) {
-              await ref
-                  .read(giftNotifierProvider.notifier)
-                  .updateGift(
-                    gift: gift.copyWith(
+            try {
+              if (gift != null) {
+                await ref.read(giftNotifierProvider.notifier).updateGift(
+                      giftId: gift.giftId,
                       itemName: formData.itemName,
                       description: formData.description,
                       quantityInInventory: formData.quantityInInventory,
                       price: formData.price,
-                    ),
-                  );
-              return;
-            }
+                    );
+                return;
+              }
 
-            await ref
-                .read(giftNotifierProvider.notifier)
-                .addGift(
-                  gift: Gift(
-                    id: 'gift_${DateTime.now().millisecondsSinceEpoch}',
+              await ref.read(giftNotifierProvider.notifier).addGift(
                     itemName: formData.itemName,
                     description: formData.description,
                     quantityInInventory: formData.quantityInInventory,
                     price: formData.price,
-                    createdAt: DateTime.now(),
-                  ),
+                  );
+            } catch (e) {
+              if (mounted) {
+                _showErrorSnackBar(
+                  e.toString().replaceFirst('Exception: ', ''),
                 );
+              }
+              rethrow;
+            }
           },
         ),
       ),
     );
   }
 
-  Future<void> _deleteGift(String giftId) async {
-    await ref.read(giftNotifierProvider.notifier).deleteGift(giftId: giftId);
+  Future<void> _deleteGift(int giftId) async {
+    try {
+      await ref.read(giftNotifierProvider.notifier).deleteGift(giftId: giftId);
+    } catch (e) {
+      if (mounted) {
+        _showErrorSnackBar(e.toString().replaceFirst('Exception: ', ''));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gifts = ref.watch(giftListProvider);
-    final giftCount = ref.watch(giftCountProvider);
+    final giftState = ref.watch(giftNotifierProvider);
+    final gifts = giftState.gifts;
+    final giftCount = gifts.length;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -204,6 +217,30 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
+                if (giftState.error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withAlpha(20),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(color: AppColors.error.withAlpha(50)),
+                    ),
+                    child: Text(
+                      giftState.error!.replaceFirst('Exception: ', ''),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (giftState.isLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else
                 if (gifts.isEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -235,7 +272,7 @@ class _GiftScreenState extends ConsumerState<GiftScreen> {
                       return GiftCard(
                         gift: gift,
                         onEdit: () => _showGiftForm(gift: gift),
-                        onDelete: () => _deleteGift(gift.id),
+                        onDelete: () => _deleteGift(gift.giftId),
                       );
                     },
                   ),

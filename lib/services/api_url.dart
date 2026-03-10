@@ -73,6 +73,20 @@ class ApiUrl {
   static String distributorDeleteById(String distId) =>
       '$distributorBase/delete-by/$distId';
 
+  // Gift Inventory Management
+  static const String giftInventoryBase = '/gift-inventory';
+  static const String giftInventoryPost = '$giftInventoryBase/post';
+  static const String giftInventoryGetAll = '$giftInventoryBase/get-all';
+
+  static String giftInventoryGetById(int giftId) =>
+      '$giftInventoryBase/get-by/$giftId';
+
+  static String giftInventoryUpdateById(int giftId) =>
+      '$giftInventoryBase/update-by/$giftId';
+
+  static String giftInventoryDeleteById(int giftId) =>
+      '$giftInventoryBase/delete-by/$giftId';
+
   // Visual Ads Management
   static const String visualAdsBase = '/visual-ads';
   static const String visualAdsPost = '$visualAdsBase/post';

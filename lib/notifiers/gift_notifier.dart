@@ -1,77 +1,120 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/gift.dart';
+import '../services/gift/gift_inventory_services.dart';
 
 class GiftState {
-  const GiftState({this.gifts = const [], this.isSaving = false});
+  const GiftState({
+    this.gifts = const [],
+    this.isLoading = false,
+    this.isSaving = false,
+    this.error,
+  });
 
   final List<Gift> gifts;
+  final bool isLoading;
   final bool isSaving;
+  final String? error;
 
-  GiftState copyWith({List<Gift>? gifts, bool? isSaving}) {
+  GiftState copyWith({
+    List<Gift>? gifts,
+    bool? isLoading,
+    bool? isSaving,
+    String? error,
+    bool clearError = false,
+  }) {
     return GiftState(
       gifts: gifts ?? this.gifts,
+      isLoading: isLoading ?? this.isLoading,
       isSaving: isSaving ?? this.isSaving,
+      error: clearError ? null : (error ?? this.error),
     );
   }
 }
 
 class GiftNotifier extends Notifier<GiftState> {
+  late final GiftInventoryService _service;
+
   @override
   GiftState build() {
-    return GiftState(gifts: _mockGifts());
+    _service = GiftInventoryService();
+    Future.microtask(fetchGifts);
+    return const GiftState();
   }
 
-  List<Gift> _mockGifts() {
-    final now = DateTime.now();
-    return [
-      Gift(
-        id: 'gift_1',
-        itemName: 'Premium Pen Set',
-        description:
-            'Executive metal pen set for doctor engagement activities.',
-        quantityInInventory: 120,
-        price: 499,
-        createdAt: now.subtract(const Duration(days: 18)),
-      ),
-      Gift(
-        id: 'gift_2',
-        itemName: 'Desk Calendar',
-        description: 'Branded yearly desk calendar with product highlights.',
-        quantityInInventory: 280,
-        price: 149,
-        createdAt: now.subtract(const Duration(days: 12)),
-      ),
-      Gift(
-        id: 'gift_3',
-        itemName: 'Conference Bag',
-        description: 'Utility conference bag for events and CME participation.',
-        quantityInInventory: 64,
-        price: 999,
-        createdAt: now.subtract(const Duration(days: 6)),
-      ),
-    ];
+  Future<void> fetchGifts() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final gifts = await _service.getAllGifts();
+      state = state.copyWith(isLoading: false, gifts: gifts);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
   }
 
-  Future<void> addGift({required Gift gift}) async {
-    state = state.copyWith(isSaving: true);
-    await Future.delayed(const Duration(milliseconds: 300));
-    state = state.copyWith(gifts: [gift, ...state.gifts], isSaving: false);
+  Future<void> addGift({
+    required String itemName,
+    required String description,
+    required int quantityInInventory,
+    required double price,
+  }) async {
+    state = state.copyWith(isSaving: true, clearError: true);
+    try {
+      final created = await _service.createGift(
+        itemName: itemName,
+        description: description,
+        quantityInInventory: quantityInInventory,
+        price: price,
+      );
+
+      state = state.copyWith(
+        isSaving: false,
+        gifts: [created, ...state.gifts],
+      );
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: e.toString());
+      rethrow;
+    }
   }
 
-  Future<void> updateGift({required Gift gift}) async {
-    state = state.copyWith(isSaving: true);
-    await Future.delayed(const Duration(milliseconds: 300));
-    final updated = state.gifts.map((g) => g.id == gift.id ? gift : g).toList();
-    state = state.copyWith(gifts: updated, isSaving: false);
+  Future<void> updateGift({
+    required int giftId,
+    required String itemName,
+    required String description,
+    required int quantityInInventory,
+    required double price,
+  }) async {
+    state = state.copyWith(isSaving: true, clearError: true);
+    try {
+      final updatedGift = await _service.updateGift(
+        giftId: giftId,
+        itemName: itemName,
+        description: description,
+        quantityInInventory: quantityInInventory,
+        price: price,
+      );
+
+      final updated = state.gifts
+          .map((g) => g.giftId == giftId ? updatedGift : g)
+          .toList(growable: false);
+      state = state.copyWith(gifts: updated, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: e.toString());
+      rethrow;
+    }
   }
 
-  Future<void> deleteGift({required String giftId}) async {
-    state = state.copyWith(isSaving: true);
-    await Future.delayed(const Duration(milliseconds: 250));
-    state = state.copyWith(
-      gifts: state.gifts.where((g) => g.id != giftId).toList(),
-      isSaving: false,
-    );
+  Future<void> deleteGift({required int giftId}) async {
+    state = state.copyWith(isSaving: true, clearError: true);
+    try {
+      await _service.deleteGift(giftId);
+      state = state.copyWith(
+        gifts: state.gifts.where((g) => g.giftId != giftId).toList(),
+        isSaving: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isSaving: false, error: e.toString());
+      rethrow;
+    }
   }
 }

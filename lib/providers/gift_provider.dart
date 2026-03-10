@@ -14,3 +14,11 @@ final giftListProvider = Provider<List<Gift>>((ref) {
 final giftCountProvider = Provider<int>((ref) {
   return ref.watch(giftListProvider).length;
 });
+
+final giftLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(giftNotifierProvider).isLoading;
+});
+
+final giftErrorProvider = Provider<String?>((ref) {
+  return ref.watch(giftNotifierProvider).error;
+});
