@@ -30,7 +30,7 @@ class _AddNotificationCardState extends State<AddNotificationCard> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
 
-  NotificationAudience _audience = NotificationAudience.all;
+  NotificationAudience _audience = NotificationAudience.mr;
   bool _submitting = false;
 
   @override
@@ -47,16 +47,28 @@ class _AddNotificationCardState extends State<AddNotificationCard> {
 
     setState(() => _submitting = true);
 
-    await widget.onSubmit(
-      NotificationFormData(
-        title: _titleController.text.trim(),
-        message: _messageController.text.trim(),
-        audience: _audience,
-      ),
-    );
+    try {
+      await widget.onSubmit(
+        NotificationFormData(
+          title: _titleController.text.trim(),
+          message: _messageController.text.trim(),
+          audience: _audience,
+        ),
+      );
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Unable to create notification: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _submitting = false);
+      }
     }
   }
 
@@ -137,10 +149,6 @@ class _AddNotificationCardState extends State<AddNotificationCard> {
                   prefixIcon: Icon(Iconsax.profile_2user),
                 ),
                 items: const [
-                  DropdownMenuItem(
-                    value: NotificationAudience.all,
-                    child: Text('All'),
-                  ),
                   DropdownMenuItem(
                     value: NotificationAudience.mr,
                     child: Text('MR'),

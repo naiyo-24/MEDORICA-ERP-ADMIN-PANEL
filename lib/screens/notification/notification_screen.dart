@@ -20,6 +20,14 @@ class NotificationScreen extends ConsumerStatefulWidget {
 class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(notificationNotifierProvider.notifier).loadNotifications();
+    });
+  }
+
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
   }
@@ -236,11 +244,40 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                NotificationCards(
-                  notifications: notifications,
-                  onTap: _onNotificationTap,
-                  onDelete: _deleteNotification,
-                ),
+                if (state.error != null) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      border: Border.all(
+                        color: AppColors.error.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Text(
+                      state.error!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (state.isLoading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppSpacing.lg),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else
+                  NotificationCards(
+                    notifications: notifications,
+                    onTap: _onNotificationTap,
+                    onDelete: _deleteNotification,
+                  ),
               ],
             ),
           ),

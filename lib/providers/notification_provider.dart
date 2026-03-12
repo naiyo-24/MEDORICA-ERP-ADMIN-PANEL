@@ -2,6 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/notification.dart';
 import '../notifiers/notification_notifier.dart';
+import '../services/notification/notification_services.dart';
+
+final notificationServicesProvider = Provider<NotificationServices>((ref) {
+  return NotificationServices();
+});
 
 final notificationNotifierProvider =
     NotifierProvider<NotificationNotifier, NotificationState>(

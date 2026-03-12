@@ -108,6 +108,14 @@ class ApiUrl {
 
   static String teamDeleteById(int teamId) => '$teamBase/delete-by/$teamId';
 
+  // Notifications
+  static const String notificationBase = '/notifications';
+  static const String notificationPost = '$notificationBase/post';
+  static const String notificationGetAll = '$notificationBase/get-all';
+
+  static String notificationGetById(int notificationId) =>
+      '$notificationBase/get-by/$notificationId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

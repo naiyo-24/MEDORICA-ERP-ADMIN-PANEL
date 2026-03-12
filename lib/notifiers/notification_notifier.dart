@@ -1,66 +1,62 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/notification.dart';
+import '../providers/notification_provider.dart';
+import '../services/notification/notification_services.dart';
 
 class NotificationState {
   const NotificationState({
     this.notifications = const [],
     this.selectedAudience = NotificationAudience.all,
+    this.isLoading = false,
+    this.isSaving = false,
+    this.error,
   });
 
   final List<AppNotification> notifications;
   final NotificationAudience selectedAudience;
+  final bool isLoading;
+  final bool isSaving;
+  final String? error;
 
   NotificationState copyWith({
     List<AppNotification>? notifications,
     NotificationAudience? selectedAudience,
+    bool? isLoading,
+    bool? isSaving,
+    String? error,
   }) {
     return NotificationState(
       notifications: notifications ?? this.notifications,
       selectedAudience: selectedAudience ?? this.selectedAudience,
+      isLoading: isLoading ?? this.isLoading,
+      isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
   }
 }
 
 class NotificationNotifier extends Notifier<NotificationState> {
+  late final NotificationServices _services;
+
   @override
   NotificationState build() {
-    return NotificationState(
-      notifications: [
-        AppNotification(
-          id: 'noti_1',
-          title: 'Target Reminder: Zone East',
-          message: 'MRs must submit this week\'s doctor coverage before 6 PM.',
-          audience: NotificationAudience.mr,
-          createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-        ),
-        AppNotification(
-          id: 'noti_2',
-          title: 'ASM Review Call',
-          message:
-              'Monthly review call has been scheduled for tomorrow 10:30 AM.',
-          audience: NotificationAudience.asm,
-          createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-        ),
-        AppNotification(
-          id: 'noti_3',
-          title: 'Distributor Lead Follow-up',
-          message:
-              'MR team to follow up with 3 pending distributor onboarding leads.',
-          audience: NotificationAudience.mr,
-          createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          isUnread: false,
-        ),
-        AppNotification(
-          id: 'noti_4',
-          title: 'ASM Field Movement Update',
-          message: 'Submit branch-wise travel status before daily close.',
-          audience: NotificationAudience.asm,
-          createdAt: DateTime.now().subtract(const Duration(days: 2)),
-          isUnread: false,
-        ),
-      ],
-    );
+    _services = ref.read(notificationServicesProvider);
+    return const NotificationState();
+  }
+
+  Future<void> loadNotifications() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final notifications = await _services.getAllNotifications();
+      state = state.copyWith(notifications: notifications, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load notifications: $e',
+      );
+    }
   }
 
   void setAudience(NotificationAudience audience) {
@@ -80,17 +76,26 @@ class NotificationNotifier extends Notifier<NotificationState> {
     required String message,
     required NotificationAudience audience,
   }) async {
-    final now = DateTime.now();
-    final item = AppNotification(
-      id: 'noti_${now.microsecondsSinceEpoch}',
-      title: title,
-      message: message,
-      audience: audience,
-      createdAt: now,
-      isUnread: true,
-    );
+    state = state.copyWith(isSaving: true, error: null);
 
-    state = state.copyWith(notifications: [item, ...state.notifications]);
+    try {
+      final created = await _services.createNotification(
+        title: title,
+        subTitle: message,
+        audience: audience,
+      );
+
+      state = state.copyWith(
+        isSaving: false,
+        notifications: [created, ...state.notifications],
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to create notification: $e',
+      );
+      rethrow;
+    }
   }
 
   void deleteNotification(String id) {
