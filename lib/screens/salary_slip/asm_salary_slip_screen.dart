@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/salary_slip/asm/asm_salary_slip_card.dart';
-import '../../cards/salary_slip/asm/asm_salary_slip_filter_card.dart';
 import '../../models/asm_salary_slip.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../providers/asm_salary_slip_provider.dart';
@@ -23,6 +22,15 @@ class _ASMSalarySlipScreenState extends ConsumerState<ASMSalarySlipScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.asmSalarySlip;
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await ref.read(asmOnboardingNotifierProvider.notifier).loadASMList();
+      await ref.read(asmSalarySlipNotifierProvider.notifier).loadSalarySlips();
+    });
+  }
+
   void _onNavTap(String itemKey) {
     Navigator.of(context).pop();
 
@@ -39,53 +47,83 @@ class _ASMSalarySlipScreenState extends ConsumerState<ASMSalarySlipScreen> {
     }
   }
 
-  void _handleUpload(String slipId, PlatformFile file) {
-    if (file.bytes != null) {
-      ref
-          .read(asmSalarySlipNotifierProvider.notifier)
-          .uploadFile(
-            slipId: slipId,
-            fileBytes: file.bytes!,
-            fileName: file.name,
-          );
+  Future<void> _handleUpload(String asmId, PlatformFile file) async {
+    if (file.bytes == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to read selected PDF file.')),
+        );
+      }
+      return;
+    }
+
+    await ref
+        .read(asmSalarySlipNotifierProvider.notifier)
+        .uploadFile(asmId: asmId, fileBytes: file.bytes!, fileName: file.name);
+  }
+
+  Future<void> _handleView(ASMSalarySlip slip) async {
+    if (!slip.hasFile) {
+      return;
+    }
+
+    final bytes = await ref
+        .read(asmSalarySlipNotifierProvider.notifier)
+        .downloadByAsmId(slip.asmId);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Downloaded ${bytes.length} bytes for ${slip.asmName}.',
+          ),
+        ),
+      );
     }
   }
 
-  void _handleView(ASMSalarySlip slip) {
-    if (slip.hasFile) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('${slip.monthName} ${slip.year} Salary Slip'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('ASM: ${slip.asmName}'),
-              const SizedBox(height: 8),
-              Text('File: ${slip.fileName}'),
-              const SizedBox(height: 16),
-              const Text(
-                'File preview not implemented. In a real app, you would display the file here.',
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
-            ),
-          ],
+  Future<void> _handleDelete(ASMSalarySlip slip) async {
+    if (!slip.hasFile) {
+      return;
+    }
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Salary Slip'),
+        content: Text(
+          'Delete salary slip for ${slip.asmName} (${slip.asmId})?',
         ),
-      );
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm ?? false) {
+      await ref.read(asmSalarySlipNotifierProvider.notifier).deleteByAsm(slip);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Salary slip deleted successfully.')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final asmList = ref.watch(asmListProvider);
     final state = ref.watch(asmSalarySlipNotifierProvider);
     final salarySlips = ref.watch(asmSalarySlipListProvider);
 
@@ -108,26 +146,33 @@ class _ASMSalarySlipScreenState extends ConsumerState<ASMSalarySlipScreen> {
       ),
       body: Column(
         children: [
-          ASMSalarySlipFilterCard(
-            asmOptions: asmList,
-            selectedASMId: state.selectedASMId,
-            selectedYear: state.selectedYear,
-            onASMChanged: (asmId) {
-              ref
-                  .read(asmSalarySlipNotifierProvider.notifier)
-                  .setSelectedASM(asmId);
-            },
-            onYearChanged: (year) {
-              ref
-                  .read(asmSalarySlipNotifierProvider.notifier)
-                  .setSelectedYear(year);
-            },
-          ),
+          if (state.error != null)
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Text(
+                state.error!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
           Expanded(
-            child: salarySlips.isEmpty
+            child: state.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : salarySlips.isEmpty
                 ? Center(
                     child: Text(
-                      'No salary slips found',
+                      'No ASM records found',
                       style: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(color: theme.hintColor),
@@ -146,7 +191,8 @@ class _ASMSalarySlipScreenState extends ConsumerState<ASMSalarySlipScreen> {
                       return ASMSalarySlipCard(
                         salarySlip: slip,
                         onUpload: _handleUpload,
-                        onView: () => _handleView(slip),
+                        onView: () async => _handleView(slip),
+                        onDelete: () async => _handleDelete(slip),
                       );
                     },
                   ),

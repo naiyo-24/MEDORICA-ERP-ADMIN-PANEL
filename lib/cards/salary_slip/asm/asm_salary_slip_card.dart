@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../../models/asm_salary_slip.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMSalarySlipCard extends StatelessWidget {
@@ -11,26 +12,42 @@ class ASMSalarySlipCard extends StatelessWidget {
     required this.salarySlip,
     required this.onUpload,
     required this.onView,
+    required this.onDelete,
   });
 
   final ASMSalarySlip salarySlip;
-  final Function(String slipId, PlatformFile file) onUpload;
+  final Future<void> Function(String asmId, PlatformFile file) onUpload;
   final VoidCallback onView;
+  final VoidCallback onDelete;
 
   Future<void> _handleUpload(BuildContext context) async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'],
+        allowedExtensions: ['pdf'],
+        withData: true,
       );
 
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.first;
-        onUpload(salarySlip.id, file);
+
+        if (file.bytes == null) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Unable to read file. Please try another PDF.'),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
+          return;
+        }
+
+        await onUpload(salarySlip.asmId, file);
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('File "${file.name}" uploaded successfully'),
+              content: Text('Salary slip "${file.name}" uploaded.'),
               backgroundColor: AppColors.success,
             ),
           );
@@ -51,6 +68,7 @@ class ASMSalarySlipCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final profileUrl = ApiUrl.getProfilePhotoUrl(salarySlip.asmProfilePhoto);
 
     return Card(
       margin: const EdgeInsets.symmetric(
@@ -69,17 +87,26 @@ class ASMSalarySlipCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primary.withAlpha(204), AppColors.primary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: AppColors.primaryLight,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
-              child: const Icon(
-                Iconsax.document_text,
-                color: AppColors.surface,
-                size: 24,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+                child: profileUrl.isEmpty
+                    ? const Icon(
+                        Iconsax.profile_circle,
+                        color: AppColors.primary,
+                        size: 24,
+                      )
+                    : Image.network(
+                        profileUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => const Icon(
+                          Iconsax.profile_circle,
+                          color: AppColors.primary,
+                          size: 24,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(width: AppSpacing.md),
@@ -96,8 +123,15 @@ class ASMSalarySlipCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xxs),
                   Text(
-                    '${salarySlip.monthName} ${salarySlip.year}',
+                    'ASM ID: ${salarySlip.asmId}',
                     style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.hintColor,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    'Phone: ${salarySlip.asmPhone}',
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.hintColor,
                     ),
                   ),
@@ -113,7 +147,7 @@ class ASMSalarySlipCard extends StatelessWidget {
                         const SizedBox(width: AppSpacing.xxs),
                         Expanded(
                           child: Text(
-                            salarySlip.fileName!,
+                            salarySlip.fileName ?? 'Salary slip available',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: AppColors.success,
                               fontWeight: FontWeight.w500,
@@ -151,6 +185,20 @@ class ASMSalarySlipCard extends StatelessWidget {
                 foregroundColor: AppColors.surface,
                 disabledBackgroundColor: AppColors.primary.withAlpha(77),
                 disabledForegroundColor: AppColors.surface.withAlpha(128),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            OutlinedButton.icon(
+              onPressed: salarySlip.hasFile ? onDelete : null,
+              icon: const Icon(Iconsax.trash, size: 18),
+              label: const Text('Delete'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.error,
+                side: const BorderSide(color: AppColors.error),
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.md,
                   vertical: AppSpacing.sm,

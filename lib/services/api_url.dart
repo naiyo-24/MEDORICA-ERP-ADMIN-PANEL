@@ -116,6 +116,31 @@ class ApiUrl {
   static String notificationGetById(int notificationId) =>
       '$notificationBase/get-by/$notificationId';
 
+  // ASM Salary Slip
+  static const String asmSalarySlipBase = '/salary-slip/asm';
+  static const String asmSalarySlipGetAll = '$asmSalarySlipBase/get-all';
+
+  static String asmSalarySlipPostByAsm(String asmId) =>
+      '$asmSalarySlipBase/post/$asmId';
+
+  static String asmSalarySlipUpdateByAsm(String asmId) =>
+      '$asmSalarySlipBase/update-by/$asmId';
+
+  static String asmSalarySlipGetByAsm(String asmId) =>
+      '$asmSalarySlipBase/get-by-asm/$asmId';
+
+  static String asmSalarySlipDownloadByAsm(String asmId) =>
+      '$asmSalarySlipBase/download-by-asm/$asmId';
+
+  static String asmSalarySlipGetById(int slipId) =>
+      '$asmSalarySlipBase/get-by/$slipId';
+
+  static String asmSalarySlipDownloadById(int slipId) =>
+      '$asmSalarySlipBase/download-by/$slipId';
+
+  static String asmSalarySlipDeleteById(int slipId) =>
+      '$asmSalarySlipBase/delete-by/$slipId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

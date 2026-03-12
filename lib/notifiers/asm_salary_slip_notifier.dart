@@ -1,118 +1,183 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/asm.dart';
 import '../models/asm_salary_slip.dart';
 import '../providers/asm_onboarding_provider.dart';
+import '../providers/asm_salary_slip_provider.dart';
 
 class ASMSalarySlipState {
   const ASMSalarySlipState({
     this.salarySlips = const [],
-    required this.selectedASMId,
-    required this.selectedYear,
+    this.isLoading = false,
+    this.isSaving = false,
+    this.error,
   });
 
   final List<ASMSalarySlip> salarySlips;
-  final String selectedASMId;
-  final int selectedYear;
+  final bool isLoading;
+  final bool isSaving;
+  final String? error;
 
   ASMSalarySlipState copyWith({
     List<ASMSalarySlip>? salarySlips,
-    String? selectedASMId,
-    int? selectedYear,
+    bool? isLoading,
+    bool? isSaving,
+    String? error,
   }) {
     return ASMSalarySlipState(
       salarySlips: salarySlips ?? this.salarySlips,
-      selectedASMId: selectedASMId ?? this.selectedASMId,
-      selectedYear: selectedYear ?? this.selectedYear,
+      isLoading: isLoading ?? this.isLoading,
+      isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
-  }
-
-  List<ASMSalarySlip> get filteredSlips {
-    return salarySlips
-        .where(
-          (slip) => slip.asmId == selectedASMId && slip.year == selectedYear,
-        )
-        .toList();
   }
 }
 
 class ASMSalarySlipNotifier extends Notifier<ASMSalarySlipState> {
   @override
   ASMSalarySlipState build() {
-    final asmList = ref.watch(asmListProvider);
-    final firstASMId = asmList.isNotEmpty ? asmList.first.asmId : 'asm_001';
-    final currentYear = DateTime.now().year;
-
-    return ASMSalarySlipState(
-      salarySlips: _generateMockSlips(asmList, currentYear),
-      selectedASMId: firstASMId,
-      selectedYear: currentYear,
-    );
+    return const ASMSalarySlipState();
   }
 
-  List<ASMSalarySlip> _generateMockSlips(List<ASM> asmList, int year) {
-    final slips = <ASMSalarySlip>[];
-    for (final asm in asmList) {
-      for (int month = 1; month <= 12; month++) {
-        slips.add(
-          ASMSalarySlip(
-            id: '${asm.asmId}_${year}_$month',
-            asmId: asm.asmId,
-            asmName: asm.name,
-            month: month,
-            year: year,
-          ),
-        );
+  Future<void> loadSalarySlips() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final asmNotifier = ref.read(asmOnboardingNotifierProvider.notifier);
+      if (ref.read(asmOnboardingNotifierProvider).asmList.isEmpty) {
+        await asmNotifier.loadASMList();
       }
-    }
-    return slips;
-  }
 
-  void setSelectedASM(String asmId) {
-    state = state.copyWith(selectedASMId: asmId);
-  }
+      final asmList = ref.read(asmOnboardingNotifierProvider).asmList;
+      final services = ref.read(asmSalarySlipServicesProvider);
+      final slipRows = await services.getAllASMSalarySlips();
 
-  void setSelectedYear(int year) {
-    final asmList = ref.read(asmListProvider);
-    final existingForYear = state.salarySlips
-        .where((s) => s.year == year)
-        .toList();
-
-    if (existingForYear.isEmpty) {
-      final newSlips = [...state.salarySlips];
-      for (final asm in asmList) {
-        for (int month = 1; month <= 12; month++) {
-          newSlips.add(
-            ASMSalarySlip(
-              id: '${asm.asmId}_${year}_$month',
-              asmId: asm.asmId,
-              asmName: asm.name,
-              month: month,
-              year: year,
-            ),
-          );
-        }
+      final byAsmId = <String, ASMSalarySlip>{};
+      for (final item in slipRows) {
+        byAsmId[item.asmId] = item;
       }
-      state = state.copyWith(salarySlips: newSlips, selectedYear: year);
-    } else {
-      state = state.copyWith(selectedYear: year);
+
+      final merged = asmList
+          .map((asm) => _mergeAsmWithSlip(asm, byAsmId[asm.asmId]))
+          .toList(growable: false);
+
+      state = state.copyWith(salarySlips: merged, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load ASM salary slips: $e',
+      );
     }
   }
 
   Future<void> uploadFile({
-    required String slipId,
+    required String asmId,
     required Uint8List fileBytes,
     required String fileName,
   }) async {
-    final updatedSlips = state.salarySlips.map((slip) {
-      if (slip.id == slipId) {
-        return slip.copyWith(fileBytes: fileBytes, fileName: fileName);
-      }
-      return slip;
-    }).toList();
+    state = state.copyWith(isSaving: true, error: null);
 
-    state = state.copyWith(salarySlips: updatedSlips);
+    try {
+      final services = ref.read(asmSalarySlipServicesProvider);
+      ASMSalarySlip saved;
+
+      try {
+        saved = await services.postASMSalarySlip(
+          asmId: asmId,
+          fileBytes: fileBytes,
+          fileName: fileName,
+        );
+      } on DioException catch (e) {
+        final statusCode = e.response?.statusCode;
+        if (statusCode == 400) {
+          saved = await services.updateASMSalarySlip(
+            asmId: asmId,
+            fileBytes: fileBytes,
+            fileName: fileName,
+          );
+        } else {
+          rethrow;
+        }
+      }
+
+      final updated = state.salarySlips
+          .map((slip) {
+            if (slip.asmId == asmId) {
+              return slip.copyWith(
+                id: saved.id,
+                salarySlipUrl: saved.salarySlipUrl,
+                createdAt: saved.createdAt,
+                updatedAt: saved.updatedAt,
+              );
+            }
+            return slip;
+          })
+          .toList(growable: false);
+
+      state = state.copyWith(salarySlips: updated, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to upload salary slip: $e',
+      );
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> downloadByAsmId(String asmId) async {
+    try {
+      final services = ref.read(asmSalarySlipServicesProvider);
+      return await services.downloadASMSalarySlipByAsmId(asmId);
+    } catch (e) {
+      state = state.copyWith(error: 'Failed to download salary slip: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteByAsm(ASMSalarySlip salarySlip) async {
+    if (salarySlip.id == null) {
+      return;
+    }
+
+    state = state.copyWith(isSaving: true, error: null);
+
+    try {
+      final services = ref.read(asmSalarySlipServicesProvider);
+      await services.deleteASMSalarySlipById(salarySlip.id!);
+
+      final updated = state.salarySlips
+          .map((slip) {
+            if (slip.asmId == salarySlip.asmId) {
+              return slip.copyWith(clearSlip: true);
+            }
+            return slip;
+          })
+          .toList(growable: false);
+
+      state = state.copyWith(salarySlips: updated, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to delete salary slip: $e',
+      );
+      rethrow;
+    }
+  }
+
+  ASMSalarySlip _mergeAsmWithSlip(ASM asm, ASMSalarySlip? slip) {
+    final base = ASMSalarySlip.fromAsm(asm);
+    if (slip == null) {
+      return base;
+    }
+
+    return base.copyWith(
+      id: slip.id,
+      salarySlipUrl: slip.salarySlipUrl,
+      createdAt: slip.createdAt,
+      updatedAt: slip.updatedAt,
+    );
   }
 }
