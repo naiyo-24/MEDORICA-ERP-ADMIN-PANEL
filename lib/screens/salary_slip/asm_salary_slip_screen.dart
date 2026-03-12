@@ -1,11 +1,13 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../cards/salary_slip/asm/asm_salary_slip_card.dart';
 import '../../models/asm_salary_slip.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../providers/asm_salary_slip_provider.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
@@ -67,16 +69,26 @@ class _ASMSalarySlipScreenState extends ConsumerState<ASMSalarySlipScreen> {
       return;
     }
 
-    final bytes = await ref
-        .read(asmSalarySlipNotifierProvider.notifier)
-        .downloadByAsmId(slip.asmId);
+    final url =
+        '${ApiUrl.baseUrl}${ApiUrl.asmSalarySlipDownloadByAsm(slip.asmId)}';
+    final uri = Uri.parse(url);
+    final canLaunch = await canLaunchUrl(uri);
 
-    if (mounted) {
+    if (!canLaunch) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open salary slip URL: $url')),
+        );
+      }
+      return;
+    }
+
+    final launched = await launchUrl(uri, webOnlyWindowName: '_blank');
+
+    if (mounted && !launched) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Downloaded ${bytes.length} bytes for ${slip.asmName}.',
-          ),
+          content: Text('Failed to open salary slip for ${slip.asmName}.'),
         ),
       );
     }
