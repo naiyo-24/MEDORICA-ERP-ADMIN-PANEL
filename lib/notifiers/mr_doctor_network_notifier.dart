@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr_doctor_network.dart';
+import '../models/doctor_network/mr_doctor_network.dart';
 import '../providers/mr_doctor_network_provider.dart';
 
 class MRDoctorNetworkState {

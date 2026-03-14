@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/asm_chemist_shop.dart';
+import '../../../models/chemist_shop/asm_chemist_shop.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMChemistShopCard extends StatelessWidget {

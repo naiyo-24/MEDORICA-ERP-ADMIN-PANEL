@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../../models/mr_doctor_network.dart';
+import '../../../models/doctor_network/mr_doctor_network.dart';
 import '../../api_url.dart';
 
 // Service class to handle all MR Doctor Network related API calls

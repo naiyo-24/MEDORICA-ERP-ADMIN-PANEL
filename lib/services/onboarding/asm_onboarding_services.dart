@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../models/asm.dart';
+import '../../models/onboarding/asm.dart';
 import '../api_url.dart';
 
 // Service class to handle all ASM onboarding related API calls

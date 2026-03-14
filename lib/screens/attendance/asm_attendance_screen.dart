@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../cards/attendance/asm_attendance/asm_attendance_card.dart';
 import '../../cards/attendance/asm_attendance/asm_calendar_card.dart';
-import '../../models/asm.dart';
+import '../../models/onboarding/asm.dart';
 import '../../providers/asm_attendance_provider.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';

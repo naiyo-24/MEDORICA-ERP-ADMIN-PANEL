@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/mr_doctor_network.dart';
+import '../../../models/doctor_network/mr_doctor_network.dart';
 import '../../../theme/app_theme.dart';
 
 class MRDoctorCard extends StatelessWidget {

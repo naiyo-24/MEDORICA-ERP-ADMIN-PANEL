@@ -1,4 +1,4 @@
-import 'asm.dart';
+import 'onboarding/asm.dart';
 
 class ASMSalarySlip {
   const ASMSalarySlip({

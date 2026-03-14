@@ -5,7 +5,7 @@ import '../../cards/onboarding/mr/mr_card.dart';
 import '../../cards/onboarding/mr/mr_details_card.dart';
 import '../../cards/onboarding/mr/mr_search_filter_card.dart';
 import '../../cards/onboarding/mr/onboard_edit_mr_card.dart';
-import '../../models/mr.dart';
+import '../../models/onboarding/mr.dart';
 import '../../providers/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

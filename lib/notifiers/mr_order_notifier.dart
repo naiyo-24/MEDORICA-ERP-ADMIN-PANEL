@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/distributor.dart';
-import '../models/mr.dart';
-import '../models/mr_chemist_shop.dart';
-import '../models/mr_doctor_network.dart';
+import '../models/onboarding/mr.dart';
+import '../models/chemist_shop/mr_chemist_shop.dart';
+import '../models/doctor_network/mr_doctor_network.dart';
 import '../models/mr_order.dart';
 import '../providers/distributor_provider.dart';
 import '../providers/mr_chemist_shop_provider.dart';

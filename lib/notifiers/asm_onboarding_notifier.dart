@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm.dart';
+import '../models/onboarding/asm.dart';
 import '../services/onboarding/asm_onboarding_services.dart';
 
 class ASMOnboardingState {

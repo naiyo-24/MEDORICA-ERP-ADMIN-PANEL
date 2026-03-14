@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr.dart';
+import '../models/onboarding/mr.dart';
 import '../models/mr_salary_slip.dart';
 import '../providers/mr_onboarding_provider.dart';
 

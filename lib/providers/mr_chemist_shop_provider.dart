@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr_chemist_shop.dart';
+import '../models/chemist_shop/mr_chemist_shop.dart';
 import '../notifiers/mr_chemist_shop_notifier.dart';
 
 final mrChemistShopNotifierProvider =

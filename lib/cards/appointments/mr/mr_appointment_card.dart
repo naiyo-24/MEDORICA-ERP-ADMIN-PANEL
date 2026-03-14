@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/mr_appointments.dart';
+import '../../../models/appointment/mr_appointments.dart';
 import '../../../theme/app_theme.dart';
 
 class MRAppointmentCard extends StatelessWidget {

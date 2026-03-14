@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../models/asm.dart';
-import '../../models/mr.dart';
+import '../../models/onboarding/asm.dart';
+import '../../models/onboarding/mr.dart';
 import '../../models/team.dart';
 import '../../theme/app_theme.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/mr.dart';
+import '../../../models/onboarding/mr.dart';
 import '../../../models/mr_order.dart';
 import '../../../theme/app_theme.dart';
 

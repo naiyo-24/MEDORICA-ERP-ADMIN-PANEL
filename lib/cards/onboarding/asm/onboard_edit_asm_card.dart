@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/asm.dart';
+import '../../../models/onboarding/asm.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMFormData {

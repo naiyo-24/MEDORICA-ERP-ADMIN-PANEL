@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_doctor_network.dart';
+import '../models/doctor_network/asm_doctor_network.dart';
 import '../notifiers/asm_doctor_network_notifier.dart';
 
 final asmDoctorNetworkNotifierProvider =

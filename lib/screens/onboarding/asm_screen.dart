@@ -5,7 +5,7 @@ import '../../cards/onboarding/asm/asm_card.dart';
 import '../../cards/onboarding/asm/asm_details_card.dart';
 import '../../cards/onboarding/asm/asm_search_filter_card.dart';
 import '../../cards/onboarding/asm/onboard_edit_asm_card.dart';
-import '../../models/asm.dart';
+import '../../models/onboarding/asm.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

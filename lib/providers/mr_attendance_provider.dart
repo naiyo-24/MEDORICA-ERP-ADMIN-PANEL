@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr_attendance.dart';
+import '../models/attendance/mr_attendance.dart';
 import '../notifiers/mr_attendance_notifier.dart';
 
 final mrAttendanceNotifierProvider =

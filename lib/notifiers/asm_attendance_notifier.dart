@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_attendance.dart';
+import '../models/attendance/asm_attendance.dart';
 
 class ASMAttendanceState {
   const ASMAttendanceState({

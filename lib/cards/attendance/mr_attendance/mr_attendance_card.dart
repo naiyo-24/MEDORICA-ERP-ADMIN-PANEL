@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/mr_attendance.dart';
+import '../../../models/attendance/mr_attendance.dart';
 import '../../../providers/mr_attendance_provider.dart';
 import '../../../theme/app_theme.dart';
 

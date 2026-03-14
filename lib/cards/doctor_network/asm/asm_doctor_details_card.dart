@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/asm_doctor_network.dart';
+import '../../../models/doctor_network/asm_doctor_network.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMDoctorDetailsCard extends StatelessWidget {

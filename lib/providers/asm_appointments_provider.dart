@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_appointments.dart';
+import '../models/appointment/asm_appointments.dart';
 import '../notifiers/asm_appointments_notifier.dart';
 
 final asmAppointmentsNotifierProvider =

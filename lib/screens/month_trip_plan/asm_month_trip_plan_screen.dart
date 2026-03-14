@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../cards/month_trip_plan/asm/asm_create_edit_month_trip_plan_card.dart';
 import '../../cards/month_trip_plan/asm/asm_month_trip_plan_card.dart';
 import '../../cards/month_trip_plan/asm/asm_month_trip_plan_filter_card.dart';
-import '../../models/asm.dart';
+import '../../models/onboarding/asm.dart';
 import '../../models/asm_month_trip_plan.dart';
 import '../../providers/asm_month_trip_plan_provider.dart';
 import '../../providers/asm_onboarding_provider.dart';
