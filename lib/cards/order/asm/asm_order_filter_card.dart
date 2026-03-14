@@ -72,10 +72,10 @@ class ASMOrderFilterCard extends StatelessWidget {
     switch (status) {
       case ASMOrderStatus.pending:
         return 'Pending';
+      case ASMOrderStatus.approved:
+        return 'Approved';
       case ASMOrderStatus.shipped:
         return 'Shipped';
-      case ASMOrderStatus.dispatched:
-        return 'Dispatched';
       case ASMOrderStatus.delivered:
         return 'Delivered';
     }

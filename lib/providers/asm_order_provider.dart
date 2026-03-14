@@ -29,3 +29,15 @@ final selectedASMOrderStatusProvider = Provider<String>((ref) {
 final asmOrderSearchQueryProvider = Provider<String>((ref) {
   return ref.watch(asmOrderNotifierProvider).searchQuery;
 });
+
+final asmOrderLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(asmOrderNotifierProvider).isLoading;
+});
+
+final asmOrderSavingProvider = Provider<bool>((ref) {
+  return ref.watch(asmOrderNotifierProvider).isSaving;
+});
+
+final asmOrderErrorProvider = Provider<String?>((ref) {
+  return ref.watch(asmOrderNotifierProvider).error;
+});

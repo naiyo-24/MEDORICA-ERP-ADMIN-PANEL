@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/order/asm/asm_order_card.dart';
 import '../../cards/order/asm/asm_order_filter_card.dart';
+import '../../models/asm_order.dart';
 import '../../providers/asm_onboarding_provider.dart';
 import '../../providers/asm_order_provider.dart';
 import '../../theme/app_theme.dart';
@@ -19,6 +20,15 @@ class ASMOrderScreen extends ConsumerStatefulWidget {
 class _ASMOrderScreenState extends ConsumerState<ASMOrderScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.asmOrders;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await ref.read(asmOnboardingNotifierProvider.notifier).loadASMList();
+      await ref.read(asmOrderNotifierProvider.notifier).loadOrders();
+    });
+  }
 
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
@@ -40,17 +50,84 @@ class _ASMOrderScreenState extends ConsumerState<ASMOrderScreen> {
     }
   }
 
+  Future<void> _onUpdateStatus(
+    BuildContext context,
+    ASMOrder order,
+    ASMOrderStatus status,
+  ) async {
+    await ref
+        .read(asmOrderNotifierProvider.notifier)
+        .updateOrderStatus(order: order, status: status);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order status updated successfully.')),
+    );
+  }
+
+  Future<void> _onDeleteOrder(BuildContext context, ASMOrder order) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Order'),
+        content: Text('Delete order ${order.id}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete != true) {
+      return;
+    }
+
+    await ref.read(asmOrderNotifierProvider.notifier).deleteOrderById(order);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order deleted successfully.')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final orderState = ref.watch(asmOrderNotifierProvider);
     final orders = ref.watch(asmOrderListProvider);
     final count = ref.watch(asmOrderCountProvider);
-    final asmList = ref.watch(asmListProvider);
+    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
     final searchQuery = ref.watch(asmOrderSearchQueryProvider);
     final selectedASMId = ref.watch(selectedASMOrderIdProvider);
     final selectedDate = ref.watch(selectedASMOrderDateProvider);
     final selectedStatus = ref.watch(selectedASMOrderStatusProvider);
     final notifier = ref.read(asmOrderNotifierProvider.notifier);
+
+    ref.listen(asmOrderNotifierProvider, (previous, next) {
+      if (next.error != null && next.error!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
 
     return Scaffold(
       key: _scaffoldKey,
@@ -100,7 +177,12 @@ class _ASMOrderScreenState extends ConsumerState<ASMOrderScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                if (orders.isEmpty)
+                if (orderState.isLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (orders.isEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.xxl,
@@ -127,7 +209,17 @@ class _ASMOrderScreenState extends ConsumerState<ASMOrderScreen> {
                     separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
                     itemBuilder: (context, index) {
-                      return ASMOrderCard(order: orders[index]);
+                      final order = orders[index];
+                      return ASMOrderCard(
+                        order: order,
+                        isBusy: orderState.isSaving,
+                        onStatusChanged: (status) async {
+                          await _onUpdateStatus(context, order, status);
+                        },
+                        onDelete: () async {
+                          await _onDeleteOrder(context, order);
+                        },
+                      );
                     },
                   ),
               ],

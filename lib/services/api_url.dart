@@ -141,6 +141,22 @@ class ApiUrl {
   static String asmSalarySlipDeleteById(int slipId) =>
       '$asmSalarySlipBase/delete-by/$slipId';
 
+  // ASM Orders
+  static const String asmOrderBase = '/order/asm';
+  static const String asmOrderGetAll = '$asmOrderBase/get-all';
+
+  static String asmOrderGetByAsm(String asmId) =>
+      '$asmOrderBase/get-by-asm/$asmId';
+
+  static String asmOrderGetByAsmAndOrderId(String asmId, String orderId) =>
+      '$asmOrderBase/get-by/$asmId/$orderId';
+
+  static String asmOrderUpdateByOrderId(String orderId) =>
+      '$asmOrderBase/update-by/$orderId';
+
+  static String asmOrderDeleteByOrderId(String orderId) =>
+      '$asmOrderBase/delete-by/$orderId';
+
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

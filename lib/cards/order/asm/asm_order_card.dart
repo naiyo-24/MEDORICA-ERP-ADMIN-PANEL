@@ -5,9 +5,18 @@ import '../../../models/asm_order.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMOrderCard extends StatelessWidget {
-  const ASMOrderCard({super.key, required this.order});
+  const ASMOrderCard({
+    super.key,
+    required this.order,
+    required this.onStatusChanged,
+    required this.onDelete,
+    this.isBusy = false,
+  });
 
   final ASMOrder order;
+  final ValueChanged<ASMOrderStatus> onStatusChanged;
+  final VoidCallback onDelete;
+  final bool isBusy;
 
   String _date(DateTime value) {
     const months = [
@@ -37,10 +46,10 @@ class ASMOrderCard extends StatelessWidget {
     switch (status) {
       case ASMOrderStatus.pending:
         return 'Pending';
+      case ASMOrderStatus.approved:
+        return 'Approved';
       case ASMOrderStatus.shipped:
         return 'Shipped';
-      case ASMOrderStatus.dispatched:
-        return 'Dispatched';
       case ASMOrderStatus.delivered:
         return 'Delivered';
     }
@@ -50,10 +59,10 @@ class ASMOrderCard extends StatelessWidget {
     switch (status) {
       case ASMOrderStatus.pending:
         return Colors.orange;
+      case ASMOrderStatus.approved:
+        return Colors.teal;
       case ASMOrderStatus.shipped:
         return AppColors.primary;
-      case ASMOrderStatus.dispatched:
-        return Colors.blue;
       case ASMOrderStatus.delivered:
         return Colors.green;
     }
@@ -137,19 +146,66 @@ class ASMOrderCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          _DetailRow(label: 'Doctor Interested', value: order.doctorName),
+          _DetailRow(
+            label: 'Doctor Interested',
+            value: order.doctorName == '-'
+                ? (order.doctorId ?? '-')
+                : order.doctorName,
+          ),
           _DetailRow(
             label: 'Chemist Shop Ordered For',
-            value: order.chemistShopName,
+            value: order.chemistShopName == '-'
+                ? (order.chemistShopId ?? '-')
+                : order.chemistShopName,
           ),
           _DetailRow(
             label: 'Distributor Responsible',
-            value: order.distributorName,
+            value: order.distributorName == '-'
+                ? (order.distributorId ?? '-')
+                : order.distributorName,
           ),
           _DetailRow(
             label: 'Delivery Time & Date',
             value:
                 '${_date(order.deliveryDateTime)} | ${_time(order.deliveryDateTime)}',
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<ASMOrderStatus>(
+                  initialValue: order.status,
+                  decoration: InputDecoration(
+                    labelText: 'Update Status',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                    ),
+                  ),
+                  items: ASMOrderStatus.values
+                      .map(
+                        (status) => DropdownMenuItem<ASMOrderStatus>(
+                          value: status,
+                          child: Text(_statusLabel(status)),
+                        ),
+                      )
+                      .toList(growable: false),
+                  onChanged: isBusy
+                      ? null
+                      : (value) {
+                          if (value != null && value != order.status) {
+                            onStatusChanged(value);
+                          }
+                        },
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              TextButton.icon(
+                onPressed: isBusy ? null : onDelete,
+                icon: const Icon(Iconsax.trash, size: 18),
+                label: const Text('Delete'),
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              ),
+            ],
           ),
         ],
       ),

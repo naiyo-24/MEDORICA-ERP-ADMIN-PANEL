@@ -1,14 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/asm.dart';
-import '../models/asm_chemist_shop.dart';
-import '../models/asm_doctor_network.dart';
 import '../models/asm_order.dart';
-import '../models/distributor.dart';
-import '../providers/asm_chemist_shop_provider.dart';
-import '../providers/asm_doctor_network_provider.dart';
 import '../providers/asm_onboarding_provider.dart';
-import '../providers/distributor_provider.dart';
+import '../services/order/asm_order_services.dart';
 
 class ASMOrderState {
   const ASMOrderState({
@@ -17,6 +12,9 @@ class ASMOrderState {
     this.selectedASMId = '',
     this.selectedDate,
     this.selectedStatus = '',
+    this.isLoading = false,
+    this.isSaving = false,
+    this.error,
   });
 
   final List<ASMOrder> orders;
@@ -24,6 +22,9 @@ class ASMOrderState {
   final String selectedASMId;
   final DateTime? selectedDate;
   final String selectedStatus;
+  final bool isLoading;
+  final bool isSaving;
+  final String? error;
 
   ASMOrderState copyWith({
     List<ASMOrder>? orders,
@@ -31,6 +32,9 @@ class ASMOrderState {
     String? selectedASMId,
     DateTime? selectedDate,
     String? selectedStatus,
+    bool? isLoading,
+    bool? isSaving,
+    String? error,
     bool clearSelectedDate = false,
   }) {
     return ASMOrderState(
@@ -41,6 +45,9 @@ class ASMOrderState {
           ? null
           : selectedDate ?? this.selectedDate,
       selectedStatus: selectedStatus ?? this.selectedStatus,
+      isLoading: isLoading ?? this.isLoading,
+      isSaving: isSaving ?? this.isSaving,
+      error: error,
     );
   }
 
@@ -69,64 +76,98 @@ class ASMOrderState {
 }
 
 class ASMOrderNotifier extends Notifier<ASMOrderState> {
+  late final ASMOrderServices _services;
+
   @override
   ASMOrderState build() {
-    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
-    final doctorList = ref.watch(asmDoctorNetworkNotifierProvider).doctorList;
-    final shops = ref.watch(asmChemistShopNotifierProvider).shops;
-    final distributors = ref.watch(distributorNotifierProvider).distributors;
-
-    return ASMOrderState(
-      orders: _buildMockOrders(
-        asmList: asmList,
-        doctorList: doctorList,
-        shops: shops,
-        distributors: distributors,
-      ),
-    );
+    _services = ref.read(asmOrderServicesProvider);
+    return const ASMOrderState();
   }
 
-  List<ASMOrder> _buildMockOrders({
-    required List<ASM> asmList,
-    required List<ASMDoctorNetwork> doctorList,
-    required List<ASMChemistShop> shops,
-    required List<Distributor> distributors,
-  }) {
-    if (asmList.isEmpty) {
-      return const [];
+  Future<void> loadOrders() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final asmNotifier = ref.read(asmOnboardingNotifierProvider.notifier);
+      if (ref.read(asmOnboardingNotifierProvider).asmList.isEmpty) {
+        await asmNotifier.loadASMList();
+      }
+
+      final asmList = ref.read(asmOnboardingNotifierProvider).asmList;
+      final asmNameById = _asmNameByIdMap(asmList);
+
+      final orders = await _services.getAllASMOrders(asmNameById: asmNameById);
+
+      state = state.copyWith(orders: orders, isLoading: false, error: null);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load ASM orders: $e',
+      );
     }
+  }
 
-    final now = DateTime.now();
-    final fallbackDoctor = doctorList.isNotEmpty
-        ? doctorList.first.doctorName
-        : 'Dr. Shalini Das';
-    final fallbackShop = shops.isNotEmpty
-        ? shops.first.shopName
-        : 'MediLink Drug House Central';
-    final fallbackDistributor = distributors.isNotEmpty
-        ? distributors.first.distName
-        : 'Astra Medisupply';
+  Future<void> updateOrderStatus({
+    required ASMOrder order,
+    required ASMOrderStatus status,
+  }) async {
+    state = state.copyWith(isSaving: true, error: null);
 
-    return [
-      for (var i = 0; i < asmList.length; i++)
-        ASMOrder(
-          id: 'ASM-ORD-${1001 + i}',
-          orderDate: now.subtract(Duration(days: i * 2 + 1)),
-          deliveryDateTime: now
-              .subtract(Duration(days: i))
-              .add(Duration(hours: 13 + (i % 5))),
-          asmId: asmList[i].asmId,
-          asmName: asmList[i].name,
-          doctorName: doctorList.length > i
-              ? doctorList[i].doctorName
-              : fallbackDoctor,
-          chemistShopName: shops.length > i ? shops[i].shopName : fallbackShop,
-          distributorName: distributors.isNotEmpty
-              ? distributors[i % distributors.length].distName
-              : fallbackDistributor,
-          status: ASMOrderStatus.values[i % ASMOrderStatus.values.length],
-        ),
-    ];
+    try {
+      final updatedOrder = await _services.updateOrderStatus(
+        orderId: order.id,
+        status: status,
+        asmName: order.asmName,
+      );
+
+      final updatedOrders = state.orders
+          .map((item) => item.id == order.id ? updatedOrder : item)
+          .toList(growable: false);
+
+      state = state.copyWith(
+        orders: updatedOrders,
+        isSaving: false,
+        error: null,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to update order status: $e',
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> deleteOrderById(ASMOrder order) async {
+    state = state.copyWith(isSaving: true, error: null);
+
+    try {
+      await _services.deleteOrderByOrderId(order.id);
+
+      final updatedOrders = state.orders
+          .where((item) => item.id != order.id)
+          .toList(growable: false);
+
+      state = state.copyWith(
+        orders: updatedOrders,
+        isSaving: false,
+        error: null,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        error: 'Failed to delete order: $e',
+      );
+      rethrow;
+    }
+  }
+
+  Map<String, String> _asmNameByIdMap(List<ASM> asmList) {
+    final map = <String, String>{};
+    for (final asm in asmList) {
+      map[asm.asmId] = asm.name;
+    }
+    return map;
   }
 
   void setSearchQuery(String value) {
