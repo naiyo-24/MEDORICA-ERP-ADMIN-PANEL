@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../models/dashboard.dart';
@@ -26,17 +25,17 @@ class CountCardSection extends StatelessWidget {
       _CountMetric(
         title: 'Distributors',
         value: data.totalDistributors,
-        icon: FontAwesomeIcons.truckFast,
+        icon: Iconsax.truck,
       ),
       _CountMetric(
         title: 'Chemist Shops',
         value: data.totalChemistShops,
-        icon: FontAwesomeIcons.store,
+        icon: Iconsax.shop,
       ),
       _CountMetric(
         title: 'Doctors',
         value: data.totalDoctors,
-        icon: FontAwesomeIcons.userDoctor,
+        icon: Iconsax.user,
       ),
     ];
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +8,14 @@ import 'package:iconsax/iconsax.dart';
 import '../providers/auth_provider.dart';
 import '../routes/app_router.dart';
 import '../theme/app_theme.dart';
+
+// Helper function to render Icon or FaIcon based on icon type
+Widget _buildIcon(dynamic icon, double size, Color color) {
+  if (icon is FaIconData) {
+    return FaIcon(icon, size: size, color: color);
+  }
+  return Icon(icon as IconData, size: size, color: color);
+}
 
 class SideNavItemKeys {
   static const String dashboard = 'dashboard';
@@ -651,7 +660,7 @@ class _NavChild {
 
   final String itemKey;
   final String label;
-  final IconData icon;
+  final dynamic icon;
 }
 
 class _NavGroup extends StatelessWidget {
@@ -663,7 +672,7 @@ class _NavGroup extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final dynamic icon;
   final String title;
   final List<_NavChild> children;
   final String selectedKey;
@@ -688,7 +697,7 @@ class _NavGroup extends StatelessWidget {
         ),
         iconColor: AppColors.secondary,
         collapsedIconColor: AppColors.secondary,
-        leading: Icon(icon, size: 18, color: AppColors.secondary),
+        leading: _buildIcon(icon, 18, AppColors.secondary),
         title: Text(
           title,
           style: theme.textTheme.bodyMedium?.copyWith(
@@ -747,10 +756,10 @@ class _NavSubTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
             child: Row(
               children: [
-                Icon(
+                _buildIcon(
                   icon,
-                  size: 15,
-                  color: isSelected ? AppColors.primary : AppColors.quaternary,
+                  15,
+                  isSelected ? AppColors.primary : AppColors.quaternary,
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Expanded(
@@ -785,7 +794,7 @@ class _NavTile extends StatelessWidget {
     this.danger = false,
   });
 
-  final IconData icon;
+  final dynamic icon;
   final String title;
   final String itemKey;
   final String selectedKey;
@@ -812,7 +821,12 @@ class _NavTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
             child: Row(
               children: [
-                Icon(icon, size: 18, color: isSelected ? baseColor : textColor),
+                _buildIcon(
+                  icon,
+                  18,
+                  isSelected ? baseColor : textColor,
+                ),
+                // Helper function to render Icon or FaIcon based on icon type
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
