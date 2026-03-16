@@ -230,9 +230,9 @@ class _VisualAdsScreenState extends ConsumerState<VisualAdsScreen> {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.1),
+                      color: AppColors.error.withAlpha(10),
                       borderRadius: BorderRadius.circular(AppRadius.md),
-                      border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                      border: Border.all(color: AppColors.error.withAlpha(30)),
                     ),
                     child: Row(
                       children: [

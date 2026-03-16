@@ -1,4 +1,15 @@
 class ApiUrl {
+    // MR Salary Slip
+    static const String mrSalarySlipBase = '/salary-slip/mr';
+    static const String mrSalarySlipGetAll = '$mrSalarySlipBase/get-all';
+
+    static String mrSalarySlipPostByMr(String mrId) => '$mrSalarySlipBase/post/$mrId';
+    static String mrSalarySlipUpdateByMr(String mrId) => '$mrSalarySlipBase/update-by/$mrId';
+    static String mrSalarySlipGetByMr(String mrId) => '$mrSalarySlipBase/get-by-mr/$mrId';
+    static String mrSalarySlipDownloadByMr(String mrId) => '$mrSalarySlipBase/download-by-mr/$mrId';
+    static String mrSalarySlipGetById(int slipId) => '$mrSalarySlipBase/get-by/$slipId';
+    static String mrSalarySlipDownloadById(int slipId) => '$mrSalarySlipBase/download-by/$slipId';
+    static String mrSalarySlipDeleteById(int slipId) => '$mrSalarySlipBase/delete-by/$slipId';
   // Update this base URL to your deployed backend host.
   static const String baseUrl = 'http://0.0.0.0:8000';
 

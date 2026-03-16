@@ -5,32 +5,49 @@ import 'package:file_picker/file_picker.dart';
 import '../../../models/mr_salary_slip.dart';
 import '../../../theme/app_theme.dart';
 
+
+import '../../../services/api_url.dart';
+
+
 class MRSalarySlipCard extends StatelessWidget {
   const MRSalarySlipCard({
     super.key,
     required this.salarySlip,
     required this.onUpload,
     required this.onView,
+    required this.onDelete,
   });
 
   final MRSalarySlip salarySlip;
-  final Function(String slipId, PlatformFile file) onUpload;
+  final Future<void> Function(String mrId, PlatformFile file) onUpload;
   final VoidCallback onView;
+  final VoidCallback onDelete;
 
   Future<void> _handleUpload(BuildContext context) async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'],
+        allowedExtensions: ['pdf'],
+        withData: true,
       );
-
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.first;
-        onUpload(salarySlip.id, file);
+        if (file.bytes == null) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Unable to read file. Please try another PDF.'),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
+          return;
+        }
+        await onUpload(salarySlip.mrId, file);
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('File "${file.name}" uploaded successfully'),
+              content: Text('Salary slip "${file.name}" uploaded.'),
               backgroundColor: AppColors.success,
             ),
           );
@@ -51,6 +68,7 @@ class MRSalarySlipCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final profileUrl = ApiUrl.getProfilePhotoUrl(salarySlip.mrProfilePhoto);
 
     return Card(
       margin: const EdgeInsets.symmetric(
@@ -65,22 +83,12 @@ class MRSalarySlipCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primary.withAlpha(204), AppColors.primary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: const Icon(
-                Iconsax.document_text,
-                color: AppColors.surface,
-                size: 24,
-              ),
+            CircleAvatar(
+              radius: 24,
+              backgroundImage:
+                  NetworkImage(profileUrl),
+              backgroundColor: AppColors.primary.withAlpha(40),
+              child: null,
             ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
@@ -89,73 +97,60 @@ class MRSalarySlipCard extends StatelessWidget {
                 children: [
                   Text(
                     salarySlip.mrName,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: theme.textTheme.titleMedium,
                   ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    '${salarySlip.monthName} ${salarySlip.year}',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.hintColor,
-                    ),
-                  ),
-                  if (salarySlip.hasFile) ...[
-                    const SizedBox(height: AppSpacing.xxs),
-                    Row(
-                      children: [
-                        Icon(
-                          Iconsax.tick_circle5,
-                          size: 16,
+                  Text('MR ID: ${salarySlip.mrId}',
+                      style: theme.textTheme.bodySmall),
+                  Text('Phone: ${salarySlip.mrPhone}',
+                      style: theme.textTheme.bodySmall),
+                  if (salarySlip.hasFile)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        salarySlip.fileName ?? '',
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: AppColors.success,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: AppSpacing.xxs),
-                        Expanded(
-                          child: Text(
-                            salarySlip.fileName!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: AppColors.success,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ],
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
-            OutlinedButton.icon(
-              onPressed: () => _handleUpload(context),
-              icon: const Icon(Iconsax.document_upload, size: 18),
-              label: const Text('Upload'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                side: const BorderSide(color: AppColors.primary),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
+            const SizedBox(width: AppSpacing.md),
+            Column(
+              children: [
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.upload_file),
+                  label: const Text('Upload'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.surface,
+                    foregroundColor: AppColors.primary,
+                  ),
+                  onPressed: () => _handleUpload(context),
                 ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            ElevatedButton.icon(
-              onPressed: salarySlip.hasFile ? onView : null,
-              icon: const Icon(Iconsax.eye, size: 18),
-              label: const Text('View'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.surface,
-                disabledBackgroundColor: AppColors.primary.withAlpha(77),
-                disabledForegroundColor: AppColors.surface.withAlpha(128),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  icon: const Icon(Iconsax.eye),
+                  label: const Text('View'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.surface,
+                  ),
+                  onPressed: salarySlip.hasFile ? onView : null,
                 ),
-              ),
+                const SizedBox(height: 8),
+                ElevatedButton.icon(
+                  icon: const Icon(Iconsax.trash),
+                  label: const Text('Delete'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.surface,
+                    foregroundColor: AppColors.error,
+                    side: const BorderSide(color: AppColors.error),
+                  ),
+                  onPressed: salarySlip.hasFile ? onDelete : null,
+                ),
+              ],
             ),
           ],
         ),
@@ -163,3 +158,5 @@ class MRSalarySlipCard extends StatelessWidget {
     );
   }
 }
+                
+            
