@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_order.dart';
+import '../models/order/asm_order.dart';
 import '../notifiers/asm_order_notifier.dart';
 
 final asmOrderNotifierProvider =

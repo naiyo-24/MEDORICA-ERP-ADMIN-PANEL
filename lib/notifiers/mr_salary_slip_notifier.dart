@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr_salary_slip.dart';
+import '../models/salary_slip/mr_salary_slip.dart';
 import '../providers/mr_onboarding_provider.dart';
 import '../providers/mr_salary_slip_provider.dart';
 

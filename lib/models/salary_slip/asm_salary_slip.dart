@@ -1,22 +1,22 @@
-import 'onboarding/mr.dart';
+import '../onboarding/asm.dart';
 
-class MRSalarySlip {
-  const MRSalarySlip({
+class ASMSalarySlip {
+  const ASMSalarySlip({
     this.id,
-    required this.mrId,
-    required this.mrName,
-    required this.mrPhone,
-    this.mrProfilePhoto,
+    required this.asmId,
+    required this.asmName,
+    required this.asmPhone,
+    this.asmProfilePhoto,
     this.salarySlipUrl,
     this.createdAt,
     this.updatedAt,
   });
 
   final int? id;
-  final String mrId;
-  final String mrName;
-  final String mrPhone;
-  final String? mrProfilePhoto;
+  final String asmId;
+  final String asmName;
+  final String asmPhone;
+  final String? asmProfilePhoto;
   final String? salarySlipUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -31,45 +31,44 @@ class MRSalarySlip {
     return value.split('/').last;
   }
 
-  factory MRSalarySlip.fromMr(MR mr) {
-    return MRSalarySlip(
-      mrId: mr.mrId,
-      mrName: mr.name,
-      mrPhone: mr.phone,
-      mrProfilePhoto: mr.profilePhoto,
+  factory ASMSalarySlip.fromAsm(ASM asm) {
+    return ASMSalarySlip(
+      asmId: asm.asmId,
+      asmName: asm.name,
+      asmPhone: asm.phone,
+      asmProfilePhoto: asm.profilePhoto,
     );
   }
 
-  factory MRSalarySlip.fromJson(Map<String, dynamic> json) {
-    return MRSalarySlip(
+  factory ASMSalarySlip.fromJson(Map<String, dynamic> json) {
+    return ASMSalarySlip(
       id: _asInt(json['id']),
-      mrId: (json['mr_id'] ?? '').toString(),
-      mrName: (json['mr_name'] ?? '').toString(),
-      mrPhone: (json['mr_phone'] ?? '').toString(),
-      mrProfilePhoto: (json['mr_profile_photo'] ?? '').toString(),
+      asmId: (json['asm_id'] ?? '').toString(),
+      asmName: '',
+      asmPhone: '',
       salarySlipUrl: (json['salary_slip_url'] ?? '').toString(),
       createdAt: _parseDateTime(json['created_at']),
       updatedAt: _parseDateTime(json['updated_at']),
     );
   }
 
-  MRSalarySlip copyWith({
+  ASMSalarySlip copyWith({
     int? id,
-    String? mrId,
-    String? mrName,
-    String? mrPhone,
-    String? mrProfilePhoto,
+    String? asmId,
+    String? asmName,
+    String? asmPhone,
+    String? asmProfilePhoto,
     String? salarySlipUrl,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool clearSlip = false,
   }) {
-    return MRSalarySlip(
+    return ASMSalarySlip(
       id: id ?? this.id,
-      mrId: mrId ?? this.mrId,
-      mrName: mrName ?? this.mrName,
-      mrPhone: mrPhone ?? this.mrPhone,
-      mrProfilePhoto: mrProfilePhoto ?? this.mrProfilePhoto,
+      asmId: asmId ?? this.asmId,
+      asmName: asmName ?? this.asmName,
+      asmPhone: asmPhone ?? this.asmPhone,
+      asmProfilePhoto: asmProfilePhoto ?? this.asmProfilePhoto,
       salarySlipUrl: clearSlip ? null : salarySlipUrl ?? this.salarySlipUrl,
       createdAt: clearSlip ? null : createdAt ?? this.createdAt,
       updatedAt: clearSlip ? null : updatedAt ?? this.updatedAt,
@@ -84,12 +83,12 @@ class MRSalarySlip {
   }
 
   static int? _asInt(dynamic value) {
-    if (value == null) return null;
-    if (value is int) return value;
-    if (value is String && value.isNotEmpty) {
+    if (value is int) {
+      return value;
+    }
+    if (value is String) {
       return int.tryParse(value);
     }
     return null;
   }
 }
-  

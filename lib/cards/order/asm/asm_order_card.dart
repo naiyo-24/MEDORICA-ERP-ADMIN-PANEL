@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/asm_order.dart';
+import '../../../models/order/asm_order.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMOrderCard extends StatelessWidget {

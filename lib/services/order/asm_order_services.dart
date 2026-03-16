@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../models/asm_order.dart';
+import '../../models/order/asm_order.dart';
 import '../api_url.dart';
 
 class ASMOrderServices {

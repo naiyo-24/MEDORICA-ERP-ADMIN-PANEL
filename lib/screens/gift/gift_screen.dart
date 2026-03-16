@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../cards/gift/gift/edit_create_gift_card.dart';
 import '../../cards/gift/gift/gift_card.dart';
-import '../../models/gift.dart';
+import '../../models/gift/gift.dart';
 import '../../providers/gift_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

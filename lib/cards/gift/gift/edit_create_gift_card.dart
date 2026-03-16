@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/gift.dart';
+import '../../../models/gift/gift.dart';
 import '../../../theme/app_theme.dart';
 
 class GiftFormData {

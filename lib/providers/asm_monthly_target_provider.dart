@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_monthly_target.dart';
+import '../models/monthly_target/asm_monthly_target.dart';
 import '../notifiers/asm_monthly_target_notifier.dart';
 
 final asmMonthlyTargetNotifierProvider =

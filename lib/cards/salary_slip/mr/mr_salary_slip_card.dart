@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
 
-import '../../../models/mr_salary_slip.dart';
+import '../../../models/salary_slip/mr_salary_slip.dart';
 import '../../../theme/app_theme.dart';
 
 

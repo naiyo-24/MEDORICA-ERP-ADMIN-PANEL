@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/mr_monthly_target.dart';
+import '../../../models/monthly_target/mr_monthly_target.dart';
 import '../../../theme/app_theme.dart';
 
 class MRMonthlyTargetCard extends StatelessWidget {

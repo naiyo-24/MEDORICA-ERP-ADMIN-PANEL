@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/asm.dart';
-import '../models/asm_monthly_target.dart';
+import '../models/monthly_target/asm_monthly_target.dart';
 import '../providers/asm_onboarding_provider.dart';
 
 class ASMMonthlyTargetState {

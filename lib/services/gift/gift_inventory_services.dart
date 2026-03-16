@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../models/gift.dart';
+import '../../models/gift/gift.dart';
 import '../api_url.dart';
 
 class GiftInventoryService {

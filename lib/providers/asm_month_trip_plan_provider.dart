@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_month_trip_plan.dart';
+import '../models/month_plan/asm_month_trip_plan.dart';
 import '../notifiers/asm_month_trip_plan_notifier.dart';
 
 final asmMonthTripPlanNotifierProvider =

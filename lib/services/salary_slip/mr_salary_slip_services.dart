@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-import '../../models/mr_salary_slip.dart';
+import '../../models/salary_slip/mr_salary_slip.dart';
 import '../api_url.dart';
 
 class MRSalarySlipServices {

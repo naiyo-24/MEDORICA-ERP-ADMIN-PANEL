@@ -5,7 +5,7 @@ import '../../cards/month_trip_plan/mr/mr_create_edit_month_trip_plan_card.dart'
 import '../../cards/month_trip_plan/mr/mr_month_trip_plan_card.dart';
 import '../../cards/month_trip_plan/mr/mr_month_trip_plan_filter_card.dart';
 import '../../models/onboarding/mr.dart';
-import '../../models/mr_month_trip_plan.dart';
+import '../../models/month_plan/mr_month_trip_plan.dart';
 import '../../providers/mr_month_trip_plan_provider.dart';
 import '../../providers/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/gift.dart';
+import '../models/gift/gift.dart';
 import '../services/gift/gift_inventory_services.dart';
 
 class GiftState {

@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/asm.dart';
 import '../models/doctor_network/asm_doctor_network.dart';
-import '../models/asm_gift_application.dart';
-import '../models/gift.dart';
+import '../models/gift/asm_gift_application.dart';
+import '../models/gift/gift.dart';
 import '../providers/asm_doctor_network_provider.dart';
 import '../providers/asm_onboarding_provider.dart';
 import '../providers/gift_provider.dart';

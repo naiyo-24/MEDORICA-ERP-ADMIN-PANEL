@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_gift_application.dart';
+import '../models/gift/asm_gift_application.dart';
 import '../notifiers/asm_gift_application_notifier.dart';
 
 final asmGiftApplicationNotifierProvider =

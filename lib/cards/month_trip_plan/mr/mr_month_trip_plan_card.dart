@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/mr_month_trip_plan.dart';
+import '../../../models/month_plan/mr_month_trip_plan.dart';
 import '../../../theme/app_theme.dart';
 
 class MRMonthTripPlanCard extends StatelessWidget {

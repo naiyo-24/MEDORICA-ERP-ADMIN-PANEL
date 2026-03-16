@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/asm_gift_application.dart';
+import '../../../models/gift/asm_gift_application.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMGiftApplicationCard extends StatelessWidget {

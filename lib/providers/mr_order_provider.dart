@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/mr_order.dart';
+import '../models/order/mr_order.dart';
 import '../notifiers/mr_order_notifier.dart';
 
 final mrOrderNotifierProvider = NotifierProvider<MROrderNotifier, MROrderState>(

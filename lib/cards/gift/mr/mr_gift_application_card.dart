@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/mr_gift_application.dart';
+import '../../../models/gift/mr_gift_application.dart';
 import '../../../theme/app_theme.dart';
 
 class MRGiftApplicationCard extends StatelessWidget {

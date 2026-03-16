@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/asm.dart';
-import '../models/asm_month_trip_plan.dart';
+import '../models/month_plan/asm_month_trip_plan.dart';
 import '../providers/asm_onboarding_provider.dart';
 
 class ASMMonthTripPlanState {

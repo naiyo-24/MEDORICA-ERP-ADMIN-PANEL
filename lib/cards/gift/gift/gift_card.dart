@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../../models/gift.dart';
+import '../../../models/gift/gift.dart';
 import '../../../theme/app_theme.dart';
 
 class GiftCard extends StatefulWidget {

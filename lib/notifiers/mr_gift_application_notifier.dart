@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/gift.dart';
+import '../models/gift/gift.dart';
 import '../models/onboarding/mr.dart';
 import '../models/doctor_network/mr_doctor_network.dart';
-import '../models/mr_gift_application.dart';
+import '../models/gift/mr_gift_application.dart';
 import '../providers/gift_provider.dart';
 import '../providers/mr_doctor_network_provider.dart';
 import '../providers/mr_onboarding_provider.dart';

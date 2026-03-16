@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/asm.dart';
-import '../models/asm_order.dart';
+import '../models/order/asm_order.dart';
 import '../providers/asm_onboarding_provider.dart';
 import '../services/order/asm_order_services.dart';
 

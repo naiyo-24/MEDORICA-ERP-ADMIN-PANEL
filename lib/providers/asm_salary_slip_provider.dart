@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/asm_salary_slip.dart';
+import '../models/salary_slip/asm_salary_slip.dart';
 import '../notifiers/asm_salary_slip_notifier.dart';
 import '../services/salary_slip/asm_salary_slip_services.dart';
 
