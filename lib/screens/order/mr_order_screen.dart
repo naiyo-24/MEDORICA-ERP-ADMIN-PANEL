@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/order/mr/mr_order_card.dart';
 import '../../cards/order/mr/mr_order_filter_card.dart';
-import '../../providers/mr_onboarding_provider.dart';
+import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../providers/mr_order_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

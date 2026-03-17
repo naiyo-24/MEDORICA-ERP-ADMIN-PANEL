@@ -4,7 +4,7 @@ import '../models/onboarding/mr.dart';
 import '../models/chemist_shop/mr_chemist_shop.dart';
 import '../models/doctor_network/mr_doctor_network.dart';
 import '../providers/mr_doctor_network_provider.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/onboarding/mr_onboarding_provider.dart';
 
 class MRChemistShopState {
   const MRChemistShopState({

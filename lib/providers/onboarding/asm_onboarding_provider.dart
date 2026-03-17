@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/onboarding/asm.dart';
-import '../notifiers/asm_onboarding_notifier.dart';
+import '../../models/onboarding/asm.dart';
+import '../../notifiers/onboarding/asm_onboarding_notifier.dart';
 
 final asmOnboardingNotifierProvider =
     NotifierProvider<ASMOnboardingNotifier, ASMOnboardingState>(

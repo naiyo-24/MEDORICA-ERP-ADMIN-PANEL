@@ -6,7 +6,7 @@ import '../models/doctor_network/mr_doctor_network.dart';
 import '../models/gift/mr_gift_application.dart';
 import '../providers/gift_provider.dart';
 import '../providers/mr_doctor_network_provider.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/onboarding/mr_onboarding_provider.dart';
 
 class MRGiftApplicationState {
   const MRGiftApplicationState({

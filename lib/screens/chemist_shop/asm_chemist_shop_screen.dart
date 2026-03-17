@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../cards/chemist_shop/asm/asm_chemist_shop_card.dart';
 import '../../cards/chemist_shop/asm/asm_chemist_shop_filter_card.dart';
 import '../../providers/asm_chemist_shop_provider.dart';
-import '../../providers/asm_onboarding_provider.dart';
+import '../../providers/onboarding/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';

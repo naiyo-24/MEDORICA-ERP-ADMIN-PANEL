@@ -2,8 +2,8 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/attendance/asm_attendance.dart';
-import '../services/attendance/asm_attendance_services.dart';
+import '../../models/attendance/asm_attendance.dart';
+import '../../services/attendance/asm_attendance_services.dart';
 
 class ASMAttendanceState {
   const ASMAttendanceState({

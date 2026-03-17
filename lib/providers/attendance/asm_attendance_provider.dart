@@ -1,9 +1,9 @@
-import '../services/attendance/asm_attendance_services.dart';
+import '../../services/attendance/asm_attendance_services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/attendance/asm_attendance.dart';
-import '../notifiers/asm_attendance_notifier.dart';
+import '../../models/attendance/asm_attendance.dart';
+import '../../notifiers/attendance/asm_attendance_notifier.dart';
 final asmAttendanceServicesProvider = Provider<ASMAttendanceServices>((ref) {
   return ASMAttendanceServices();
 });

@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../../models/attendance/asm_attendance.dart';
 import '../../../models/onboarding/asm.dart';
-import '../../../providers/asm_attendance_provider.dart';
-import '../../../providers/asm_onboarding_provider.dart';
+import '../../../providers/attendance/asm_attendance_provider.dart';
+import '../../../providers/onboarding/asm_onboarding_provider.dart';
 import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 

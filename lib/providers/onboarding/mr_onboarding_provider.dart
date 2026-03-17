@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/onboarding/mr.dart';
-import '../notifiers/mr_onboarding_notifier.dart';
-import '../services/onboarding/mr_onboarding_services.dart';
+import '../../models/onboarding/mr.dart';
+import '../../notifiers/onboarding/mr_onboarding_notifier.dart';
+import '../../services/onboarding/mr_onboarding_services.dart';
 
 final mrOnboardingServicesProvider = Provider<MROnboardingServices>((ref) {
   return MROnboardingServices();

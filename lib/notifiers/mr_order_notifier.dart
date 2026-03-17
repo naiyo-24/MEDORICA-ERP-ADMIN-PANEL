@@ -8,7 +8,7 @@ import '../models/order/mr_order.dart';
 import '../providers/distributor_provider.dart';
 import '../providers/mr_chemist_shop_provider.dart';
 import '../providers/mr_doctor_network_provider.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/onboarding/mr_onboarding_provider.dart';
 
 class MROrderState {
   const MROrderState({

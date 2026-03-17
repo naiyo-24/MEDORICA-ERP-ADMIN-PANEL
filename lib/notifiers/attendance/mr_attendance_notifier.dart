@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/attendance/mr_attendance.dart';
-import '../services/attendance/mr_attendance_services.dart';
+import '../../models/attendance/mr_attendance.dart';
+import '../../services/attendance/mr_attendance_services.dart';
 
 class MRAttendanceState {
   const MRAttendanceState({

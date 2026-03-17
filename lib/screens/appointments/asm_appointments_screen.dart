@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../cards/appointments/asm/asm_appointment_card.dart';
 import '../../cards/appointments/asm/asm_appointment_filter_card.dart';
 import '../../providers/asm_appointments_provider.dart';
-import '../../providers/asm_onboarding_provider.dart';
+import '../../providers/onboarding/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';

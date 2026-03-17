@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/mr.dart';
 import '../models/month_plan/mr_month_trip_plan.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/onboarding/mr_onboarding_provider.dart';
 
 class MRMonthTripPlanState {
   const MRMonthTripPlanState({

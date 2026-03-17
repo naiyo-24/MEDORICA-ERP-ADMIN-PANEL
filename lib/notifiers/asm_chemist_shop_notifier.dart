@@ -4,7 +4,7 @@ import '../models/onboarding/asm.dart';
 import '../models/chemist_shop/asm_chemist_shop.dart';
 import '../models/doctor_network/asm_doctor_network.dart';
 import '../providers/asm_doctor_network_provider.dart';
-import '../providers/asm_onboarding_provider.dart';
+import '../providers/onboarding/asm_onboarding_provider.dart';
 
 class ASMChemistShopState {
   const ASMChemistShopState({

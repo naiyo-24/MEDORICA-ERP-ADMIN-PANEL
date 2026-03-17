@@ -7,7 +7,7 @@ import '../../cards/month_trip_plan/mr/mr_month_trip_plan_filter_card.dart';
 import '../../models/onboarding/mr.dart';
 import '../../models/month_plan/mr_month_trip_plan.dart';
 import '../../providers/mr_month_trip_plan_provider.dart';
-import '../../providers/mr_onboarding_provider.dart';
+import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';

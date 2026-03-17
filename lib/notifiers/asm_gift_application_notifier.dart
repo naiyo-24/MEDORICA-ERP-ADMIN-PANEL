@@ -5,7 +5,7 @@ import '../models/doctor_network/asm_doctor_network.dart';
 import '../models/gift/asm_gift_application.dart';
 import '../models/gift/gift.dart';
 import '../providers/asm_doctor_network_provider.dart';
-import '../providers/asm_onboarding_provider.dart';
+import '../providers/onboarding/asm_onboarding_provider.dart';
 import '../providers/gift_provider.dart';
 
 class ASMGiftApplicationState {

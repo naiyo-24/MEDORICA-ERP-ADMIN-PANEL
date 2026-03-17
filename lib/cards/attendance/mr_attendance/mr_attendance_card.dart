@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../models/attendance/mr_attendance.dart';
 import '../../../models/onboarding/mr.dart';
 import '../../../providers/mr_attendance_provider.dart';
-import '../../../providers/mr_onboarding_provider.dart';
+import '../../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 

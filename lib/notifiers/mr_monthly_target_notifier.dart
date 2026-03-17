@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/onboarding/mr.dart';
 import '../models/monthly_target/mr_monthly_target.dart';
-import '../providers/mr_onboarding_provider.dart';
+import '../providers/onboarding/mr_onboarding_provider.dart';
 
 class MRMonthlyTargetState {
   const MRMonthlyTargetState({

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/appointment/mr_appointments.dart';
-import '../notifiers/mr_appointments_notifier.dart';
+import '../../models/appointment/mr_appointments.dart';
+import '../../notifiers/mr_appointments_notifier.dart';
 
 final mrAppointmentsNotifierProvider =
     NotifierProvider<MRAppointmentsNotifier, MRAppointmentsState>(

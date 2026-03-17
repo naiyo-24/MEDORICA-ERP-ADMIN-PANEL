@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../cards/salary_slip/asm/asm_salary_slip_card.dart';
 import '../../models/salary_slip/asm_salary_slip.dart';
-import '../../providers/asm_onboarding_provider.dart';
+import '../../providers/onboarding/asm_onboarding_provider.dart';
 import '../../providers/asm_salary_slip_provider.dart';
 import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';

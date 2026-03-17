@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/appointments/mr/mr_appointment_card.dart';
 import '../../cards/appointments/mr/mr_appointment_filter_card.dart';
-import '../../providers/mr_appointments_provider.dart';
-import '../../providers/mr_onboarding_provider.dart';
+import '../../providers/attendance/mr_appointments_provider.dart';
+import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
