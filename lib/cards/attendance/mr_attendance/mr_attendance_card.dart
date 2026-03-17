@@ -4,7 +4,10 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/attendance/mr_attendance.dart';
+import '../../../models/onboarding/mr.dart';
 import '../../../providers/mr_attendance_provider.dart';
+import '../../../providers/mr_onboarding_provider.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class MRAttendanceCard extends ConsumerWidget {
@@ -21,6 +24,58 @@ class MRAttendanceCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isSaving = ref.watch(mrAttendanceNotifierProvider).isSaving;
+
+    // Fetch MR name from provider
+    final mrList = ref.watch(mrListProvider);
+        final mr = mrList.firstWhere(
+          (m) => m.mrId == attendance.mrId,
+          orElse: () => MR(
+            mrId: attendance.mrId,
+            name: attendance.mrName,
+            phone: '',
+            password: '',
+          ),
+        );
+    final mrName = mr.name;
+
+    // Helper to build selfie image from backend
+    Widget buildSelfie(String? selfiePath) {
+      if (selfiePath == null || selfiePath.isEmpty) {
+        return Container(
+          width: 150,
+          height: 150,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Iconsax.camera, size: 40, color: AppColors.quaternary),
+              const SizedBox(height: AppSpacing.xs),
+              Text('No selfie', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.quaternary)),
+            ],
+          ),
+        );
+      }
+      final url = selfiePath.startsWith('http') ? selfiePath : '${Uri.parse(ApiUrl.baseUrl).origin}/$selfiePath';
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        child: Image.network(
+          url,
+          width: 150,
+          height: 150,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => Container(
+            width: 150,
+            height: 150,
+            color: AppColors.surface,
+            child: Icon(Icons.broken_image, color: AppColors.error),
+          ),
+        ),
+      );
+    }
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -104,7 +159,7 @@ class MRAttendanceCard extends ConsumerWidget {
                     _DetailRow(
                       icon: Iconsax.user,
                       label: 'MR Name',
-                      value: attendance.mrName,
+                      value: mrName,
                     ),
                     const SizedBox(height: AppSpacing.md),
 
@@ -178,56 +233,14 @@ class MRAttendanceCard extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.sm),
                             ],
-                            if (attendance.checkInSelfie != null) ...[
-                              Text(
-                                'Check-In Selfie:',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.quaternary,
-                                ),
+                            Text(
+                              'Check-In Selfie:',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: AppColors.quaternary,
                               ),
-                              const SizedBox(height: AppSpacing.sm),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
-                                ),
-                                child: Image.memory(
-                                  attendance.checkInSelfie!,
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ] else ...[
-                              Container(
-                                width: 150,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(
-                                    AppRadius.sm,
-                                  ),
-                                  border: Border.all(color: AppColors.border),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Iconsax.camera,
-                                      size: 40,
-                                      color: AppColors.quaternary,
-                                    ),
-                                    const SizedBox(height: AppSpacing.xs),
-                                    Text(
-                                      'No selfie',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: AppColors.quaternary,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            buildSelfie(attendance.checkInSelfieFileName),
                           ],
                         ),
                       ),
@@ -291,56 +304,14 @@ class MRAttendanceCard extends ConsumerWidget {
                               ),
                               const SizedBox(height: AppSpacing.sm),
                             ],
-                            if (attendance.checkOutSelfie != null) ...[
-                              Text(
-                                'Check-Out Selfie:',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.quaternary,
-                                ),
+                            Text(
+                              'Check-Out Selfie:',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: AppColors.quaternary,
                               ),
-                              const SizedBox(height: AppSpacing.sm),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.sm,
-                                ),
-                                child: Image.memory(
-                                  attendance.checkOutSelfie!,
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ] else ...[
-                              Container(
-                                width: 150,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(
-                                    AppRadius.sm,
-                                  ),
-                                  border: Border.all(color: AppColors.border),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Iconsax.camera,
-                                      size: 40,
-                                      color: AppColors.quaternary,
-                                    ),
-                                    const SizedBox(height: AppSpacing.xs),
-                                    Text(
-                                      'No selfie',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: AppColors.quaternary,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            buildSelfie(attendance.checkOutSelfieFileName),
                           ],
                         ),
                       ),
