@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
@@ -5,9 +6,10 @@ import 'package:intl/intl.dart';
 
 import '../../../models/attendance/asm_attendance.dart';
 import '../../../providers/asm_attendance_provider.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
-class ASMAttendanceCard extends ConsumerWidget {
+class ASMAttendanceCard extends ConsumerStatefulWidget {
   const ASMAttendanceCard({
     super.key,
     required this.attendance,
@@ -18,9 +20,29 @@ class ASMAttendanceCard extends ConsumerWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ASMAttendanceCard> createState() => _ASMAttendanceCardState();
+}
+
+class _ASMAttendanceCardState extends ConsumerState<ASMAttendanceCard> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
+    String? buildSelfieUrl(String? selfiePath) {
+      if (selfiePath == null || selfiePath.isEmpty) return null;
+      if (selfiePath.startsWith('http')) return selfiePath;
+      return '${ApiUrl.baseUrl}/$selfiePath';
+    }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isSaving = ref.watch(asmAttendanceNotifierProvider).isSaving;
+    final attendance = widget.attendance;
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -90,7 +112,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close, color: AppColors.white),
-                    onPressed: onClose,
+                    onPressed: widget.onClose,
                   ),
                 ],
               ),
@@ -138,50 +160,35 @@ class ASMAttendanceCard extends ConsumerWidget {
                       ],
 
                       // Check In Selfie
-                      if (attendance.checkInSelfie != null) ...[
-                        Text(
-                          'Check In Selfie',
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
+                      Text(
+                        'Check In Selfie',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
                         ),
-                        const SizedBox(height: AppSpacing.sm),
-                        if (attendance.checkInSelfieFileName != null) ...[
-                          Text(
-                            attendance.checkInSelfieFileName!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: AppColors.quaternary,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                        ],
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.border),
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            color: AppColors.surface,
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            child: Image.memory(
-                              attendance.checkInSelfie!,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.border),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          color: AppColors.surface,
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                      ] else ...[
-                        _DetailRow(
-                          icon: Iconsax.camera,
-                          label: 'Check In Selfie',
-                          value: 'Not uploaded',
-                          valueColor: AppColors.quaternary,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                            child: (attendance.checkInSelfieFileName != null && buildSelfieUrl(attendance.checkInSelfieFileName) != null)
+                                ? Image.network(
+                                    buildSelfieUrl(attendance.checkInSelfieFileName!)!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => Center(child: Text('Not uploaded', style: theme.textTheme.bodySmall)),
+                                  )
+                                : Center(child: Text('Not uploaded', style: theme.textTheme.bodySmall)),
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
 
                       // Check Out Time
                       if (attendance.checkOutTime != null) ...[
@@ -196,50 +203,35 @@ class ASMAttendanceCard extends ConsumerWidget {
                       ],
 
                       // Check Out Selfie
-                      if (attendance.checkOutSelfie != null) ...[
-                        Text(
-                          'Check Out Selfie',
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
+                      Text(
+                        'Check Out Selfie',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
                         ),
-                        const SizedBox(height: AppSpacing.sm),
-                        if (attendance.checkOutSelfieFileName != null) ...[
-                          Text(
-                            attendance.checkOutSelfieFileName!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: AppColors.quaternary,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                        ],
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.border),
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            color: AppColors.surface,
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            child: Image.memory(
-                              attendance.checkOutSelfie!,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.border),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          color: AppColors.surface,
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                      ] else ...[
-                        _DetailRow(
-                          icon: Iconsax.camera,
-                          label: 'Check Out Selfie',
-                          value: 'Not uploaded',
-                          valueColor: AppColors.quaternary,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                            child: (attendance.checkOutSelfieFileName != null && buildSelfieUrl(attendance.checkOutSelfieFileName) != null)
+                                ? Image.network(
+                                    buildSelfieUrl(attendance.checkOutSelfieFileName!)!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => Center(child: Text('Not uploaded', style: theme.textTheme.bodySmall)),
+                                  )
+                                : Center(child: Text('Not uploaded', style: theme.textTheme.bodySmall)),
                         ),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
                     ],
 
                     // Remarks
@@ -292,7 +284,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                                           backgroundColor: Colors.green,
                                         ),
                                       );
-                                      onClose();
+                                      widget.onClose();
                                     }
                                   },
                             icon: isSaving
@@ -348,7 +340,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                                           backgroundColor: Colors.red,
                                         ),
                                       );
-                                      onClose();
+                                      widget.onClose();
                                     }
                                   },
                             icon: isSaving
