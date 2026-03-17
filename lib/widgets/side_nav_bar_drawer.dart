@@ -40,7 +40,6 @@ class SideNavItemKeys {
   static const String asmGiftApplications = 'asm_gift_applications';
   static const String asmTargets = 'asm_targets';
   static const String mrTargets = 'mr_targets';
-  static const String asmTripPlan = 'asm_trip_plan';
   static const String mrTripPlan = 'mr_trip_plan';
   static const String mrSalarySlip = 'mr_salary_slip';
   static const String asmSalarySlip = 'asm_salary_slip';
@@ -72,7 +71,6 @@ class SideNavRouteIndex {
   static const int asmGiftApplications = 19;
   static const int asmTargets = 20;
   static const int mrTargets = 21;
-  static const int asmTripPlan = 22;
   static const int mrTripPlan = 23;
   static const int mrSalarySlip = 24;
   static const int asmSalarySlip = 25;
@@ -127,8 +125,6 @@ class SideNavRouteIndex {
         return asmTargets;
       case SideNavItemKeys.mrTargets:
         return mrTargets;
-      case SideNavItemKeys.asmTripPlan:
-        return asmTripPlan;
       case SideNavItemKeys.mrTripPlan:
         return mrTripPlan;
       case SideNavItemKeys.mrSalarySlip:
@@ -265,11 +261,7 @@ class SideNavRouteIndex {
           context.go(AppRoutePaths.mrMonthlyTarget);
         }
         return true;
-      case asmTripPlan:
-        if (currentItemKey != itemKey) {
-          context.go(AppRoutePaths.asmMonthTripPlan);
-        }
-        return true;
+      
       case mrTripPlan:
         if (currentItemKey != itemKey) {
           context.go(AppRoutePaths.mrMonthTripPlan);
@@ -517,11 +509,7 @@ class SideNavBarDrawer extends StatelessWidget {
                     title: 'Month Trip Plan',
                     selectedKey: selectedKey,
                     children: const [
-                      _NavChild(
-                        itemKey: SideNavItemKeys.asmTripPlan,
-                        label: 'ASM Trip Plan',
-                        icon: Iconsax.user_octagon,
-                      ),
+                      
                       _NavChild(
                         itemKey: SideNavItemKeys.mrTripPlan,
                         label: 'MR Trip Plan',
