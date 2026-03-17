@@ -5,7 +5,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/attendance/asm_attendance.dart';
+import '../../../models/onboarding/asm.dart';
 import '../../../providers/asm_attendance_provider.dart';
+import '../../../providers/asm_onboarding_provider.dart';
 import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
@@ -24,6 +26,21 @@ class ASMAttendanceCard extends ConsumerStatefulWidget {
 }
 
 class _ASMAttendanceCardState extends ConsumerState<ASMAttendanceCard> {
+  String getAsmName(WidgetRef ref, ASMAttendance attendance) {
+    if (attendance.asmName.isNotEmpty) return attendance.asmName;
+    // Try to get from onboarding provider
+    final asmList = ref.read(asmListProvider);
+      final asm = asmList.firstWhere(
+        (a) => a.asmId == attendance.asmId,
+        orElse: () => ASM(
+          asmId: attendance.asmId,
+          name: '',
+          phone: '',
+          password: '',
+        ),
+      );
+      return asm.name.isNotEmpty ? asm.name : attendance.asmId;
+  }
 
 
   @override
@@ -43,6 +60,7 @@ class _ASMAttendanceCardState extends ConsumerState<ASMAttendanceCard> {
     final theme = Theme.of(context);
     final isSaving = ref.watch(asmAttendanceNotifierProvider).isSaving;
     final attendance = widget.attendance;
+    final asmName = getAsmName(ref, attendance);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -129,7 +147,7 @@ class _ASMAttendanceCardState extends ConsumerState<ASMAttendanceCard> {
                     _DetailRow(
                       icon: Iconsax.user_octagon,
                       label: 'ASM Name',
-                      value: attendance.asmName,
+                      value: asmName,
                     ),
                     const SizedBox(height: AppSpacing.md),
 
