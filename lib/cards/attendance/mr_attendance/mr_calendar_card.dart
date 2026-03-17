@@ -24,6 +24,8 @@ class _MRCalendarCardState extends ConsumerState<MRCalendarCard> {
     final state = ref.watch(mrAttendanceNotifierProvider);
 
     return Container(
+      height: 500, // Increased height for better visibility
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
