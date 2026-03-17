@@ -238,61 +238,89 @@ class _OnboardEditMRCardState extends State<OnboardEditMRCard> {
 
     setState(() => _submitting = true);
 
-    await widget.onSubmit(
-      MRFormData(
-        name: _nameController.text.trim(),
-        phone: _phoneController.text.trim(),
-        altPhone: _altPhoneController.text.trim(),
-        email: _emailController.text.trim(),
-        address: _addressController.text.trim(),
-        headquarterAssigned: _headquarterController.text.trim(),
-        territoriesOfWork: _territoriesController.text.trim(),
-        bankName: _bankNameController.text.trim(),
-        bankBranchName: _bankBranchController.text.trim(),
-        bankAccountNumber: _accountNumberController.text.trim(),
-        ifscCode: _ifscCodeController.text.trim(),
-        monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
-        password: _passwordController.text.trim(),
-        joiningDate: _joiningDateController.text.trim().isNotEmpty
-            ? DateTime.tryParse(_joiningDateController.text.trim())
-            : null,
-        basicSalary: _basicSalaryController.text.trim().isNotEmpty
-            ? double.tryParse(_basicSalaryController.text.trim())
-            : null,
-        dailyAllowances: _dailyAllowancesController.text.trim().isNotEmpty
-            ? double.tryParse(_dailyAllowancesController.text.trim())
-            : null,
-        hra: _hraController.text.trim().isNotEmpty
-            ? double.tryParse(_hraController.text.trim())
-            : null,
-        phoneAllowances: _phoneAllowancesController.text.trim().isNotEmpty
-            ? double.tryParse(_phoneAllowancesController.text.trim())
-            : null,
-        childrenAllowances:
-            _childrenAllowancesController.text.trim().isNotEmpty
-                ? double.tryParse(_childrenAllowancesController.text.trim())
-                : null,
-        esic: _esicController.text.trim().isNotEmpty
-            ? double.tryParse(_esicController.text.trim())
-            : null,
-        specialAllowances: _specialAllowancesController.text.trim().isNotEmpty
-            ? double.tryParse(_specialAllowancesController.text.trim())
-            : null,
-        medicalAllowances: _medicalAllowancesController.text.trim().isNotEmpty
-            ? double.tryParse(_medicalAllowancesController.text.trim())
-            : null,
-        totalMonthlyCompensation:
-            _totalCompensationController.text.trim().isNotEmpty
-                ? double.tryParse(_totalCompensationController.text.trim())
-                : null,
-        photoBytes: _photoBytes,
-        photoFileName: _photoFileName,
-      ),
-    );
+    try {
+      await widget.onSubmit(
+        MRFormData(
+          name: _nameController.text.trim(),
+          phone: _phoneController.text.trim(),
+          altPhone: _altPhoneController.text.trim(),
+          email: _emailController.text.trim(),
+          address: _addressController.text.trim(),
+          headquarterAssigned: _headquarterController.text.trim(),
+          territoriesOfWork: _territoriesController.text.trim(),
+          bankName: _bankNameController.text.trim(),
+          bankBranchName: _bankBranchController.text.trim(),
+          bankAccountNumber: _accountNumberController.text.trim(),
+          ifscCode: _ifscCodeController.text.trim(),
+          monthlyTarget: double.tryParse(_targetController.text.trim()) ?? 0,
+          password: _passwordController.text.trim(),
+          joiningDate: _joiningDateController.text.trim().isNotEmpty
+              ? DateTime.tryParse(_joiningDateController.text.trim())
+              : null,
+          basicSalary: _basicSalaryController.text.trim().isNotEmpty
+              ? double.tryParse(_basicSalaryController.text.trim())
+              : null,
+          dailyAllowances: _dailyAllowancesController.text.trim().isNotEmpty
+              ? double.tryParse(_dailyAllowancesController.text.trim())
+              : null,
+          hra: _hraController.text.trim().isNotEmpty
+              ? double.tryParse(_hraController.text.trim())
+              : null,
+          phoneAllowances: _phoneAllowancesController.text.trim().isNotEmpty
+              ? double.tryParse(_phoneAllowancesController.text.trim())
+              : null,
+          childrenAllowances:
+              _childrenAllowancesController.text.trim().isNotEmpty
+                  ? double.tryParse(_childrenAllowancesController.text.trim())
+                  : null,
+          esic: _esicController.text.trim().isNotEmpty
+              ? double.tryParse(_esicController.text.trim())
+              : null,
+          specialAllowances: _specialAllowancesController.text.trim().isNotEmpty
+              ? double.tryParse(_specialAllowancesController.text.trim())
+              : null,
+          medicalAllowances: _medicalAllowancesController.text.trim().isNotEmpty
+              ? double.tryParse(_medicalAllowancesController.text.trim())
+              : null,
+          totalMonthlyCompensation:
+              _totalCompensationController.text.trim().isNotEmpty
+                  ? double.tryParse(_totalCompensationController.text.trim())
+                  : null,
+          photoBytes: _photoBytes,
+          photoFileName: _photoFileName,
+        ),
+      );
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      // Check for DioException with MR already exists error
+      final errorMsg = e.toString();
+      if (errorMsg.contains('MR already exists')) {
+        if (mounted) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'MR already exists with this phone number',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to onboard MR: '),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
+    setState(() => _submitting = false);
   }
 
   @override
