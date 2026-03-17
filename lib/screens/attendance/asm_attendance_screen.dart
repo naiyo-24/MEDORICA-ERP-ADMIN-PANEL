@@ -22,12 +22,26 @@ class ASMAttendanceScreen extends ConsumerStatefulWidget {
 class _ASMAttendanceScreenState extends ConsumerState<ASMAttendanceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Ensure ASM list is loaded for dropdown
+    Future.microtask(() =>
+      ref.read(asmOnboardingNotifierProvider.notifier).loadASMList()
+    );
+  }
+
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
   }
 
   void _onNavTap(String itemKey) {
-    Navigator.of(context).pop();
+    SideNavRouteIndex.handleTap(
+      context: context,
+      ref: ref,
+      itemKey: itemKey,
+      currentItemKey: SideNavItemKeys.asmAttendance,
+    );
   }
 
   void _showAttendanceDetails(DateTime date) {

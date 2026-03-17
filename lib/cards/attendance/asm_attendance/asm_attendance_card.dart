@@ -280,8 +280,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                                         )
                                         .markAttendance(
                                           asmId: attendance.asmId,
-                                          asmName: attendance.asmName,
-                                          date: attendance.date,
+                                          attendanceId: int.tryParse(attendance.id) ?? 0,
                                           isPresent: true,
                                         );
                                     if (context.mounted) {
@@ -337,8 +336,7 @@ class ASMAttendanceCard extends ConsumerWidget {
                                         )
                                         .markAttendance(
                                           asmId: attendance.asmId,
-                                          asmName: attendance.asmName,
-                                          date: attendance.date,
+                                          attendanceId: int.tryParse(attendance.id) ?? 0,
                                           isPresent: false,
                                         );
                                     if (context.mounted) {

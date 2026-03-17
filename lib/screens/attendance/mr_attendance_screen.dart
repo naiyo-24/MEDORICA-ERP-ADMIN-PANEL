@@ -21,12 +21,26 @@ class MRAttendanceScreen extends ConsumerStatefulWidget {
 class _MRAttendanceScreenState extends ConsumerState<MRAttendanceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    // Ensure MR list is loaded for dropdown
+    Future.microtask(() =>
+      ref.read(mrOnboardingNotifierProvider.notifier).loadMRList()
+    );
+  }
+
   void _onMenuTap() {
     _scaffoldKey.currentState?.openDrawer();
   }
 
   void _onNavTap(String itemKey) {
-    Navigator.of(context).pop();
+    SideNavRouteIndex.handleTap(
+      context: context,
+      ref: ref,
+      itemKey: itemKey,
+      currentItemKey: 'mr_attendance',
+    );
   }
 
   void _showAttendanceDetails(DateTime date) {
