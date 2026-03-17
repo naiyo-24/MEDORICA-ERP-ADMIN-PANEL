@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/attendance/mr_attendance.dart';
+import '../services/attendance/mr_attendance_services.dart';
 
 class MRAttendanceState {
   const MRAttendanceState({
@@ -63,117 +64,41 @@ class MRAttendanceState {
 }
 
 class MRAttendanceNotifier extends Notifier<MRAttendanceState> {
+  late final MRAttendanceServices _services;
+
   @override
   MRAttendanceState build() {
+    _services = MRAttendanceServices();
     final now = DateTime.now();
+    _fetchAttendanceList();
     return MRAttendanceState(
-      attendanceList: _mockAttendanceData(),
+      attendanceList: [],
       selectedMonth: now.month,
       selectedYear: now.year,
     );
   }
 
-  List<MRAttendance> _mockAttendanceData() {
-    final now = DateTime.now();
-    final List<MRAttendance> attendanceList = [];
-
-    // Generate attendance for current month for MR 1 (Rajesh Kumar)
-    for (int day = 1; day <= DateTime(now.year, now.month + 1, 0).day; day++) {
-      final date = DateTime(now.year, now.month, day);
-      // Skip Sundays
-      if (date.weekday == DateTime.sunday) {
-        continue;
-      }
-
-      // Only generate for days that have passed
-      if (date.isAfter(now)) {
-        continue;
-      }
-
-      final isPresent = day % 5 != 0; // Absent every 5th day
-      attendanceList.add(
-        MRAttendance(
-          id: 'att_mr1_$day',
-          mrId: 'mr_1',
-          mrName: 'Rajesh Kumar',
-          date: date,
-          isPresent: isPresent,
-          checkInTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 9, 15 + (day % 30))
-              : null,
-          checkOutTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 18, 10 + (day % 30))
-              : null,
-          remarks: isPresent ? 'On time' : 'Not marked attendance',
-        ),
-      );
+  Future<void> _fetchAttendanceList() async {
+    try {
+      final list = await _services.getAllAttendance();
+      state = state.copyWith(attendanceList: list);
+    } catch (e) {
+      // Optionally handle error
     }
-
-    // Generate attendance for current month for MR 2 (Priya Sharma)
-    for (int day = 1; day <= DateTime(now.year, now.month + 1, 0).day; day++) {
-      final date = DateTime(now.year, now.month, day);
-      if (date.weekday == DateTime.sunday) {
-        continue;
-      }
-
-      if (date.isAfter(now)) {
-        continue;
-      }
-
-      final isPresent = day % 7 != 0;
-      attendanceList.add(
-        MRAttendance(
-          id: 'att_mr2_$day',
-          mrId: 'mr_2',
-          mrName: 'Priya Sharma',
-          date: date,
-          isPresent: isPresent,
-          checkInTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 9, 0 + (day % 20))
-              : null,
-          checkOutTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 18, 30 + (day % 20))
-              : null,
-          remarks: isPresent ? 'Regular attendance' : 'Absent',
-        ),
-      );
-    }
-
-    // Generate attendance for current month for MR 3 (Amit Patel)
-    for (int day = 1; day <= DateTime(now.year, now.month + 1, 0).day; day++) {
-      final date = DateTime(now.year, now.month, day);
-      if (date.weekday == DateTime.sunday) {
-        continue;
-      }
-
-      if (date.isAfter(now)) {
-        continue;
-      }
-
-      final isPresent = day % 6 != 0;
-      attendanceList.add(
-        MRAttendance(
-          id: 'att_mr3_$day',
-          mrId: 'mr_3',
-          mrName: 'Amit Patel',
-          date: date,
-          isPresent: isPresent,
-          checkInTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 8, 45 + (day % 25))
-              : null,
-          checkOutTime: isPresent
-              ? DateTime(date.year, date.month, date.day, 19, 0 + (day % 25))
-              : null,
-          remarks: isPresent ? 'Good attendance' : 'Leave taken',
-        ),
-      );
-    }
-
-    return attendanceList;
   }
 
   void setSelectedMR(String mrId) {
     state = state.copyWith(selectedMRId: mrId);
+    _fetchAttendanceListByMr(mrId);
+  }
+
+  Future<void> _fetchAttendanceListByMr(String mrId) async {
+    try {
+      final list = await _services.getAttendanceByMrId(mrId);
+      state = state.copyWith(attendanceList: list);
+    } catch (e) {
+      // Optionally handle error
+    }
   }
 
   void setSelectedMonth(int month, int year) {
@@ -182,44 +107,21 @@ class MRAttendanceNotifier extends Notifier<MRAttendanceState> {
 
   Future<void> markAttendance({
     required String mrId,
-    required String mrName,
-    required DateTime date,
+    required int attendanceId,
     required bool isPresent,
   }) async {
     state = state.copyWith(isSaving: true);
-
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final existingAttendance = state.attendanceList.firstWhere(
-      (att) =>
-          att.mrId == mrId &&
-          att.date.year == date.year &&
-          att.date.month == date.month &&
-          att.date.day == date.day,
-      orElse: () => MRAttendance(
-        id: 'att_${mrId}_${date.day}',
+    try {
+      final updated = await _services.updateAttendance(
         mrId: mrId,
-        mrName: mrName,
-        date: date,
-        isPresent: false,
-      ),
-    );
-
-    final updatedAttendance = existingAttendance.copyWith(
-      isPresent: isPresent,
-      checkInTime: isPresent ? DateTime.now() : null,
-      checkOutTime: isPresent
-          ? DateTime.now().add(const Duration(hours: 9))
-          : null,
-      remarks: isPresent ? 'Marked by admin' : 'Marked absent by admin',
-    );
-
-    final newList =
-        state.attendanceList
-            .where((att) => att.id != existingAttendance.id)
-            .toList()
-          ..add(updatedAttendance);
-
-    state = state.copyWith(attendanceList: newList, isSaving: false);
+        attendanceId: attendanceId,
+        status: isPresent ? 'present' : 'absent',
+      );
+      final newList = state.attendanceList.map((a) => a.id == updated.id ? updated : a).toList();
+      state = state.copyWith(attendanceList: newList, isSaving: false);
+    } catch (e) {
+      state = state.copyWith(isSaving: false);
+      // Optionally handle error
+    }
   }
 }

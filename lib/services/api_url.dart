@@ -1,4 +1,5 @@
 class ApiUrl {
+        
     // MR Salary Slip
     static const String mrSalarySlipBase = '/salary-slip/mr';
     static const String mrSalarySlipGetAll = '$mrSalarySlipBase/get-all';
@@ -167,7 +168,16 @@ class ApiUrl {
 
   static String asmOrderDeleteByOrderId(String orderId) =>
       '$asmOrderBase/delete-by/$orderId';
-
+  
+  // MR Attendance
+  static const String mrAttendanceBase = '/attendance/mr';
+  static const String mrAttendanceGetAll = '$mrAttendanceBase/get-all';
+  static String mrAttendanceGetByMrId(String mrId) => '$mrAttendanceBase/get-by/$mrId';
+  static String mrAttendanceGetByMrIdAndAttendanceId(String mrId, int attendanceId) => '$mrAttendanceBase/get-by/$mrId/$attendanceId';
+  static String mrAttendanceUpdateByMrIdAndAttendanceId(String mrId, int attendanceId) => '$mrAttendanceBase/update-by/$mrId/$attendanceId';
+  static String mrAttendanceDeleteByAttendanceId(int attendanceId) => '$mrAttendanceBase/delete-by/$attendanceId';
+  
+  
   // Helper to get full profile photo URL
   static String getProfilePhotoUrl(String? photoPath) {
     if (photoPath == null || photoPath.isEmpty) return '';

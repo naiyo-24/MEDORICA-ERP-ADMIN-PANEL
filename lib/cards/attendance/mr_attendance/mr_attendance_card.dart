@@ -373,8 +373,7 @@ class MRAttendanceCard extends ConsumerWidget {
                                         )
                                         .markAttendance(
                                           mrId: attendance.mrId,
-                                          mrName: attendance.mrName,
-                                          date: attendance.date,
+                                          attendanceId: int.tryParse(attendance.id) ?? 0,
                                           isPresent: true,
                                         );
                                     if (context.mounted) {
@@ -433,8 +432,7 @@ class MRAttendanceCard extends ConsumerWidget {
                                         )
                                         .markAttendance(
                                           mrId: attendance.mrId,
-                                          mrName: attendance.mrName,
-                                          date: attendance.date,
+                                          attendanceId: int.tryParse(attendance.id) ?? 0,
                                           isPresent: false,
                                         );
                                     if (context.mounted) {

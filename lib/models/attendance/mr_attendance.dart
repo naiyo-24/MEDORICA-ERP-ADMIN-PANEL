@@ -60,4 +60,35 @@ class MRAttendance {
       remarks: remarks ?? this.remarks,
     );
   }
+  static MRAttendance fromJson(Map<String, dynamic> json) {
+    return MRAttendance(
+      id: json['id'].toString(),
+      mrId: json['mr_id'] ?? '',
+      mrName: json['mr_name'] ?? '',
+      date: DateTime.parse(json['date']),
+      isPresent: (json['status'] ?? '').toLowerCase() == 'present',
+      checkInTime: json['check_in_time'] != null ? DateTime.tryParse(json['check_in_time']) : null,
+      checkInSelfie: null, // To be fetched separately if needed
+      checkInSelfieFileName: json['check_in_selfie'],
+      checkOutTime: json['check_out_time'] != null ? DateTime.tryParse(json['check_out_time']) : null,
+      checkOutSelfie: null, // To be fetched separately if needed
+      checkOutSelfieFileName: json['check_out_selfie'],
+      remarks: json['remarks'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'mr_id': mrId,
+      'mr_name': mrName,
+      'date': date.toIso8601String(),
+      'status': isPresent ? 'present' : 'absent',
+      'check_in_time': checkInTime?.toIso8601String(),
+      'check_in_selfie': checkInSelfieFileName,
+      'check_out_time': checkOutTime?.toIso8601String(),
+      'check_out_selfie': checkOutSelfieFileName,
+      'remarks': remarks,
+    };
+  }
 }

@@ -2,6 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/attendance/mr_attendance.dart';
 import '../notifiers/mr_attendance_notifier.dart';
+import '../services/attendance/mr_attendance_services.dart';
+final mrAttendanceServicesProvider = Provider<MRAttendanceServices>((ref) {
+  return MRAttendanceServices();
+});
 
 final mrAttendanceNotifierProvider =
     NotifierProvider<MRAttendanceNotifier, MRAttendanceState>(
