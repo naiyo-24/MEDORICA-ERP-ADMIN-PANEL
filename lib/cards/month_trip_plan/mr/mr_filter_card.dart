@@ -20,7 +20,7 @@ class MRFilterCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: DropdownButtonFormField<String>(
           decoration: const InputDecoration(labelText: 'Select MR'),
-          value: selectedMrId,
+          initialValue: selectedMrId,
           items: mrList
               .where((mr) => mr != null && mr is Object && (mr as dynamic).mrId != null && (mr as dynamic).name != null)
               .map((mr) => DropdownMenuItem<String>(

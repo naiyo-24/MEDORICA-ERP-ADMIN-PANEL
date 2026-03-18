@@ -27,7 +27,7 @@ class _MRMonthTripPlanScreenState extends ConsumerState<MRMonthTripPlanScreen> {
     super.initState();
     Future.microtask(() {
       ref.read(mrOnboardingNotifierProvider.notifier).loadMRList();
-      ref.read(mrMonthTripPlanNotifierProvider.notifier).fetchPlans('');
+      // Do NOT fetch plans until MR is selected
     });
   }
 
@@ -75,10 +75,12 @@ class _MRMonthTripPlanScreenState extends ConsumerState<MRMonthTripPlanScreen> {
                   selectedDate = null;
                   selectedPlan = null;
                 });
-                ref.read(mrMonthTripPlanNotifierProvider.notifier).fetchPlans(mrId);
+                if (mrId.isNotEmpty) {
+                  ref.read(mrMonthTripPlanNotifierProvider.notifier).fetchPlans(mrId);
+                }
               },
             ),
-            if (selectedMrId != null)
+            if (selectedMrId != null && selectedMrId!.isNotEmpty)
               PlanCalendarCard(
                 plans: plans,
                 selectedDate: selectedDate,

@@ -87,7 +87,7 @@ class MRSalarySlipNotifier extends Notifier<MRSalarySlipState> {
           fileBytes: fileBytes,
           fileName: fileName,
         );
-      } on DioError catch (e) {
+      } on DioException catch (e) {
         final statusCode = e.response?.statusCode;
         if (statusCode == 400) {
           saved = await services.updateMRSalarySlip(
