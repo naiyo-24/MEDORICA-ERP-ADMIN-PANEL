@@ -5,7 +5,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../cards/attendance/mr_attendance/mr_attendance_card.dart';
 import '../../cards/attendance/mr_attendance/mr_calendar_card.dart';
 import '../../models/onboarding/mr.dart';
-import '../../providers/mr_attendance_provider.dart';
+import '../../providers/attendance/mr_attendance_provider.dart';
 import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

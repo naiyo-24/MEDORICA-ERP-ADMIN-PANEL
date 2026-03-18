@@ -5,7 +5,7 @@ import '../../cards/doctor_network/mr/mr_doctor_cards.dart';
 import '../../cards/doctor_network/mr/mr_doctor_details_card.dart';
 import '../../cards/doctor_network/mr/mr_doctor_search_filter_card.dart';
 import '../../models/doctor_network/mr_doctor_network.dart';
-import '../../providers/mr_doctor_network_provider.dart';
+import '../../providers/doctor_network/mr_doctor_network_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';

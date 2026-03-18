@@ -5,7 +5,7 @@ import '../../cards/doctor_network/asm/asm_doctor_cards.dart';
 import '../../cards/doctor_network/asm/asm_doctor_details_card.dart';
 import '../../cards/doctor_network/asm/asm_doctor_search_filter_card.dart';
 import '../../models/doctor_network/asm_doctor_network.dart';
-import '../../providers/asm_doctor_network_provider.dart';
+import '../../providers/doctor_network/asm_doctor_network_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';

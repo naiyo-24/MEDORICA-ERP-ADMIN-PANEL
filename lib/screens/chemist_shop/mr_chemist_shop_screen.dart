@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/chemist_shop/mr/mr_chemist_shop_card.dart';
 import '../../cards/chemist_shop/mr/mr_chemist_shop_filter_card.dart';
-import '../../providers/mr_chemist_shop_provider.dart';
+import '../../providers/chemist_shop/mr_chemist_shop_provider.dart';
 import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';

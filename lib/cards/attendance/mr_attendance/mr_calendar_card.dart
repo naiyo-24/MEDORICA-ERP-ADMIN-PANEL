@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../providers/mr_attendance_provider.dart';
+import '../../../providers/attendance/mr_attendance_provider.dart';
 import '../../../theme/app_theme.dart';
 
 class MRCalendarCard extends ConsumerStatefulWidget {

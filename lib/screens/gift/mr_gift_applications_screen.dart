@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../cards/gift/mr/mr_gift_application_card.dart';
 import '../../cards/gift/mr/mr_gift_application_filter_card.dart';
-import '../../providers/mr_gift_application_provider.dart';
+import '../../providers/gift/mr_gift_application_provider.dart';
 import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
