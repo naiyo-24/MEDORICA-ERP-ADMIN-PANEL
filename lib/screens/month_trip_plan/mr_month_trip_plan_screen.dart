@@ -63,42 +63,44 @@ class _MRMonthTripPlanScreenState extends ConsumerState<MRMonthTripPlanScreen> {
         selectedKey: SideNavItemKeys.mrTripPlan,
         onItemTap: _onNavTap,
       ),
-      body: Column(
-        children: [
-          MRFilterCard(
-            mrList: mrList,
-            selectedMrId: selectedMrId,
-            onMrChanged: (mrId) {
-              setState(() {
-                selectedMrId = mrId;
-                selectedDate = null;
-                selectedPlan = null;
-              });
-              ref.read(mrMonthTripPlanNotifierProvider.notifier).fetchPlans(mrId);
-            },
-          ),
-          if (selectedMrId != null)
-            PlanCalendarCard(
-              plans: plans,
-              selectedDate: selectedDate,
-              onDateSelected: (date) {
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            MRFilterCard(
+              mrList: mrList,
+              selectedMrId: selectedMrId,
+              onMrChanged: (mrId) {
                 setState(() {
-                  selectedDate = date;
-                  try {
-                    selectedPlan = plans.firstWhere(
-                      (plan) => plan.planDate.year == date.year && plan.planDate.month == date.month && plan.planDate.day == date.day,
-                    );
-                  } catch (_) {
-                    selectedPlan = null;
-                  }
+                  selectedMrId = mrId;
+                  selectedDate = null;
+                  selectedPlan = null;
                 });
+                ref.read(mrMonthTripPlanNotifierProvider.notifier).fetchPlans(mrId);
               },
             ),
-          if (selectedPlan != null)
-            PlanDetailsCard(
-              plan: selectedPlan!,
-            ),
-        ],
+            if (selectedMrId != null)
+              PlanCalendarCard(
+                plans: plans,
+                selectedDate: selectedDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    selectedDate = date;
+                    try {
+                      selectedPlan = plans.firstWhere(
+                        (plan) => plan.planDate.year == date.year && plan.planDate.month == date.month && plan.planDate.day == date.day,
+                      );
+                    } catch (_) {
+                      selectedPlan = null;
+                    }
+                  });
+                },
+              ),
+            if (selectedPlan != null)
+              PlanDetailsCard(
+                plan: selectedPlan!,
+              ),
+          ],
+        ),
       ),
     );
   }
