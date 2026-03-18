@@ -58,15 +58,15 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
   }
 
   void setSelectedASM(String asmId) {
-    state = state.copyWith(selectedASMId: asmId);
+    state = state.copyWith(selectedASMId: asmId, appliedTarget: null);
   }
 
   void setSelectedMonth(int month) {
-    state = state.copyWith(selectedMonth: month);
+    state = state.copyWith(selectedMonth: month, appliedTarget: null);
   }
 
   void setSelectedYear(int year) {
-    state = state.copyWith(selectedYear: year);
+    state = state.copyWith(selectedYear: year, appliedTarget: null);
   }
 
 
