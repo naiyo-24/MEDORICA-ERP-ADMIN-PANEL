@@ -1,4 +1,9 @@
 class ApiUrl {
+                // ASM Monthly Target
+                static const String asmMonthlyTargetBase = '/monthly-target/asm';
+                static const String asmMonthlyTargetGetAll = '$asmMonthlyTargetBase/get-all';
+                static String asmMonthlyTargetGetByAsm(String asmId) => '$asmMonthlyTargetBase/get-by-asm/$asmId';
+                static String asmMonthlyTargetGetByAsmYearMonth(String asmId, int year, int month) => '$asmMonthlyTargetBase/get-by/$asmId/$year/$month';
             
     // MR Salary Slip
     static const String mrSalarySlipBase = '/salary-slip/mr';

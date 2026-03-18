@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
 import '../../models/onboarding/asm.dart';
 import '../../models/monthly_target/asm_monthly_target.dart';
+import '../../providers/monthly_target/asm_monthly_target_provider.dart';
 import '../../providers/onboarding/asm_onboarding_provider.dart';
+import '../../services/monthly_target/asm_monthly_target_services.dart';
 
 class ASMMonthlyTargetState {
   const ASMMonthlyTargetState({
@@ -41,9 +44,13 @@ class ASMMonthlyTargetState {
   bool get canApply => selectedASMId.isNotEmpty;
 }
 
+
 class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
+  late final ASMMonthlyTargetServices _services;
+
   @override
   ASMMonthlyTargetState build() {
+    _services = ref.read(asmMonthlyTargetServicesProvider);
     final now = DateTime.now();
     final defaultYear = now.year < 2026 ? 2026 : now.year;
     return ASMMonthlyTargetState(
@@ -64,6 +71,7 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
     state = state.copyWith(selectedYear: year);
   }
 
+
   Future<void> applyFilter() async {
     if (!state.canApply) {
       state = state.copyWith(clearAppliedTarget: true);
@@ -71,9 +79,6 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
     }
 
     state = state.copyWith(isApplying: true);
-
-    // Simulate async fetch.
-    await Future.delayed(const Duration(milliseconds: 350));
 
     final asmList = ref.read(asmListProvider);
     ASM? selectedASM;
@@ -89,55 +94,17 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
       return;
     }
 
-    final target = _buildMonthlyTarget(
-      asm: selectedASM,
-      month: state.selectedMonth,
-      year: state.selectedYear,
-    );
-
-    state = state.copyWith(appliedTarget: target, isApplying: false);
-  }
-
-  ASMMonthlyTarget _buildMonthlyTarget({
-    required ASM asm,
-    required int month,
-    required int year,
-  }) {
-    final totalTarget = asm.monthlyTarget ?? 0.0;
-    final ratio = _achievementRatio(id: asm.asmId, month: month, year: year);
-
-    return ASMMonthlyTarget(
-      id: 'asm_target_${asm.asmId}_${year}_$month',
-      asmId: asm.asmId,
-      asmName: asm.name,
-      month: month,
-      year: year,
-      totalTarget: totalTarget,
-      targetAchieved: totalTarget * ratio,
-    );
-  }
-
-  double _achievementRatio({
-    required String id,
-    required int month,
-    required int year,
-  }) {
-    final now = DateTime.now();
-    final selected = DateTime(year, month);
-    final current = DateTime(now.year, now.month);
-
-    final seed =
-        id.codeUnits.fold<int>(0, (acc, v) => acc + v) +
-        (month * 29) +
-        (year * 19);
-    final normalized = (seed % 100) / 100;
-
-    if (selected.isBefore(current)) {
-      return 0.68 + (normalized * 0.27);
+    try {
+      final target = await _services.getByAsmYearMonth(
+        selectedASM.asmId,
+        state.selectedYear,
+        state.selectedMonth,
+      );
+      state = state.copyWith(appliedTarget: target, isApplying: false);
+    } catch (e) {
+      state = state.copyWith(isApplying: false, clearAppliedTarget: true);
     }
-    if (selected.year == current.year && selected.month == current.month) {
-      return 0.38 + (normalized * 0.47);
-    }
-    return 0.12 + (normalized * 0.25);
   }
+
+  // _buildMonthlyTarget and _achievementRatio removed (now using backend data)
 }

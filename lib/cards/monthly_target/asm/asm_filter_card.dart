@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+
 import '../../../models/onboarding/asm.dart';
+import '../../../providers/onboarding/asm_onboarding_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../theme/app_theme.dart';
 
-class ASMFilterCard extends StatelessWidget {
+
+class ASMFilterCard extends ConsumerWidget {
   const ASMFilterCard({
     super.key,
     required this.asmList,
@@ -48,8 +53,9 @@ class ASMFilterCard extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final filteredASMList = ref.watch(asmListProvider);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -98,7 +104,7 @@ class ASMFilterCard extends StatelessWidget {
                     labelText: 'Select ASM',
                     prefixIcon: Icon(Iconsax.user_octagon),
                   ),
-                  items: asmList
+                  items: filteredASMList
                       .map(
                         (asm) => DropdownMenuItem<String>(
                           value: asm.asmId,

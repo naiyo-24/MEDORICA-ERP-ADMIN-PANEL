@@ -50,7 +50,7 @@ class _ASMMonthlyTargetScreenState
     final theme = Theme.of(context);
     final state = ref.watch(asmMonthlyTargetNotifierProvider);
     final notifier = ref.read(asmMonthlyTargetNotifierProvider.notifier);
-    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
+    final asmList = ref.watch(asmListProvider); // Use filtered ASM list for dropdown
     final months = ref.watch(asmMonthlyTargetMonthsProvider);
     final years = ref.watch(asmMonthlyTargetYearsProvider);
     final appliedTarget = ref.watch(asmAppliedMonthlyTargetProvider);

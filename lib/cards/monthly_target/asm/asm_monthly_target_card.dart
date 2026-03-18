@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 import '../../../models/monthly_target/asm_monthly_target.dart';
 import '../../../theme/app_theme.dart';
 
@@ -33,7 +34,7 @@ class ASMMonthlyTargetCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            target.asmName,
+            target.asmName.isNotEmpty ? target.asmName : target.asmId,
             style: theme.textTheme.titleLarge?.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,

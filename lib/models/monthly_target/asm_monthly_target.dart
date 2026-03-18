@@ -1,3 +1,4 @@
+
 class ASMMonthlyTarget {
   const ASMMonthlyTarget({
     required this.id,
@@ -8,6 +9,18 @@ class ASMMonthlyTarget {
     required this.totalTarget,
     required this.targetAchieved,
   });
+
+  factory ASMMonthlyTarget.fromJson(Map<String, dynamic> json) {
+    return ASMMonthlyTarget(
+      id: json['id'].toString(),
+      asmId: json['asm_id'] ?? '',
+      asmName: json['asm_name'] ?? '',
+      month: json['month'] ?? 1,
+      year: json['year'] ?? 2000,
+      totalTarget: (json['opening_target_rupees'] as num?)?.toDouble() ?? 0.0,
+      targetAchieved: (json['deducted_target_rupees'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
 
   final String id;
   final String asmId;

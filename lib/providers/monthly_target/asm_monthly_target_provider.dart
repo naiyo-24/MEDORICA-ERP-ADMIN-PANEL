@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
 import '../../models/monthly_target/asm_monthly_target.dart';
 import '../../notifiers/monthly_target/asm_monthly_target_notifier.dart';
+import '../../services/monthly_target/asm_monthly_target_services.dart';
 
+final asmMonthlyTargetServicesProvider = Provider<ASMMonthlyTargetServices>((ref) => ASMMonthlyTargetServices());
 final asmMonthlyTargetNotifierProvider =
     NotifierProvider<ASMMonthlyTargetNotifier, ASMMonthlyTargetState>(
       ASMMonthlyTargetNotifier.new,
