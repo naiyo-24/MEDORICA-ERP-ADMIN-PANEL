@@ -1,10 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/onboarding/mr.dart';
 import '../../models/chemist_shop/mr_chemist_shop.dart';
-import '../../models/doctor_network/mr_doctor_network.dart';
-import '../../providers/doctor_network/mr_doctor_network_provider.dart';
-import '../../providers/onboarding/mr_onboarding_provider.dart';
+import '../../services/chemist_shop/mr_chemist_shop_services.dart';
 
 class MRChemistShopState {
   const MRChemistShopState({
@@ -61,53 +57,29 @@ class MRChemistShopState {
 }
 
 class MRChemistShopNotifier extends Notifier<MRChemistShopState> {
+  late final MRChemistShopServices _services;
+
   @override
   MRChemistShopState build() {
-    final mrList = ref.watch(mrOnboardingNotifierProvider).mrList;
-    final doctorList = ref.watch(mrDoctorNetworkNotifierProvider).doctorList;
-
-    return MRChemistShopState(
-      shops: _mockShops(mrList: mrList, doctorList: doctorList),
-    );
+    _services = MRChemistShopServices();
+    // Load initial shop list from backend
+    _init();
+    return const MRChemistShopState();
   }
 
-  List<MRChemistShop> _mockShops({
-    required List<MR> mrList,
-    required List<MRDoctorNetwork> doctorList,
-  }) {
-    if (mrList.isEmpty) {
-      return const [];
+  Future<void> _init() async {
+    final shops = await _services.getAllShops();
+    state = state.copyWith(shops: shops);
+  }
+
+  Future<void> loadShopList({String? mrId}) async {
+    List<MRChemistShop> shops = [];
+    if (mrId != null && mrId.isNotEmpty) {
+      shops = await _services.getShopsByMR(mrId);
+    } else {
+      shops = await _services.getAllShops();
     }
-
-    final fallbackDoctor = doctorList.isNotEmpty ? doctorList.first : null;
-    final fallbackDoctorName = fallbackDoctor?.doctorName ?? 'Dr. Sunil Roy';
-    final fallbackDoctorPhone = fallbackDoctor?.phoneNo ?? '+919800000001';
-
-    final created = DateTime.now();
-
-    return [
-      for (var i = 0; i < mrList.length; i++)
-        MRChemistShop(
-          id: 'MR-SHOP-${i + 101}',
-          shopPhoto:
-              'https://via.placeholder.com/640x420.png?text=MR+Chemist+Shop+${i + 1}',
-          shopName: 'WellCare Pharmacy ${i + 1}',
-          shopPhone: '+91970000000${i + 1}',
-          shopEmail: 'wellcare${i + 1}@medorica.com',
-          location: i % 2 == 0 ? 'Kolkata' : 'Mumbai',
-          description:
-              'Established retail chemist partner serving nearby clinics and walk-in patients.',
-          doctorName: doctorList.length > i
-              ? doctorList[i].doctorName
-              : fallbackDoctorName,
-          doctorPhone: doctorList.length > i
-              ? doctorList[i].phoneNo
-              : fallbackDoctorPhone,
-          mrAddedBy: mrList[i].name,
-          mrAddedById: mrList[i].mrId,
-          createdAt: created.subtract(Duration(days: 20 - i * 2)),
-        ),
-    ];
+    state = state.copyWith(shops: shops);
   }
 
   void setSearchQuery(String value) {
@@ -116,6 +88,7 @@ class MRChemistShopNotifier extends Notifier<MRChemistShopState> {
 
   void setSelectedMRId(String value) {
     state = state.copyWith(selectedMRId: value);
+    loadShopList(mrId: value);
   }
 
   void setSelectedLocation(String value) {

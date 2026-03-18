@@ -1,9 +1,9 @@
 class ApiUrl {
-                // ASM Monthly Target
-                static const String asmMonthlyTargetBase = '/monthly-target/asm';
-                static const String asmMonthlyTargetGetAll = '$asmMonthlyTargetBase/get-all';
-                static String asmMonthlyTargetGetByAsm(String asmId) => '$asmMonthlyTargetBase/get-by-asm/$asmId';
-                static String asmMonthlyTargetGetByAsmYearMonth(String asmId, int year, int month) => '$asmMonthlyTargetBase/get-by/$asmId/$year/$month';
+    // ASM Monthly Target
+    static const String asmMonthlyTargetBase = '/monthly-target/asm';
+    static const String asmMonthlyTargetGetAll = '$asmMonthlyTargetBase/get-all';
+    static String asmMonthlyTargetGetByAsm(String asmId) => '$asmMonthlyTargetBase/get-by-asm/$asmId';
+    static String asmMonthlyTargetGetByAsmYearMonth(String asmId, int year, int month) => '$asmMonthlyTargetBase/get-by/$asmId/$year/$month';
             
     // MR Salary Slip
     static const String mrSalarySlipBase = '/salary-slip/mr';
@@ -86,6 +86,13 @@ class ApiUrl {
   static const String asmDoctorNetworkGetAll = '$asmDoctorNetworkBase/get-all';
   static String asmDoctorNetworkGetByAsm(String asmId) => '$asmDoctorNetworkBase/get-by-asm/$asmId';
   static String asmDoctorNetworkGetByAsmAndDoctor(String asmId, String doctorId) => '$asmDoctorNetworkBase/get-by/$asmId/$doctorId';
+
+    // MR Chemist Shop Network
+    static const String mrChemistShopBase = '/chemist-shop/mr';
+    static const String mrChemistShopGetAll = '$mrChemistShopBase/get-all';
+    static String mrChemistShopGetByMR(String mrId) => '$mrChemistShopBase/get-by-mr/$mrId';
+    static String mrChemistShopGetByMRAndShop(String mrId, String shopId) => '$mrChemistShopBase/get-by/$mrId/$shopId';
+    static String mrChemistShopGetByShopId(String shopId) => '$mrChemistShopBase/get-by-shop/$shopId';
 
   // Distributor Management
   static const String distributorBase = '/distributor';

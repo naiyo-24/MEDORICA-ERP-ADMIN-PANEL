@@ -69,7 +69,7 @@ class _ASMDoctorNetworkScreenState
     final doctorList = ref.watch(asmDoctorListProvider);
     final doctorCount = ref.watch(asmDoctorCountProvider);
     final asmList = ref.watch(asmListProvider);
-    final asmNames = ['All ASMs', ...asmList.map((a) => a.name).toSet().toList()];
+    final asmNames = ['All ASMs', ...asmList.map((a) => a.name).toSet()];
     final departmentOptions = ref.watch(uniqueASMDepartmentsProvider);
     final notifier = ref.read(asmDoctorNetworkNotifierProvider.notifier);
     final state = ref.watch(asmDoctorNetworkNotifierProvider);
