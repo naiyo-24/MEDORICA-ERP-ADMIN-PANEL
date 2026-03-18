@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/chemist_shop/mr_chemist_shop.dart';
 import '../../../theme/app_theme.dart';
+import '../../../services/api_url.dart';
 
 class MRChemistShopCard extends StatelessWidget {
   const MRChemistShopCard({super.key, required this.shop});
 
   final MRChemistShop shop;
+
+  void _launchBankPhoto(BuildContext context) async {
+    final baseUrl = ApiUrl.baseUrl;
+    final path = shop.bankPassbookPhoto ?? '';
+    if (path.isEmpty) return;
+    final url = path.startsWith('http') ? path : '$baseUrl/$path';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch bank details')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +104,11 @@ class MRChemistShopCard extends StatelessWidget {
                   icon: Iconsax.profile_2user,
                   label: 'Added By MR',
                   value: shop.mrAddedBy,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ElevatedButton(
+                  onPressed: () => _launchBankPhoto(context),
+                  child: const Text('View Bank Details'),
                 ),
               ],
             ),

@@ -12,6 +12,7 @@ class MRChemistShop {
     required this.mrAddedBy,
     required this.mrAddedById,
     required this.createdAt,
+    this.bankPassbookPhoto,
   });
 
   final String id;
@@ -26,6 +27,7 @@ class MRChemistShop {
   final String mrAddedBy;
   final String mrAddedById;
   final DateTime createdAt;
+  final String? bankPassbookPhoto;
 
   MRChemistShop copyWith({
     String? id,
@@ -40,6 +42,7 @@ class MRChemistShop {
     String? mrAddedBy,
     String? mrAddedById,
     DateTime? createdAt,
+    String? bankPassbookPhoto,
   }) {
     return MRChemistShop(
       id: id ?? this.id,
@@ -54,6 +57,7 @@ class MRChemistShop {
       mrAddedBy: mrAddedBy ?? this.mrAddedBy,
       mrAddedById: mrAddedById ?? this.mrAddedById,
       createdAt: createdAt ?? this.createdAt,
+      bankPassbookPhoto: bankPassbookPhoto ?? this.bankPassbookPhoto,
     );
   }
 }

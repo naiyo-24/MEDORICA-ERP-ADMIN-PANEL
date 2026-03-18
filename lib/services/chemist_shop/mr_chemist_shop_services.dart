@@ -39,6 +39,10 @@ class MRChemistShopServices {
     final shopPhoto = photoPath.isNotEmpty && !photoPath.startsWith('http')
         ? '$baseUrl/$photoPath'
         : photoPath;
+    final bankPassbookPath = json['bank_passbook_photo'] ?? '';
+    final bankPassbookPhoto = bankPassbookPath.isNotEmpty && !bankPassbookPath.startsWith('http')
+        ? '$baseUrl/$bankPassbookPath'
+        : bankPassbookPath;
     return MRChemistShop(
       id: json['shop_id'] ?? '',
       shopPhoto: shopPhoto,
@@ -52,6 +56,7 @@ class MRChemistShopServices {
       mrAddedBy: json['mr_id'] ?? '',
       mrAddedById: json['mr_id'] ?? '',
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
+      bankPassbookPhoto: bankPassbookPhoto,
     );
   }
 }
