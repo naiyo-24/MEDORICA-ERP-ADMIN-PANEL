@@ -100,7 +100,12 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
         state.selectedYear,
         state.selectedMonth,
       );
-      state = state.copyWith(appliedTarget: target, isApplying: false);
+      if (target == null) {
+        // If no data found, clear the card
+        state = state.copyWith(appliedTarget: null, isApplying: false);
+      } else {
+        state = state.copyWith(appliedTarget: target, isApplying: false);
+      }
     } catch (e) {
       state = state.copyWith(isApplying: false, clearAppliedTarget: true);
     }

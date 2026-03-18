@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 
 
 import '../../../models/onboarding/asm.dart';
+import '../../../providers/monthly_target/asm_monthly_target_provider.dart';
 import '../../../providers/onboarding/asm_onboarding_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -56,6 +57,28 @@ class ASMFilterCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final filteredASMList = ref.watch(asmListProvider);
+    final notifier = ref.read(asmMonthlyTargetNotifierProvider.notifier);
+
+    void handleASMChanged(String? value) {
+      if (value != null) {
+        notifier.setSelectedASM(value);
+        notifier.applyFilter();
+      }
+    }
+
+    void handleMonthChanged(int? value) {
+      if (value != null) {
+        notifier.setSelectedMonth(value);
+        notifier.applyFilter();
+      }
+    }
+
+    void handleYearChanged(int? value) {
+      if (value != null) {
+        notifier.setSelectedYear(value);
+        notifier.applyFilter();
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -112,7 +135,7 @@ class ASMFilterCard extends ConsumerWidget {
                         ),
                       )
                       .toList(),
-                  onChanged: onASMChanged,
+                  onChanged: handleASMChanged,
                 ),
               ),
               SizedBox(
@@ -131,7 +154,7 @@ class ASMFilterCard extends ConsumerWidget {
                         ),
                       )
                       .toList(),
-                  onChanged: onMonthChanged,
+                  onChanged: handleMonthChanged,
                 ),
               ),
               SizedBox(
@@ -150,26 +173,7 @@ class ASMFilterCard extends ConsumerWidget {
                         ),
                       )
                       .toList(),
-                  onChanged: onYearChanged,
-                ),
-              ),
-              SizedBox(
-                width: 180,
-                child: ElevatedButton.icon(
-                  onPressed: isApplying ? null : onApply,
-                  icon: isApplying
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.white,
-                            ),
-                          ),
-                        )
-                      : const Icon(Iconsax.search_normal_1, size: 18),
-                  label: Text(isApplying ? 'Applying...' : 'Apply Filter'),
+                  onChanged: handleYearChanged,
                 ),
               ),
             ],
