@@ -4,6 +4,14 @@ class ApiUrl {
     static const String mrSalarySlipBase = '/salary-slip/mr';
     static const String mrSalarySlipGetAll = '$mrSalarySlipBase/get-all';
 
+    // MR Monthly Plan
+    static const String mrMonthlyPlanBase = '/monthly-plan';
+    static const String mrMonthlyPlanGetAll = '$mrMonthlyPlanBase/get-all';
+    static String mrMonthlyPlanGetById(int planId) => '$mrMonthlyPlanBase/get-by/$planId';
+    static String mrMonthlyPlanGetByMr(String mrId) => '$mrMonthlyPlanBase/get-by-mr/$mrId';
+    static String mrMonthlyPlanGetByMrAndDate(String mrId, String planDate) => '$mrMonthlyPlanBase/get-by-mr/$mrId/date/$planDate';
+    static String mrMonthlyPlanDeleteById(int planId) => '$mrMonthlyPlanBase/delete/$planId';
+
     static String mrSalarySlipPostByMr(String mrId) => '$mrSalarySlipBase/post/$mrId';
     static String mrSalarySlipUpdateByMr(String mrId) => '$mrSalarySlipBase/update-by/$mrId';
     static String mrSalarySlipGetByMr(String mrId) => '$mrSalarySlipBase/get-by-mr/$mrId';
