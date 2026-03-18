@@ -57,26 +57,24 @@ class ASMFilterCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final filteredASMList = ref.watch(asmListProvider);
+
     final notifier = ref.read(asmMonthlyTargetNotifierProvider.notifier);
 
     void handleASMChanged(String? value) {
       if (value != null) {
         notifier.setSelectedASM(value);
-        notifier.applyFilter();
       }
     }
 
     void handleMonthChanged(int? value) {
       if (value != null) {
         notifier.setSelectedMonth(value);
-        notifier.applyFilter();
       }
     }
 
     void handleYearChanged(int? value) {
       if (value != null) {
         notifier.setSelectedYear(value);
-        notifier.applyFilter();
       }
     }
 
@@ -174,6 +172,25 @@ class ASMFilterCard extends ConsumerWidget {
                       )
                       .toList(),
                   onChanged: handleYearChanged,
+                ),
+              ),
+              SizedBox(
+                width: 180,
+                child: ElevatedButton.icon(
+                  onPressed: isApplying ? null : onApply,
+                  icon: isApplying
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.white,
+                            ),
+                          ),
+                        )
+                      : const Icon(Iconsax.search_normal_1, size: 18),
+                  label: Text(isApplying ? 'Applying...' : 'Apply Filter'),
                 ),
               ),
             ],

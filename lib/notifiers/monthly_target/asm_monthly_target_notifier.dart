@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
 import '../../models/onboarding/asm.dart';
 import '../../models/monthly_target/asm_monthly_target.dart';
 import '../../providers/monthly_target/asm_monthly_target_provider.dart';
@@ -111,5 +109,4 @@ class ASMMonthlyTargetNotifier extends Notifier<ASMMonthlyTargetState> {
     }
   }
 
-  // _buildMonthlyTarget and _achievementRatio removed (now using backend data)
 }
