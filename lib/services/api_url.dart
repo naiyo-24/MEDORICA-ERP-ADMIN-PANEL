@@ -81,6 +81,12 @@ class ApiUrl {
   static String mrDoctorNetworkGetByMrAndDoctor(String mrId, String doctorId) =>
       '$mrDoctorNetworkBase/get-by-mr/$mrId/doctor/$doctorId';
 
+  // ASM Doctor Network
+  static const String asmDoctorNetworkBase = '/doctor-network/asm';
+  static const String asmDoctorNetworkGetAll = '$asmDoctorNetworkBase/get-all';
+  static String asmDoctorNetworkGetByAsm(String asmId) => '$asmDoctorNetworkBase/get-by-asm/$asmId';
+  static String asmDoctorNetworkGetByAsmAndDoctor(String asmId, String doctorId) => '$asmDoctorNetworkBase/get-by/$asmId/$doctorId';
+
   // Distributor Management
   static const String distributorBase = '/distributor';
   static const String distributorPost = '$distributorBase/post';

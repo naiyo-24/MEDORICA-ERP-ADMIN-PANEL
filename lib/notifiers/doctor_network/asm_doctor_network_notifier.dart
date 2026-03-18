@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/doctor_network/asm_doctor_network.dart';
+import '../../services/doctor_network/asm/asm_doctor_network_services.dart';
 
 class ASMDoctorNetworkState {
   const ASMDoctorNetworkState({
@@ -82,90 +83,22 @@ class ASMDoctorNetworkState {
 }
 
 class ASMDoctorNetworkNotifier extends Notifier<ASMDoctorNetworkState> {
+  late final ASMDoctorNetworkServices _services;
+
   @override
   ASMDoctorNetworkState build() {
-    return ASMDoctorNetworkState(doctorList: _mockDoctorData());
+    _services = ASMDoctorNetworkServices();
+    return const ASMDoctorNetworkState();
   }
 
-  List<ASMDoctorNetwork> _mockDoctorData() {
-    return [
-      ASMDoctorNetwork(
-        id: 'doc_asm_1',
-        doctorName: 'Dr. Sanjay Mehta',
-        phone: '+919876543215',
-        email: 'sanjay.mehta@hospital.com',
-        address: '888 Medical Tower, Delhi',
-        specialization: 'Neurology',
-        experience: 20.0,
-        qualification: 'MD (Medicine), DM (Neurology)',
-        description:
-            'Senior neurologist with expertise in stroke management and neurodegenerative diseases.',
-        chambers: [
-          const Chamber(
-            name: 'Fortis Escorts',
-            address: 'Okhla, Delhi',
-            phone: '+911123456791',
-          ),
-          const Chamber(
-            name: 'Indraprastha Apollo',
-            address: 'Sarita Vihar, Delhi',
-            phone: '+911123456792',
-          ),
-        ],
-        asmAddedBy: 'Vikram Singh',
-        asmAddedById: 'asm_1',
-        createdAt: DateTime.now().subtract(const Duration(days: 25)),
-      ),
-      ASMDoctorNetwork(
-        id: 'doc_asm_2',
-        doctorName: 'Dr. Kavita Rao',
-        phone: '+919876543216',
-        email: 'kavita.rao@hospital.com',
-        address: '999 Health Complex, Bangalore',
-        specialization: 'Oncology',
-        experience: 16.0,
-        qualification: 'MD (Medicine), DM (Medical Oncology)',
-        description:
-            'Oncologist specializing in breast cancer and targeted therapy.',
-        chambers: [
-          const Chamber(
-            name: 'HCG Cancer Centre',
-            address: 'Kalyan Nagar, Bangalore',
-            phone: '+918023456791',
-          ),
-        ],
-        asmAddedBy: 'Neha Gupta',
-        asmAddedById: 'asm_2',
-        createdAt: DateTime.now().subtract(const Duration(days: 18)),
-      ),
-      ASMDoctorNetwork(
-        id: 'doc_asm_3',
-        doctorName: 'Dr. Ramesh Kumar',
-        phone: '+919876543217',
-        email: 'ramesh.kumar@hospital.com',
-        address: '777 Clinic Lane, Hyderabad',
-        specialization: 'Nephrology',
-        experience: 14.0,
-        qualification: 'MD (Medicine), DM (Nephrology)',
-        description:
-            'Nephrologist with focus on kidney transplantation and dialysis.',
-        chambers: [
-          const Chamber(
-            name: 'Yashoda Hospital',
-            address: 'Malakpet, Hyderabad',
-            phone: '+914023456791',
-          ),
-          const Chamber(
-            name: 'Apollo Health City',
-            address: 'Jubilee Hills, Hyderabad',
-            phone: '+914023456792',
-          ),
-        ],
-        asmAddedBy: 'Arun Kumar',
-        asmAddedById: 'asm_3',
-        createdAt: DateTime.now().subtract(const Duration(days: 12)),
-      ),
-    ];
+  Future<void> loadDoctorList({String? asmId}) async {
+    List<ASMDoctorNetwork> doctors = [];
+    if (asmId != null && asmId.isNotEmpty && asmId != 'All ASMs') {
+      doctors = await _services.getDoctorsByASM(asmId);
+    } else {
+      doctors = await _services.getAllDoctors();
+    }
+    state = state.copyWith(doctorList: doctors);
   }
 
   void setSearchQuery(String value) {

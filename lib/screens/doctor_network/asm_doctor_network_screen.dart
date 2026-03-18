@@ -6,6 +6,7 @@ import '../../cards/doctor_network/asm/asm_doctor_details_card.dart';
 import '../../cards/doctor_network/asm/asm_doctor_search_filter_card.dart';
 import '../../models/doctor_network/asm_doctor_network.dart';
 import '../../providers/doctor_network/asm_doctor_network_provider.dart';
+import '../../providers/onboarding/asm_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
@@ -56,10 +57,19 @@ class _ASMDoctorNetworkScreenState
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(asmDoctorNetworkNotifierProvider.notifier).loadDoctorList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final doctorList = ref.watch(asmDoctorListProvider);
     final doctorCount = ref.watch(asmDoctorCountProvider);
-    final asmOptions = ref.watch(uniqueASMsProvider);
+    final asmList = ref.watch(asmListProvider);
+    final asmNames = ['All ASMs', ...asmList.map((a) => a.name).toSet().toList()];
     final departmentOptions = ref.watch(uniqueASMDepartmentsProvider);
     final notifier = ref.read(asmDoctorNetworkNotifierProvider.notifier);
     final state = ref.watch(asmDoctorNetworkNotifierProvider);
@@ -96,14 +106,16 @@ class _ASMDoctorNetworkScreenState
                 ASMDoctorSearchFilterCard(
                   onSearchChanged: (query) {
                     notifier.setSearchQuery(query);
+                    notifier.loadDoctorList(asmId: state.selectedASM);
                   },
                   onASMFilterChanged: (asm) {
                     notifier.setSelectedASM(asm);
+                    notifier.loadDoctorList(asmId: asm);
                   },
                   onDepartmentFilterChanged: (dept) {
                     notifier.setSelectedDepartment(dept);
                   },
-                  asmOptions: asmOptions,
+                  asmOptions: asmNames,
                   departmentOptions: departmentOptions,
                   selectedASM: state.selectedASM.isEmpty
                       ? 'All ASMs'
