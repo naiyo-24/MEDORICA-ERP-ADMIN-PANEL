@@ -170,6 +170,53 @@ class ASMOrderCard extends StatelessWidget {
                 '${_date(order.deliveryDateTime)} | ${_time(order.deliveryDateTime)}',
           ),
           const SizedBox(height: AppSpacing.sm),
+          if (order.productsWithPrice is List && (order.productsWithPrice as List).isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Products:',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  ...List<Widget>.from(
+                    (order.productsWithPrice as List).map((prod) {
+                      final name = prod['name']?.toString() ?? '-';
+                      final qty = prod['quantity']?.toString() ?? '-';
+                      final pack = prod['pack']?.toString() ?? '-';
+                      final total = prod['totalAmount']?.toString() ?? '-';
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '$name (Qty: $qty, Pack: $pack)',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '₹$total',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
           Row(
             children: [
               Expanded(
