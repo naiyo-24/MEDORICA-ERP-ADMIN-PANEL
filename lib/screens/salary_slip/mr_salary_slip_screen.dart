@@ -36,7 +36,7 @@ class _MRSalarySlipScreenState extends ConsumerState<MRSalarySlipScreen> {
       context: context,
       ref: ref,
       itemKey: itemKey,
-      currentItemKey: SideNavItemKeys.mrSalarySlip,
+      currentItemKey: _selectedNavKey,
     );
     if (!handled) {
       setState(() {
@@ -95,12 +95,15 @@ class _MRSalarySlipScreenState extends ConsumerState<MRSalarySlipScreen> {
     final salarySlips = ref.watch(mrSalarySlipListProvider);
     final isLoading = ref.watch(mrSalarySlipLoadingProvider);
     return Scaffold(
+      key: _scaffoldKey,
       appBar: MedoricaAppBar(
         title: 'MR Salary Slips',
         subtitle: 'Manage Medical Representative Salary Slips',
         showMenuButton: true,
         showLogo: false,
-        onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
+        onMenuTap: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
       ),
       drawer: Drawer(
         width: 320,
