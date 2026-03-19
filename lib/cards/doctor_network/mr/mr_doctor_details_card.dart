@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/doctor_network/mr_doctor_network.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class MRDoctorDetailsCard extends StatelessWidget {
@@ -12,6 +13,11 @@ class MRDoctorDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final baseUrl = ApiUrl.baseUrl;
+    final photoPath = doctor.profilePhoto ?? '';
+    final doctorPhoto = photoPath.isNotEmpty && !photoPath.startsWith('http')
+        ? '$baseUrl/$photoPath'
+        : photoPath;
 
     return Material(
       color: Colors.transparent,
@@ -57,11 +63,26 @@ class MRDoctorDetailsCard extends StatelessWidget {
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
-                        child: const Icon(
-                          Iconsax.user,
-                          color: AppColors.primary,
-                          size: 32,
-                        ),
+                        child: doctorPhoto.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(AppRadius.md),
+                                child: Image.network(
+                                  doctorPhoto,
+                                  fit: BoxFit.cover,
+                                  width: 60,
+                                  height: 60,
+                                  errorBuilder: (context, error, stackTrace) => const Icon(
+                                    Iconsax.user,
+                                    color: AppColors.primary,
+                                    size: 32,
+                                  ),
+                                ),
+                              )
+                            : const Icon(
+                                Iconsax.user,
+                                color: AppColors.primary,
+                                size: 32,
+                              ),
                       ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(

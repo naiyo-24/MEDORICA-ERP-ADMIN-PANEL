@@ -15,7 +15,7 @@ class Chamber {
     return Chamber(
       name: json['name'] as String? ?? '',
       address: json['address'] as String? ?? '',
-      phone: json['phone'] as String? ?? '',
+      phone: json['phoneNumber'] as String? ?? '',
     );
   }
 
@@ -104,7 +104,7 @@ class MRDoctorNetwork {
   }
 
   factory MRDoctorNetwork.fromJson(Map<String, dynamic> json) {
-    var chambersJson = json['chambers'];
+    var chambersJson = json['doctor_chambers'];
     List<Chamber> chambers = [];
     if (chambersJson != null) {
       if (chambersJson is List) {
@@ -132,15 +132,15 @@ class MRDoctorNetwork {
       mrId: json['mr_id'] as String? ?? '',
       doctorId: json['doctor_id'] as String? ?? '',
       doctorName: json['doctor_name'] as String? ?? '',
-      phoneNo: json['phone_no'] as String? ?? '',
-      email: json['email'] as String?,
-      description: json['description'] as String?,
-      address: json['address'] as String?,
-      qualification: json['qualification'] as String?,
-      specialization: json['specialization'] as String? ?? '',
-      experience: json['experience'] as String?,
+      phoneNo: json['doctor_phone_no'] as String? ?? '',
+      email: json['doctor_email'] as String?,
+      description: json['doctor_description'] as String?,
+      address: json['doctor_address'] as String?,
+      qualification: json['doctor_qualification'] as String?,
+      specialization: json['doctor_specialization'] as String? ?? '',
+      experience: json['doctor_experience'] as String?,
       chambers: chambers,
-      profilePhoto: json['profile_photo'] as String?,
+      profilePhoto: json['doctor_photo'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,

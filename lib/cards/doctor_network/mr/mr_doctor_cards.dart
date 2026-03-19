@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../models/doctor_network/mr_doctor_network.dart';
 import '../../../theme/app_theme.dart';
+import '../../../services/api_url.dart';
 
 class MRDoctorCard extends StatelessWidget {
   const MRDoctorCard({super.key, required this.doctor, required this.onTap});
@@ -13,6 +14,11 @@ class MRDoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final baseUrl = ApiUrl.baseUrl;
+    final photoPath = doctor.profilePhoto ?? '';
+    final doctorPhoto = photoPath.isNotEmpty && !photoPath.startsWith('http')
+        ? '$baseUrl/$photoPath'
+        : photoPath;
 
     return Material(
       color: AppColors.white,
@@ -28,7 +34,7 @@ class MRDoctorCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Doctor Icon
+              // Doctor Photo
               Container(
                 width: 48,
                 height: 48,
@@ -36,11 +42,26 @@ class MRDoctorCard extends StatelessWidget {
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: const Icon(
-                  Iconsax.user,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
+                child: doctorPhoto.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        child: Image.network(
+                          doctorPhoto,
+                          fit: BoxFit.cover,
+                          width: 48,
+                          height: 48,
+                          errorBuilder: (context, error, stackTrace) => const Icon(
+                            Iconsax.user,
+                            color: AppColors.primary,
+                            size: 24,
+                          ),
+                        ),
+                      )
+                    : const Icon(
+                        Iconsax.user,
+                        color: AppColors.primary,
+                        size: 24,
+                      ),
               ),
               const SizedBox(width: AppSpacing.sm),
 
@@ -81,6 +102,46 @@ class MRDoctorCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (doctor.qualification != null && doctor.qualification!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          'Qualification: ${doctor.qualification}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                          ),
+                        ),
+                      ),
+                    if (doctor.experience != null && doctor.experience!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          'Experience: ${doctor.experience} yrs',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                          ),
+                        ),
+                      ),
+                    if (doctor.description != null && doctor.description!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          'Description: ${doctor.description}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                          ),
+                        ),
+                      ),
+                    if (doctor.chambers != null && doctor.chambers!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          'Chamber: ${doctor.chambers!.first.name}, ${doctor.chambers!.first.address} (${doctor.chambers!.first.phone})',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.quaternary,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -117,6 +178,26 @@ class MRDoctorCard extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
+                  if (doctor.email != null && doctor.email!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        doctor.email!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppColors.quaternary,
+                        ),
+                      ),
+                    ),
+                  if (doctor.address != null && doctor.address!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        doctor.address!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppColors.quaternary,
+                        ),
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(width: AppSpacing.sm),
