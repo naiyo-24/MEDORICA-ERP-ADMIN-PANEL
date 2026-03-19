@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../models/onboarding/mr.dart';
 import '../../../providers/onboarding/mr_onboarding_provider.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,12 @@ class MRAppointmentCard extends ConsumerWidget {
 
   MRDoctorNetwork _getDoctor(WidgetRef ref, String doctorId) {
     final doctorList = ref.watch(mrDoctorListProvider);
-    // Try matching doctorId with doc.doctorId or doc.id (as string)
+    // Try matching doctorId with doc.doctorId, doc.id (as string), or substring match
     return doctorList.firstWhere(
-      (doc) => doc.doctorId == doctorId || doc.id.toString() == doctorId,
+      (doc) =>
+        doc.doctorId == doctorId ||
+        doc.id.toString() == doctorId ||
+        (doctorId.contains(doc.doctorId) && doc.doctorId.isNotEmpty),
       orElse: () => const MRDoctorNetwork(
         id: 0,
         mrId: '',
@@ -101,6 +106,15 @@ class MRAppointmentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+            // DEBUG: Print doctor list for troubleshooting
+            final debugDoctorList = ref.watch(mrDoctorListProvider);
+            // ignore: avoid_print
+            print('DEBUG: mrDoctorListProvider contents:');
+            for (final doc in debugDoctorList) {
+              if (kDebugMode) {
+                print('doctorId: \\${doc.doctorId}, doctorName: \\${doc.doctorName}');
+              }
+            }
         // Fetch MR name via provider
         MR getMR(WidgetRef ref, String mrId) {
           final mrList = ref.watch(mrListProvider);
