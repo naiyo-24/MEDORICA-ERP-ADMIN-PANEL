@@ -12,6 +12,7 @@ class ASMChemistShop {
     required this.asmAddedBy,
     required this.asmAddedById,
     required this.createdAt,
+    this.bankPassbookPhoto,
   });
 
   final String id;
@@ -26,6 +27,7 @@ class ASMChemistShop {
   final String asmAddedBy;
   final String asmAddedById;
   final DateTime createdAt;
+  final String? bankPassbookPhoto;
 
   ASMChemistShop copyWith({
     String? id,
@@ -40,6 +42,7 @@ class ASMChemistShop {
     String? asmAddedBy,
     String? asmAddedById,
     DateTime? createdAt,
+    String? bankPassbookPhoto,
   }) {
     return ASMChemistShop(
       id: id ?? this.id,
@@ -54,6 +57,7 @@ class ASMChemistShop {
       asmAddedBy: asmAddedBy ?? this.asmAddedBy,
       asmAddedById: asmAddedById ?? this.asmAddedById,
       createdAt: createdAt ?? this.createdAt,
+      bankPassbookPhoto: bankPassbookPhoto ?? this.bankPassbookPhoto,
     );
   }
 }

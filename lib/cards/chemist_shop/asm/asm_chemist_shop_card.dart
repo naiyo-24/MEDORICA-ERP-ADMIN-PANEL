@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/chemist_shop/asm_chemist_shop.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMChemistShopCard extends StatelessWidget {
@@ -12,6 +14,15 @@ class ASMChemistShopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final baseUrl = ApiUrl.baseUrl;
+    final photoPath = shop.shopPhoto;
+    final shopPhotoUrl = photoPath.isNotEmpty && !photoPath.startsWith('http')
+        ? '$baseUrl/$photoPath'
+        : photoPath;
+    final bankPassbookPhoto = (shop as dynamic).bankPassbookPhoto ?? '';
+    final bankPassbookUrl = bankPassbookPhoto.isNotEmpty && !bankPassbookPhoto.startsWith('http')
+        ? '$baseUrl/$bankPassbookPhoto'
+        : bankPassbookPhoto;
 
     return Container(
       decoration: BoxDecoration(
@@ -27,7 +38,7 @@ class ASMChemistShopCard extends StatelessWidget {
               top: Radius.circular(AppRadius.md),
             ),
             child: Image.network(
-              shop.shopPhoto,
+              shopPhotoUrl,
               width: double.infinity,
               height: 190,
               fit: BoxFit.cover,
@@ -89,6 +100,31 @@ class ASMChemistShopCard extends StatelessWidget {
                   label: 'Added By ASM',
                   value: shop.asmAddedBy,
                 ),
+                if (bankPassbookPhoto.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Iconsax.document, size: 18),
+                      label: const Text('View Bank Passbook'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 16,
+                        ),
+                      ),
+                      onPressed: () {
+                        if (bankPassbookUrl.isNotEmpty) {
+                          // ignore: deprecated_member_use
+                          launchUrl(Uri.parse(bankPassbookUrl));
+                        }
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
