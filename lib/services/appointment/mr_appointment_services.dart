@@ -47,44 +47,23 @@ class MRAppointmentServices {
 
   MRAppointment _fromJson(Map<String, dynamic> json) {
     final mrId = json['mr_id'] as String? ?? '';
-    final _ = json['doctor_id'] as String? ?? '';
+    final doctorId = json['doctor_id'] as String? ?? '';
     final appointmentProofImage = json['completion_photo_proof'] as String?;
-    final visualAdsRaw = json['visual_ads'] as List?;
+    final _ = json['visual_ads'] as List?;
+    final place = json['place'] as String?;
 
-    // Fetch MR details
-    // Fetch Doctor details
-    // Fetch Visual Ads details
-    // These should be fetched from providers/notifiers in the UI layer, but here we stub for structure
-    String mrName = '';
-    String doctorName = '';
-    String chamberName = '';
-    String chamberAddress = '';
-    String chamberPhone = '';
-    String doctorPhone = '';
-    String doctorSpecialization = '';
-
-    // Construct completion photo URL if present
     String? proofImageUrl;
     if (appointmentProofImage != null && appointmentProofImage.isNotEmpty) {
       proofImageUrl = '${ApiUrl.baseUrl}/$appointmentProofImage';
-    }
-
-    // Visual ads: extract medicine names
-    if (visualAdsRaw != null) {
     }
 
     return MRAppointment(
       id: json['appointment_id'] as String? ?? '',
       dateTime: _parseDateTime(json['appointment_date'], json['appointment_time']),
       mrId: mrId,
-      mrName: mrName,
-      doctorName: doctorName,
-      chamberName: chamberName,
-      chamberAddress: chamberAddress,
-      chamberPhone: chamberPhone,
-      doctorPhone: doctorPhone,
-      doctorSpecialization: doctorSpecialization,
+      doctorId: doctorId,
       status: _parseStatus(json['status']),
+      place: place,
       appointmentProofImage: proofImageUrl,
       visualAdsRaw: json['visual_ads'] as List?,
     );

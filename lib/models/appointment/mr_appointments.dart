@@ -5,14 +5,9 @@ class MRAppointment {
     required this.id,
     required this.dateTime,
     required this.mrId,
-    required this.mrName,
-    required this.doctorName,
-    required this.chamberName,
-    required this.chamberAddress,
-    required this.chamberPhone,
-    required this.doctorPhone,
-    required this.doctorSpecialization,
+    required this.doctorId,
     required this.status,
+    this.place,
     this.appointmentProofImage,
     this.visualAdsRaw,
   });
@@ -20,14 +15,9 @@ class MRAppointment {
   final String id;
   final DateTime dateTime;
   final String mrId;
-  final String mrName;
-  final String doctorName;
-  final String chamberName;
-  final String chamberAddress;
-  final String chamberPhone;
-  final String doctorPhone;
-  final String doctorSpecialization;
+  final String doctorId;
   final AppointmentStatus status;
+  final String? place;
   final String? appointmentProofImage;
   final List<dynamic>? visualAdsRaw;
 
@@ -35,14 +25,9 @@ class MRAppointment {
     String? id,
     DateTime? dateTime,
     String? mrId,
-    String? mrName,
-    String? doctorName,
-    String? chamberName,
-    String? chamberAddress,
-    String? chamberPhone,
-    String? doctorPhone,
-    String? doctorSpecialization,
+    String? doctorId,
     AppointmentStatus? status,
+    String? place,
     String? appointmentProofImage,
     List<dynamic>? visualAdsRaw,
   }) {
@@ -50,16 +35,10 @@ class MRAppointment {
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
       mrId: mrId ?? this.mrId,
-      mrName: mrName ?? this.mrName,
-      doctorName: doctorName ?? this.doctorName,
-      chamberName: chamberName ?? this.chamberName,
-      chamberAddress: chamberAddress ?? this.chamberAddress,
-      chamberPhone: chamberPhone ?? this.chamberPhone,
-      doctorPhone: doctorPhone ?? this.doctorPhone,
-      doctorSpecialization: doctorSpecialization ?? this.doctorSpecialization,
+      doctorId: doctorId ?? this.doctorId,
       status: status ?? this.status,
-      appointmentProofImage:
-          appointmentProofImage ?? this.appointmentProofImage,
+      place: place ?? this.place,
+      appointmentProofImage: appointmentProofImage ?? this.appointmentProofImage,
       visualAdsRaw: visualAdsRaw ?? this.visualAdsRaw,
     );
   }

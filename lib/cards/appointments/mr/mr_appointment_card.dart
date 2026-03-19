@@ -1,12 +1,12 @@
+import '../../../models/onboarding/mr.dart';
+import '../../../providers/onboarding/mr_onboarding_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/appointment/mr_appointments.dart';
 import '../../../models/doctor_network/mr_doctor_network.dart';
-import '../../../models/onboarding/mr.dart';
 import '../../../models/visual_ads.dart';
 import '../../../providers/doctor_network/mr_doctor_network_provider.dart';
-import '../../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../../providers/visual_ads_provider.dart';
 import '../../../theme/app_theme.dart';
 
@@ -17,13 +17,6 @@ class MRAppointmentCard extends ConsumerWidget {
 
   final MRAppointment appointment;
 
-  MR _getMR(WidgetRef ref, String mrId) {
-    final mrList = ref.watch(mrListProvider);
-    return mrList.firstWhere(
-      (mr) => mr.mrId == mrId,
-      orElse: () => const MR(mrId: '', name: '', phone: '', password: ''),
-    );
-  }
 
   MRDoctorNetwork _getDoctor(WidgetRef ref, String doctorId) {
     final doctorList = ref.watch(mrDoctorListProvider);
@@ -107,13 +100,19 @@ class MRAppointmentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+        // Fetch MR name via provider
+        MR getMR(WidgetRef ref, String mrId) {
+          final mrList = ref.watch(mrListProvider);
+          return mrList.firstWhere(
+            (mr) => mr.mrId == mrId,
+            orElse: () => const MR(mrId: '', name: '', phone: '', password: ''),
+          );
+        }
     final theme = Theme.of(context);
     final statusColor = _statusColor(appointment.status);
-
-    // Fetch MR, Doctor, Visual Ads
-    final mr = _getMR(ref, appointment.mrId);
-    final doctor = _getDoctor(ref, appointment.doctorName); // doctorId
+    final doctor = _getDoctor(ref, appointment.doctorId);
     final visualAdsNames = _getVisualAdsNames(ref, appointment.visualAdsRaw);
+    final mr = getMR(ref, appointment.mrId);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -127,39 +126,20 @@ class MRAppointmentCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  appointment.id,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
+              Chip(
+                label: Text(_statusLabel(appointment.status)),
+                backgroundColor: statusColor,
+                labelStyle: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor.withAlpha(26),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  _statusLabel(appointment.status),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: statusColor,
-                    fontWeight: FontWeight.w700,
-                  ),
+              Text(
+                appointment.id,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.quaternary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -170,7 +150,7 @@ class MRAppointmentCard extends ConsumerWidget {
             runSpacing: AppSpacing.xs,
             children: [
               _InfoChip(
-                icon: Iconsax.calendar_1,
+                icon: Iconsax.calendar,
                 label: 'Date',
                 value: _date(appointment.dateTime),
               ),
@@ -180,45 +160,28 @@ class MRAppointmentCard extends ConsumerWidget {
                 value: _time(appointment.dateTime),
               ),
               _InfoChip(
-                icon: Iconsax.profile_2user,
-                label: 'MR Name',
+                icon: Iconsax.location,
+                label: 'Place',
+                value: appointment.place ?? '-',
+              ),
+              _InfoChip(
+                icon: Iconsax.user,
+                label: 'Doctor',
+                value: doctor.doctorName,
+              ),
+              _InfoChip(
+                icon: Iconsax.user,
+                label: 'MR',
                 value: mr.name,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          _DetailRow(label: 'Doctor', value: doctor.doctorName),
-          _DetailRow(label: 'Doctor Phone', value: doctor.phoneNo),
-          _DetailRow(
-            label: 'Doctor Specialization',
-            value: doctor.specialization,
-          ),
-          _DetailRow(label: 'Chamber Name', value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].name : appointment.chamberName),
-          _DetailRow(
-            label: 'Chamber Address',
-            value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].address : appointment.chamberAddress,
-          ),
-          _DetailRow(
-            label: 'Chamber Phone No',
-            value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].phone : appointment.chamberPhone,
-          ),
           if (visualAdsNames.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.md),
             const Divider(color: AppColors.border),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                const Icon(Iconsax.tag, size: 16, color: AppColors.primary),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Visual Ads',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            Text('Visual Ads:', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: AppSpacing.md,
@@ -229,19 +192,7 @@ class MRAppointmentCard extends ConsumerWidget {
             const SizedBox(height: AppSpacing.md),
             const Divider(color: AppColors.border),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                const Icon(Iconsax.gallery, size: 16, color: AppColors.primary),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Appointment Proof Image',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            Text('Completion Photo Proof:', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: AppSpacing.sm),
             ClipRRect(
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -314,41 +265,4 @@ class _InfoChip extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.value});
 
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              '$label:',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.quaternary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
