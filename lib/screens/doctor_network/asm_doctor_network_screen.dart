@@ -69,7 +69,8 @@ class _ASMDoctorNetworkScreenState
     final doctorList = ref.watch(asmDoctorListProvider);
     final doctorCount = ref.watch(asmDoctorCountProvider);
     final asmList = ref.watch(asmListProvider);
-    final asmNames = ['All ASMs', ...asmList.map((a) => a.name).toSet()];
+    final asmOptions = ['All ASMs', ...asmList.map((a) => a.name).toSet()];
+    final asmIdMap = {for (var a in asmList) a.name: a.asmId};
     final departmentOptions = ref.watch(uniqueASMDepartmentsProvider);
     final notifier = ref.read(asmDoctorNetworkNotifierProvider.notifier);
     final state = ref.watch(asmDoctorNetworkNotifierProvider);
@@ -106,16 +107,24 @@ class _ASMDoctorNetworkScreenState
                 ASMDoctorSearchFilterCard(
                   onSearchChanged: (query) {
                     notifier.setSearchQuery(query);
-                    notifier.loadDoctorList(asmId: state.selectedASM);
+                    notifier.loadDoctorList(
+                      asmId: state.selectedASM == 'All ASMs'
+                        ? ''
+                        : asmIdMap[state.selectedASM] ?? '',
+                    );
                   },
                   onASMFilterChanged: (asm) {
                     notifier.setSelectedASM(asm);
-                    notifier.loadDoctorList(asmId: asm);
+                    notifier.loadDoctorList(
+                      asmId: asm == 'All ASMs'
+                        ? ''
+                        : asmIdMap[asm] ?? '',
+                    );
                   },
                   onDepartmentFilterChanged: (dept) {
                     notifier.setSelectedDepartment(dept);
                   },
-                  asmOptions: asmNames,
+                  asmOptions: asmOptions,
                   departmentOptions: departmentOptions,
                   selectedASM: state.selectedASM.isEmpty
                       ? 'All ASMs'
