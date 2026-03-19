@@ -7,6 +7,7 @@ import '../../providers/appointment/mr_appointments_provider.dart';
 import '../../providers/onboarding/mr_onboarding_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar_drawer.dart';
 
 class MRAppointmentsScreen extends ConsumerStatefulWidget {
@@ -18,6 +19,11 @@ class MRAppointmentsScreen extends ConsumerStatefulWidget {
 }
 
 class _MRAppointmentsScreenState extends ConsumerState<MRAppointmentsScreen> {
+    @override
+    void initState() {
+      super.initState();
+      Future.microtask(() => ref.read(mrAppointmentsNotifierProvider.notifier).loadAppointments());
+    }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.mrAppointments;
 
@@ -50,6 +56,8 @@ class _MRAppointmentsScreenState extends ConsumerState<MRAppointmentsScreen> {
     final selectedMRId = ref.watch(selectedMRAppointmentIdProvider);
     final selectedDate = ref.watch(selectedMRAppointmentDateProvider);
     final notifier = ref.read(mrAppointmentsNotifierProvider.notifier);
+    final isLoading = ref.watch(mrAppointmentsIsLoadingProvider);
+    final error = ref.watch(mrAppointmentsErrorProvider);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -95,7 +103,18 @@ class _MRAppointmentsScreenState extends ConsumerState<MRAppointmentsScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                if (appointments.isEmpty)
+                if (isLoading)
+                  const MedoricaLoader()
+                else if (error != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl),
+                    child: Text(
+                      error,
+                      style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.error),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                else if (appointments.isEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.xxl,

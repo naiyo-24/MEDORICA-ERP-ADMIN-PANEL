@@ -23,3 +23,11 @@ final selectedMRAppointmentIdProvider = Provider<String>((ref) {
 final selectedMRAppointmentDateProvider = Provider<DateTime?>((ref) {
   return ref.watch(mrAppointmentsNotifierProvider).selectedDate;
 });
+
+final mrAppointmentsIsLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(mrAppointmentsNotifierProvider).isLoading;
+});
+
+final mrAppointmentsErrorProvider = Provider<String?>((ref) {
+  return ref.watch(mrAppointmentsNotifierProvider).error;
+});

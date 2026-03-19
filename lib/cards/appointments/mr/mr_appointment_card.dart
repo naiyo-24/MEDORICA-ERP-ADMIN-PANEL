@@ -2,12 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/appointment/mr_appointments.dart';
+import '../../../models/doctor_network/mr_doctor_network.dart';
+import '../../../models/onboarding/mr.dart';
+import '../../../models/visual_ads.dart';
+import '../../../providers/doctor_network/mr_doctor_network_provider.dart';
+import '../../../providers/onboarding/mr_onboarding_provider.dart';
+import '../../../providers/visual_ads_provider.dart';
 import '../../../theme/app_theme.dart';
 
-class MRAppointmentCard extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class MRAppointmentCard extends ConsumerWidget {
   const MRAppointmentCard({super.key, required this.appointment});
 
   final MRAppointment appointment;
+
+  MR _getMR(WidgetRef ref, String mrId) {
+    final mrList = ref.watch(mrListProvider);
+    return mrList.firstWhere(
+      (mr) => mr.mrId == mrId,
+      orElse: () => const MR(mrId: '', name: '', phone: '', password: ''),
+    );
+  }
+
+  MRDoctorNetwork _getDoctor(WidgetRef ref, String doctorId) {
+    final doctorList = ref.watch(mrDoctorListProvider);
+    return doctorList.firstWhere(
+      (doc) => doc.doctorId == doctorId,
+      orElse: () => const MRDoctorNetwork(
+        id: 0,
+        mrId: '',
+        doctorId: '',
+        doctorName: '',
+        phoneNo: '',
+        specialization: '',
+      ),
+    );
+  }
+
+  List<String> _getVisualAdsNames(WidgetRef ref, List<dynamic>? visualAdsRaw) {
+    final adsList = ref.watch(visualAdsListProvider);
+    if (visualAdsRaw == null) return [];
+    return visualAdsRaw.map((ad) {
+      if (ad is Map && ad['id'] != null) {
+        final adObj = adsList.firstWhere(
+          (a) => a.id == ad['id'],
+          orElse: () => VisualAd(adId: '', name: '', createdAt: DateTime(2000)),
+        );
+        return adObj.name.isNotEmpty ? adObj.name : (ad['medicine_name']?.toString() ?? '');
+      }
+      return '';
+    }).where((name) => name.isNotEmpty).toList();
+  }
 
   String _date(DateTime value) {
     const months = [
@@ -60,9 +106,14 @@ class MRAppointmentCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final statusColor = _statusColor(appointment.status);
+
+    // Fetch MR, Doctor, Visual Ads
+    final mr = _getMR(ref, appointment.mrId);
+    final doctor = _getDoctor(ref, appointment.doctorName); // doctorId
+    final visualAdsNames = _getVisualAdsNames(ref, appointment.visualAdsRaw);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -131,26 +182,49 @@ class MRAppointmentCard extends StatelessWidget {
               _InfoChip(
                 icon: Iconsax.profile_2user,
                 label: 'MR Name',
-                value: appointment.mrName,
+                value: mr.name,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          _DetailRow(label: 'Doctor', value: appointment.doctorName),
-          _DetailRow(label: 'Doctor Phone', value: appointment.doctorPhone),
+          _DetailRow(label: 'Doctor', value: doctor.doctorName),
+          _DetailRow(label: 'Doctor Phone', value: doctor.phoneNo),
           _DetailRow(
             label: 'Doctor Specialization',
-            value: appointment.doctorSpecialization,
+            value: doctor.specialization,
           ),
-          _DetailRow(label: 'Chamber Name', value: appointment.chamberName),
+          _DetailRow(label: 'Chamber Name', value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].name : appointment.chamberName),
           _DetailRow(
             label: 'Chamber Address',
-            value: appointment.chamberAddress,
+            value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].address : appointment.chamberAddress,
           ),
           _DetailRow(
             label: 'Chamber Phone No',
-            value: appointment.chamberPhone,
+            value: doctor.chambers?.isNotEmpty == true ? doctor.chambers![0].phone : appointment.chamberPhone,
           ),
+          if (visualAdsNames.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.md),
+            const Divider(color: AppColors.border),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                const Icon(Iconsax.tag, size: 16, color: AppColors.primary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  'Visual Ads',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.md,
+              children: visualAdsNames.map((name) => Chip(label: Text(name))).toList(),
+            ),
+          ],
           if (appointment.appointmentProofImage != null) ...[
             const SizedBox(height: AppSpacing.md),
             const Divider(color: AppColors.border),

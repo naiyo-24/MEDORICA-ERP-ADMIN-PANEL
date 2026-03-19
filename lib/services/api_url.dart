@@ -42,7 +42,16 @@ class ApiUrl {
   static const String mrGiftApplicationGetAll = '$mrGiftApplicationBase/get-all';
   static String mrGiftApplicationGetByMR(String mrId) => '$mrGiftApplicationBase/get-by-mr/$mrId';
   static String mrGiftApplicationUpdateByMRAndRequestId(String mrId, int requestId) => '$mrGiftApplicationBase/update-by/$mrId/$requestId';
-        
+  
+  // MR Appointment
+  static const String mrAppointmentBase = '/appointment/mr';
+  static const String mrAppointmentGetAll = '$mrAppointmentBase/get-all';
+  static String mrAppointmentGetByMR(String mrId) => '$mrAppointmentBase/get-by-mr/$mrId';
+  static String mrAppointmentGetByDoctor(String doctorId) => '$mrAppointmentBase/get-by-doctor/$doctorId';
+  static String mrAppointmentGetByMRDoctor(String mrId, String doctorId) => '$mrAppointmentBase/get-by-mr-doctor/$mrId/$doctorId';
+  static String mrAppointmentGetById(String appointmentId) => '$mrAppointmentBase/get-by/$appointmentId';
+  static String mrAppointmentDeleteById(String appointmentId) => '$mrAppointmentBase/delete-by/$appointmentId';
+
   // ASM Onboarding
   static const String asmOnboardingBase = '/onboarding/asm';
   static const String asmOnboardingPost = '$asmOnboardingBase/post';
