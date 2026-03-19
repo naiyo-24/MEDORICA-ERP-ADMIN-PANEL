@@ -20,8 +20,9 @@ class MRAppointmentCard extends ConsumerWidget {
 
   MRDoctorNetwork _getDoctor(WidgetRef ref, String doctorId) {
     final doctorList = ref.watch(mrDoctorListProvider);
+    // Try matching doctorId with doc.doctorId or doc.id (as string)
     return doctorList.firstWhere(
-      (doc) => doc.doctorId == doctorId,
+      (doc) => doc.doctorId == doctorId || doc.id.toString() == doctorId,
       orElse: () => const MRDoctorNetwork(
         id: 0,
         mrId: '',
