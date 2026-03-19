@@ -69,6 +69,10 @@ class MROrderNotifier extends Notifier<MROrderState> {
     _services = MROrderServices();
     return const MROrderState();
   }
+    Future<void> updateOrderStatus({required String orderId, required MROrderStatus status}) async {
+      await _services.updateOrderStatus(orderId: orderId, status: status.name);
+      await loadOrders(mrId: state.selectedMRId);
+    }
 
   Future<void> loadOrders({String? mrId}) async {
     state = state.copyWith(searchQuery: '', selectedMRId: mrId ?? '', selectedStatus: '', selectedDate: null);

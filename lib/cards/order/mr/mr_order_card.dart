@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 import '../../../models/order/mr_order.dart';
+import '../../../providers/order/mr_order_provider.dart';
 import '../../../theme/app_theme.dart';
 
 class MROrderCard extends StatelessWidget {
@@ -9,29 +11,7 @@ class MROrderCard extends StatelessWidget {
 
   final MROrder order;
 
-  String _date(DateTime value) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${value.day.toString().padLeft(2, '0')} ${months[value.month - 1]} ${value.year}';
-  }
 
-  String _time(DateTime value) {
-    final hour = value.hour % 12 == 0 ? 12 : value.hour % 12;
-    final period = value.hour >= 12 ? 'PM' : 'AM';
-    return '${hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')} $period';
-  }
 
   String _statusLabel(MROrderStatus status) {
     switch (status) {
@@ -62,174 +42,116 @@ class MROrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final statusColor = _statusColor(order.status);
-
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    _statusColor(order.status);
+    return Consumer(
+      builder: (context, ref, _) {
+        final notifier = ref.read(mrOrderNotifierProvider.notifier);
+        return Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  order.id,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Order ID: ${order.id}', style: theme.textTheme.bodySmall),
+                    Text('MR ID: ${order.mrId}', style: theme.textTheme.bodySmall),
+                    Text('Distributor ID: ${order.distributorName}', style: theme.textTheme.bodySmall),
+                    Text('Chemist Shop ID: ${order.chemistShopName}', style: theme.textTheme.bodySmall),
+                    Text('Doctor ID: ${order.doctorName}', style: theme.textTheme.bodySmall),
+                    Text('Created At: ${order.orderDate}', style: theme.textTheme.bodySmall),
+                    Text('Updated At: ${order.deliveryDateTime}', style: theme.textTheme.bodySmall),
+                    Text('Total Amount: ₹${order.totalAmountRupees}', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
+                  ],
                 ),
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: statusColor.withAlpha(26),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  _statusLabel(order.status),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: statusColor,
-                    fontWeight: FontWeight.w700,
+              if (order.productsWithPrice is List && (order.productsWithPrice as List).isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Products:',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      ...List<Widget>.from(
+                        (order.productsWithPrice as List).map((prod) {
+                          final name = prod['name']?.toString() ?? '-';
+                          final qty = prod['quantity']?.toString() ?? '-';
+                          final pack = prod['pack']?.toString() ?? '-';
+                          final total = prod['totalAmount']?.toString() ?? '-';
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '$name (Qty: $qty, Pack: $pack)',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: AppColors.quaternary,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '₹$total',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
                   ),
                 ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<MROrderStatus>(
+                      initialValue: order.status,
+                      decoration: InputDecoration(
+                        labelText: 'Update Status',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
+                      ),
+                      items: MROrderStatus.values
+                          .map(
+                            (status) => DropdownMenuItem<MROrderStatus>(
+                              value: status,
+                              child: Text(_statusLabel(status)),
+                            ),
+                          )
+                          .toList(growable: false),
+                      onChanged: (value) async {
+                        if (value != null && value != order.status) {
+                          await notifier.updateOrderStatus(orderId: order.id, status: value);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.lg,
-            runSpacing: AppSpacing.xs,
-            children: [
-              _InfoChip(
-                icon: Iconsax.calendar_1,
-                label: 'Order Date',
-                value: _date(order.orderDate),
-              ),
-              _InfoChip(
-                icon: Iconsax.clock,
-                label: 'Delivery',
-                value:
-                    '${_date(order.deliveryDateTime)} at ${_time(order.deliveryDateTime)}',
-              ),
-              _InfoChip(
-                icon: Iconsax.profile_2user,
-                label: 'MR',
-                value: order.mrName,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _DetailRow(label: 'Doctor Interested', value: order.doctorName),
-          _DetailRow(
-            label: 'Chemist Shop Ordered For',
-            value: order.chemistShopName,
-          ),
-          _DetailRow(
-            label: 'Distributor Responsible',
-            value: order.distributorName,
-          ),
-          _DetailRow(
-            label: 'Delivery Time & Date',
-            value:
-                '${_date(order.deliveryDateTime)} | ${_time(order.deliveryDateTime)}',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 14, color: AppColors.quaternary),
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          '$label: ',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: AppColors.quaternary,
-          ),
-        ),
-        Text(
-          value,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 190,
-            child: Text(
-              '$label:',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.quaternary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

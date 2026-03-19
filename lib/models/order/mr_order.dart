@@ -11,6 +11,8 @@ class MROrder {
     required this.chemistShopName,
     required this.distributorName,
     required this.status,
+    this.productsWithPrice,
+    this.totalAmountRupees = 0,
   });
 
   final String id;
@@ -22,6 +24,8 @@ class MROrder {
   final String chemistShopName;
   final String distributorName;
   final MROrderStatus status;
+  final dynamic productsWithPrice;
+  final double totalAmountRupees;
 
   MROrder copyWith({
     String? id,
@@ -33,6 +37,8 @@ class MROrder {
     String? chemistShopName,
     String? distributorName,
     MROrderStatus? status,
+    dynamic productsWithPrice,
+    double? totalAmountRupees,
   }) {
     return MROrder(
       id: id ?? this.id,
@@ -44,6 +50,8 @@ class MROrder {
       chemistShopName: chemistShopName ?? this.chemistShopName,
       distributorName: distributorName ?? this.distributorName,
       status: status ?? this.status,
+      productsWithPrice: productsWithPrice ?? this.productsWithPrice,
+      totalAmountRupees: totalAmountRupees ?? this.totalAmountRupees,
     );
   }
 }

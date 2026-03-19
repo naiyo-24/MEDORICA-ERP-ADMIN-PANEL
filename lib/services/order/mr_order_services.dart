@@ -53,6 +53,8 @@ class MROrderServices {
       chemistShopName: json['chemist_shop_id'] ?? '-',
       distributorName: json['distributor_id'] ?? '-',
       status: _parseStatus(json['status']),
+      productsWithPrice: json['products_with_price'],
+      totalAmountRupees: (json['total_amount_rupees'] as num?)?.toDouble() ?? 0,
     );
   }
 
