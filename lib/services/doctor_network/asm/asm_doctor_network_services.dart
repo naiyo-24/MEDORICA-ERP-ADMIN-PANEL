@@ -30,23 +30,26 @@ class ASMDoctorNetworkServices {
 
   ASMDoctorNetwork _fromJson(Map<String, dynamic> json) {
     return ASMDoctorNetwork(
-      id: json['doctor_id'] ?? '',
-      doctorName: json['doctor_name'] ?? '',
-      phone: json['doctor_phone_no'] ?? '',
-      email: json['doctor_email'] ?? '',
-      address: json['doctor_address'] ?? '',
-      specialization: json['doctor_specialization'] ?? '',
-      experience: double.tryParse(json['doctor_experience']?.toString() ?? '0') ?? 0,
-      qualification: json['doctor_qualification'] ?? '',
-      description: json['doctor_description'] ?? '',
-      chambers: (json['doctor_chambers'] as List?)?.map((c) => Chamber(
-        name: c['name'] ?? '',
-        address: c['address'] ?? '',
-        phone: c['phone'] ?? '',
-      )).toList() ?? [],
-      asmAddedBy: json['asm_id'] ?? '',
-      asmAddedById: json['asm_id'] ?? '',
-      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
+      id: json['id'] as int? ?? 0,
+      asmId: json['asm_id'] as String? ?? '',
+      doctorId: json['doctor_id'] as String? ?? '',
+      doctorName: json['doctor_name'] as String? ?? '',
+      doctorBirthday: json['doctor_birthday'] as String?,
+      specialization: json['doctor_specialization'] as String? ?? '',
+      qualification: json['doctor_qualification'] as String?,
+      experience: json['doctor_experience']?.toString(),
+      description: json['doctor_description'] as String?,
+      photo: json['doctor_photo'] as String?,
+      chambers: (json['doctor_chambers'] as List?)?.map((c) => Chamber.fromJson(c as Map<String, dynamic>)).toList(),
+      phoneNo: json['doctor_phone_no'] as String? ?? '',
+      email: json['doctor_email'] as String?,
+      address: json['doctor_address'] as String?,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.tryParse(json['updated_at'].toString())
+          : null,
     );
   }
 }

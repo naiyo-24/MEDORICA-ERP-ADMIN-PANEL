@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/doctor_network/asm_doctor_network.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMDoctorCard extends StatelessWidget {
@@ -13,6 +14,11 @@ class ASMDoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final baseUrl = ApiUrl.baseUrl;
+    final photoPath = doctor.photo ?? '';
+    final doctorPhoto = photoPath.isNotEmpty && !photoPath.startsWith('http')
+        ? '$baseUrl/$photoPath'
+        : photoPath;
 
     return Material(
       color: AppColors.white,
@@ -28,7 +34,7 @@ class ASMDoctorCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Doctor Icon
+              // Doctor Photo
               Container(
                 width: 48,
                 height: 48,
@@ -36,11 +42,26 @@ class ASMDoctorCard extends StatelessWidget {
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: const Icon(
-                  Iconsax.user,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
+                child: doctorPhoto.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        child: Image.network(
+                          doctorPhoto,
+                          fit: BoxFit.cover,
+                          width: 48,
+                          height: 48,
+                          errorBuilder: (context, error, stackTrace) => const Icon(
+                            Iconsax.user,
+                            color: AppColors.primary,
+                            size: 24,
+                          ),
+                        ),
+                      )
+                    : const Icon(
+                        Iconsax.user,
+                        color: AppColors.primary,
+                        size: 24,
+                      ),
               ),
               const SizedBox(width: AppSpacing.sm),
 
@@ -100,7 +121,7 @@ class ASMDoctorCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        doctor.phone,
+                        doctor.phoneNo,
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontSize: 12,
                           color: AppColors.quaternary,
@@ -110,7 +131,7 @@ class ASMDoctorCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Added by ${doctor.asmAddedBy}',
+                    'ASM: ${doctor.asmId}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontSize: 11,
                       color: AppColors.quaternary,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/doctor_network/asm_doctor_network.dart';
+import '../../../services/api_url.dart';
 import '../../../theme/app_theme.dart';
 
 class ASMDoctorDetailsCard extends StatelessWidget {
@@ -12,6 +13,11 @@ class ASMDoctorDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final baseUrl = ApiUrl.baseUrl;
+    final photoPath = doctor.photo ?? '';
+    final doctorPhoto = photoPath.isNotEmpty && !photoPath.startsWith('http')
+        ? '$baseUrl/$photoPath'
+        : photoPath;
 
     return Material(
       color: Colors.transparent,
@@ -57,11 +63,26 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                           color: AppColors.white,
                           borderRadius: BorderRadius.circular(AppRadius.md),
                         ),
-                        child: const Icon(
-                          Iconsax.user,
-                          color: AppColors.primary,
-                          size: 32,
-                        ),
+                        child: doctorPhoto.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(AppRadius.md),
+                                child: Image.network(
+                                  doctorPhoto,
+                                  fit: BoxFit.cover,
+                                  width: 60,
+                                  height: 60,
+                                  errorBuilder: (context, error, stackTrace) => const Icon(
+                                    Iconsax.user,
+                                    color: AppColors.primary,
+                                    size: 32,
+                                  ),
+                                ),
+                              )
+                            : const Icon(
+                                Iconsax.user,
+                                color: AppColors.primary,
+                                size: 32,
+                              ),
                       ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
@@ -115,19 +136,19 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                         theme,
                         Iconsax.call,
                         'Phone',
-                        doctor.phone,
+                        doctor.phoneNo,
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.sms,
                         'Email',
-                        doctor.email,
+                        doctor.email ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.location,
                         'Address',
-                        doctor.address,
+                        doctor.address ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
@@ -139,19 +160,19 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                         theme,
                         Iconsax.timer_1,
                         'Experience',
-                        '${doctor.experience.toStringAsFixed(0)} years',
+                        '${doctor.experience ?? 'N/A'} years',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.award,
                         'Qualification',
-                        doctor.qualification,
+                        doctor.qualification ?? 'N/A',
                       ),
                       _buildDetailRow(
                         theme,
                         Iconsax.user_octagon,
-                        'Added by ASM',
-                        doctor.asmAddedBy,
+                        'ASM ID',
+                        doctor.asmId,
                       ),
                       const SizedBox(height: AppSpacing.md),
 
@@ -173,7 +194,7 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                           border: Border.all(color: AppColors.border),
                         ),
                         child: Text(
-                          doctor.description,
+                          doctor.description ?? 'No description available',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.quaternary,
                           ),
@@ -190,7 +211,7 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      ...doctor.chambers.asMap().entries.map((entry) {
+                      ...(doctor.chambers ?? []).asMap().entries.map((entry) {
                         final chamber = entry.value;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -225,7 +246,7 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                                     const SizedBox(width: AppSpacing.sm),
                                     Expanded(
                                       child: Text(
-                                        chamber.name,
+                                        chamber.chamberName,
                                         style: theme.textTheme.bodyMedium
                                             ?.copyWith(
                                               fontWeight: FontWeight.w600,
@@ -246,7 +267,7 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                                     const SizedBox(width: 6),
                                     Expanded(
                                       child: Text(
-                                        chamber.address,
+                                        chamber.chamberAddress,
                                         style: theme.textTheme.bodySmall
                                             ?.copyWith(
                                               fontSize: 13,
@@ -266,7 +287,7 @@ class ASMDoctorDetailsCard extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      chamber.phone,
+                                      chamber.chamberPhoneNo,
                                       style: theme.textTheme.bodySmall
                                           ?.copyWith(
                                             fontSize: 13,

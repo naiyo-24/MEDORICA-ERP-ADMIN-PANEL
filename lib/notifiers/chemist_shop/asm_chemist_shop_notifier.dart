@@ -81,7 +81,7 @@ class ASMChemistShopNotifier extends Notifier<ASMChemistShopState> {
 
     final fallbackDoctor = doctorList.isNotEmpty ? doctorList.first : null;
     final fallbackDoctorName = fallbackDoctor?.doctorName ?? 'Dr. A. Banerjee';
-    final fallbackDoctorPhone = fallbackDoctor?.phone ?? '+919700000101';
+    final fallbackDoctorPhone = fallbackDoctor?.phoneNo ?? '+919700000101';
 
     final created = DateTime.now();
 
@@ -100,8 +100,8 @@ class ASMChemistShopNotifier extends Notifier<ASMChemistShopState> {
           doctorName: doctorList.length > i
               ? doctorList[i].doctorName
               : fallbackDoctorName,
-          doctorPhone: doctorList.length > i
-              ? doctorList[i].phone
+            doctorPhone: doctorList.length > i
+              ? doctorList[i].phoneNo
               : fallbackDoctorPhone,
           asmAddedBy: asmList[i].name,
           asmAddedById: asmList[i].asmId,

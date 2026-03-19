@@ -44,15 +44,15 @@ class ASMDoctorNetworkState {
                 doctor.doctorName.toLowerCase().contains(
                   searchQuery.toLowerCase(),
                 ) ||
-                doctor.phone.contains(searchQuery) ||
-                doctor.email.toLowerCase().contains(searchQuery.toLowerCase()),
+                doctor.phoneNo.contains(searchQuery) ||
+                (doctor.email?.toLowerCase().contains(searchQuery.toLowerCase()) ?? false),
           )
           .toList();
     }
 
     if (selectedASM.isNotEmpty && selectedASM != 'All ASMs') {
       filtered = filtered
-          .where((doctor) => doctor.asmAddedBy == selectedASM)
+          .where((doctor) => doctor.asmId == selectedASM)
           .toList();
     }
 
@@ -67,7 +67,7 @@ class ASMDoctorNetworkState {
   }
 
   List<String> get uniqueASMs {
-    final asms = doctorList.map((d) => d.asmAddedBy).toSet().toList();
+    final asms = doctorList.map((d) => d.asmId).toSet().toList();
     asms.sort();
     return ['All ASMs', ...asms];
   }

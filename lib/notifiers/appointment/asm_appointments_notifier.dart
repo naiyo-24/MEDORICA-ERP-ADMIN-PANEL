@@ -77,20 +77,22 @@ class ASMAppointmentsNotifier extends Notifier<ASMAppointmentsState> {
 
     for (var i = 0; i < doctorList.length; i++) {
       final doctor = doctorList[i];
-      final chamber = doctor.chambers.first;
+      final chamber = (doctor.chambers != null && doctor.chambers!.isNotEmpty)
+          ? doctor.chambers!.first
+          : null;
       final date = now.add(Duration(days: (i % 4) - 1, hours: 9 + (i % 4)));
 
       appointments.add(
         ASMAppointment(
           id: 'ASM-APT-${1000 + i}',
           dateTime: date,
-          asmId: doctor.asmAddedById,
-          asmName: doctor.asmAddedBy,
+          asmId: doctor.asmId,
+          asmName: doctor.asmId,
           doctorName: doctor.doctorName,
-          chamberName: chamber.name,
-          chamberAddress: chamber.address,
-          chamberPhone: chamber.phone,
-          doctorPhone: doctor.phone,
+          chamberName: chamber?.chamberName ?? '',
+          chamberAddress: chamber?.chamberAddress ?? '',
+          chamberPhone: chamber?.chamberPhoneNo ?? '',
+          doctorPhone: doctor.phoneNo,
           doctorSpecialization: doctor.specialization,
           status: ASMAppointmentStatus
               .values[i % ASMAppointmentStatus.values.length],
@@ -101,19 +103,23 @@ class ASMAppointmentsNotifier extends Notifier<ASMAppointmentsState> {
       );
     }
 
-    if (appointments.length < 6) {
+    if (appointments.length < 6 && doctorList.isNotEmpty) {
+      final firstDoctor = doctorList.first;
+      final firstChamber = (firstDoctor.chambers != null && firstDoctor.chambers!.isNotEmpty)
+          ? firstDoctor.chambers!.first
+          : null;
       appointments.add(
         ASMAppointment(
           id: 'ASM-APT-2001',
           dateTime: now.add(const Duration(days: 2, hours: 10)),
-          asmId: doctorList.first.asmAddedById,
-          asmName: doctorList.first.asmAddedBy,
-          doctorName: doctorList.first.doctorName,
-          chamberName: doctorList.first.chambers.first.name,
-          chamberAddress: doctorList.first.chambers.first.address,
-          chamberPhone: doctorList.first.chambers.first.phone,
-          doctorPhone: doctorList.first.phone,
-          doctorSpecialization: doctorList.first.specialization,
+          asmId: firstDoctor.asmId,
+          asmName: firstDoctor.asmId,
+          doctorName: firstDoctor.doctorName,
+          chamberName: firstChamber?.chamberName ?? '',
+          chamberAddress: firstChamber?.chamberAddress ?? '',
+          chamberPhone: firstChamber?.chamberPhoneNo ?? '',
+          doctorPhone: firstDoctor.phoneNo,
+          doctorSpecialization: firstDoctor.specialization,
           status: ASMAppointmentStatus.scheduled,
           appointmentProofImage:
               'https://via.placeholder.com/600x400.png?text=Appointment+Proof+2001',
