@@ -1,3 +1,4 @@
+import 'package:iconsax/iconsax.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -56,34 +57,64 @@ class MROrderCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Order ID: ${order.id}', style: theme.textTheme.bodySmall),
-                    Text('MR ID: ${order.mrId}', style: theme.textTheme.bodySmall),
-                    Text('Distributor ID: ${order.distributorName}', style: theme.textTheme.bodySmall),
-                    Text('Chemist Shop ID: ${order.chemistShopName}', style: theme.textTheme.bodySmall),
-                    Text('Doctor ID: ${order.doctorName}', style: theme.textTheme.bodySmall),
-                    Text('Created At: ${order.orderDate}', style: theme.textTheme.bodySmall),
-                    Text('Updated At: ${order.deliveryDateTime}', style: theme.textTheme.bodySmall),
-                    Text('Total Amount: ₹${order.totalAmountRupees}', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
-                  ],
-                ),
+              Row(
+                children: [
+                  Icon(Iconsax.document, color: AppColors.primary, size: 20),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(order.id, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _statusColor(order.status).withAlpha(26),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Iconsax.status_up, color: _statusColor(order.status), size: 16),
+                        const SizedBox(width: 4),
+                        Text(_statusLabel(order.status), style: theme.textTheme.bodySmall?.copyWith(color: _statusColor(order.status), fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.lg,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  _InfoChip(icon: Iconsax.profile_2user, label: 'MR', value: order.mrId),
+                  _InfoChip(icon: Iconsax.shop, label: 'Chemist Shop', value: order.chemistShopName),
+                  _InfoChip(icon: Iconsax.user, label: 'Doctor', value: order.doctorName),
+                  _InfoChip(icon: Iconsax.truck, label: 'Distributor', value: order.distributorName),
+                  _InfoChip(icon: Iconsax.calendar_1, label: 'Created', value: order.orderDate.toString()),
+                  _InfoChip(icon: Iconsax.clock, label: 'Updated', value: order.deliveryDateTime.toString()),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Row(
+                children: [
+                  Icon(Iconsax.money_send, color: AppColors.primary, size: 18),
+                  const SizedBox(width: 6),
+                  Text('Total Amount:', style: theme.textTheme.bodySmall),
+                  const SizedBox(width: 4),
+                  Text('₹${order.totalAmountRupees}', style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.primary)),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
               if (order.productsWithPrice is List && (order.productsWithPrice as List).isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Products:',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          Icon(Iconsax.box, color: AppColors.primary, size: 18),
+                          const SizedBox(width: 6),
+                          Text('Products:', style: theme.textTheme.titleSmall?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                        ],
                       ),
                       const SizedBox(height: AppSpacing.xs),
                       ...List<Widget>.from(
@@ -96,21 +127,12 @@ class MROrderCard extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 4),
                             child: Row(
                               children: [
+                                Icon(Iconsax.tag, color: AppColors.quaternary, size: 16),
+                                const SizedBox(width: 4),
                                 Expanded(
-                                  child: Text(
-                                    '$name (Qty: $qty, Pack: $pack)',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: AppColors.quaternary,
-                                    ),
-                                  ),
+                                  child: Text('$name (Qty: $qty, Pack: $pack)', style: theme.textTheme.bodySmall?.copyWith(color: AppColors.quaternary)),
                                 ),
-                                Text(
-                                  '₹$total',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                Text('₹$total', style: theme.textTheme.bodySmall?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
                               ],
                             ),
                           );
@@ -121,6 +143,8 @@ class MROrderCard extends StatelessWidget {
                 ),
               Row(
                 children: [
+                  Icon(Iconsax.status_up, color: AppColors.primary, size: 18),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: DropdownButtonFormField<MROrderStatus>(
                       initialValue: order.status,
@@ -148,10 +172,42 @@ class MROrderCard extends StatelessWidget {
                 ],
               ),
             ],
+          
           ),
         );
       },
     );
   }
 }
+
+// Modern info chip widget
+class _InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  const _InfoChip({required this.icon, required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: AppColors.quaternary),
+          const SizedBox(width: 4),
+          Text('$label:', style: theme.textTheme.bodySmall?.copyWith(color: AppColors.quaternary)),
+          const SizedBox(width: 2),
+          Text(value, style: theme.textTheme.bodySmall?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}
+       
 
