@@ -42,6 +42,14 @@ class _ASMChemistShopScreenState extends ConsumerState<ASMChemistShopScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(asmChemistShopNotifierProvider.notifier).loadShopList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final shops = ref.watch(asmChemistShopListProvider);
@@ -83,8 +91,13 @@ class _ASMChemistShopScreenState extends ConsumerState<ASMChemistShopScreen> {
                   locationOptions: locations,
                   selectedASMId: state.selectedASMId,
                   selectedLocation: state.selectedLocation,
-                  onSearchChanged: notifier.setSearchQuery,
-                  onASMChanged: notifier.setSelectedASMId,
+                  onSearchChanged: (query) {
+                    notifier.setSearchQuery(query);
+                  },
+                  onASMChanged: (asmId) async {
+                    notifier.setSelectedASMId(asmId);
+                    await notifier.loadShopList(asmId: asmId);
+                  },
                   onLocationChanged: notifier.setSelectedLocation,
                 ),
                 const SizedBox(height: AppSpacing.md),

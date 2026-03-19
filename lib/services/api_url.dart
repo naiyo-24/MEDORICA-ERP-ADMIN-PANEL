@@ -90,6 +90,13 @@ class ApiUrl {
   static String asmDoctorNetworkGetByAsm(String asmId) => '$asmDoctorNetworkBase/get-by-asm/$asmId';
   static String asmDoctorNetworkGetByAsmAndDoctor(String asmId, String doctorId) => '$asmDoctorNetworkBase/get-by/$asmId/$doctorId';
 
+    // ASM Chemist Shop Network
+    static const String asmChemistShopBase = '/chemist-shop/asm';
+    static const String asmChemistShopGetAll = '$asmChemistShopBase/get-all';
+    static String asmChemistShopGetByAsm(String asmId) => '$asmChemistShopBase/get-by-asm/$asmId';
+    static String asmChemistShopGetByAsmAndShop(String asmId, String shopId) => '$asmChemistShopBase/get-by/$asmId/$shopId';
+    static String asmChemistShopGetByShopId(String shopId) => '$asmChemistShopBase/get-by-shop/$shopId';
+
     // MR Chemist Shop Network
     static const String mrChemistShopBase = '/chemist-shop/mr';
     static const String mrChemistShopGetAll = '$mrChemistShopBase/get-all';

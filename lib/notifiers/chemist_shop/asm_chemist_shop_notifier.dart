@@ -1,10 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/onboarding/asm.dart';
 import '../../models/chemist_shop/asm_chemist_shop.dart';
-import '../../models/doctor_network/asm_doctor_network.dart';
-import '../../providers/doctor_network/asm_doctor_network_provider.dart';
-import '../../providers/onboarding/asm_onboarding_provider.dart';
+import '../../services/chemist_shop/asm_chemist_shop_services.dart'; // Fixed import line
+
 
 class ASMChemistShopState {
   const ASMChemistShopState({
@@ -61,53 +58,22 @@ class ASMChemistShopState {
 }
 
 class ASMChemistShopNotifier extends Notifier<ASMChemistShopState> {
+  late final ASMChemistShopServices _services;
+
   @override
   ASMChemistShopState build() {
-    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
-    final doctorList = ref.watch(asmDoctorNetworkNotifierProvider).doctorList;
-
-    return ASMChemistShopState(
-      shops: _mockShops(asmList: asmList, doctorList: doctorList),
-    );
+    _services = ASMChemistShopServices();
+    return const ASMChemistShopState();
   }
 
-  List<ASMChemistShop> _mockShops({
-    required List<ASM> asmList,
-    required List<ASMDoctorNetwork> doctorList,
-  }) {
-    if (asmList.isEmpty) {
-      return const [];
+  Future<void> loadShopList({String? asmId}) async {
+    List<ASMChemistShop> shops = [];
+    if (asmId != null && asmId.isNotEmpty) {
+      shops = await _services.getASMShopsByAsmId(asmId);
+    } else {
+      shops = await _services.getAllASMShops();
     }
-
-    final fallbackDoctor = doctorList.isNotEmpty ? doctorList.first : null;
-    final fallbackDoctorName = fallbackDoctor?.doctorName ?? 'Dr. A. Banerjee';
-    final fallbackDoctorPhone = fallbackDoctor?.phoneNo ?? '+919700000101';
-
-    final created = DateTime.now();
-
-    return [
-      for (var i = 0; i < asmList.length; i++)
-        ASMChemistShop(
-          id: 'ASM-SHOP-${i + 101}',
-          shopPhoto:
-              'https://via.placeholder.com/640x420.png?text=ASM+Chemist+Shop+${i + 1}',
-          shopName: 'MediLink Drug House ${i + 1}',
-          shopPhone: '+91981000000${i + 1}',
-          shopEmail: 'medilink${i + 1}@medorica.com',
-          location: i % 2 == 0 ? 'Delhi' : 'Hyderabad',
-          description:
-              'Regional chemist outlet partnered for prescription fulfillment and stock visibility.',
-          doctorName: doctorList.length > i
-              ? doctorList[i].doctorName
-              : fallbackDoctorName,
-            doctorPhone: doctorList.length > i
-              ? doctorList[i].phoneNo
-              : fallbackDoctorPhone,
-          asmAddedBy: asmList[i].name,
-          asmAddedById: asmList[i].asmId,
-          createdAt: created.subtract(Duration(days: 16 - i * 2)),
-        ),
-    ];
+    state = state.copyWith(shops: shops);
   }
 
   void setSearchQuery(String value) {
