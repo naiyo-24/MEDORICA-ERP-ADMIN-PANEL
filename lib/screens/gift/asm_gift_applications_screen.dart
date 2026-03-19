@@ -128,6 +128,7 @@ class _ASMGiftApplicationsScreenState
                         application: app,
                         onStatusChanged: (status) {
                           notifier.updateStatus(
+                            asmId: app.asmRequestedById,
                             applicationId: app.id,
                             status: status,
                           );

@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/onboarding/asm.dart';
-import '../../models/doctor_network/asm_doctor_network.dart';
 import '../../models/gift/asm_gift_application.dart';
-import '../../models/gift/gift.dart';
-import '../../providers/doctor_network/asm_doctor_network_provider.dart';
-import '../../providers/onboarding/asm_onboarding_provider.dart';
-import '../../providers/gift/gift_provider.dart';
+import '../../services/gift/asm_gift_application_services.dart';
 
 class ASMGiftApplicationState {
   const ASMGiftApplicationState({
@@ -57,53 +51,25 @@ class ASMGiftApplicationState {
 }
 
 class ASMGiftApplicationNotifier extends Notifier<ASMGiftApplicationState> {
+  late final ASMGiftApplicationServices _services;
+
   @override
   ASMGiftApplicationState build() {
-    final gifts = ref.watch(giftListProvider);
-    final asms = ref.watch(asmOnboardingNotifierProvider).asmList;
-    final doctors = ref.watch(asmDoctorNetworkNotifierProvider).doctorList;
-
-    return ASMGiftApplicationState(
-      applications: _mockApplications(
-        gifts: gifts,
-        asms: asms,
-        doctors: doctors,
-      ),
-    );
+    _services = ASMGiftApplicationServices();
+    Future.microtask(loadApplications);
+    return const ASMGiftApplicationState();
   }
 
-  List<ASMGiftApplication> _mockApplications({
-    required List<Gift> gifts,
-    required List<ASM> asms,
-    required List<ASMDoctorNetwork> doctors,
-  }) {
-    if (gifts.isEmpty || asms.isEmpty || doctors.isEmpty) {
-      return const [];
+  Future<void> loadApplications({String? asmId}) async {
+    List<ASMGiftApplication> apps = [];
+    if (asmId != null && asmId.isNotEmpty) {
+      apps = await _services.getApplicationsByASM(asmId);
+    } else {
+      apps = await _services.getAllApplications();
     }
-
-    final now = DateTime.now();
-    final count = [
-      gifts.length,
-      asms.length,
-      doctors.length,
-    ].reduce((a, b) => a < b ? a : b);
-
-    return List.generate(count, (i) {
-      return ASMGiftApplication(
-        id: 'ASM-GA-${i + 100}',
-        doctorName: doctors[i].doctorName,
-        giftId: gifts[i].id,
-        giftItemRequired: gifts[i].itemName,
-        asmRequestedById: asms[i].asmId,
-        asmRequestedBy: asms[i].name,
-        date: now.subtract(Duration(days: i * 2 + 2)),
-        occasion: i.isEven ? 'Quarterly Camp' : 'Specialist Visit',
-        message: 'Requested for field engagement with targeted specialist.',
-        status: ASMGiftApplicationStatus
-            .values[i % ASMGiftApplicationStatus.values.length],
-      );
-    });
+    state = state.copyWith(applications: apps);
   }
+
 
   List<String> get doctorOptions {
     final names = state.applications.map((e) => e.doctorName).toSet().toList()
@@ -123,14 +89,18 @@ class ASMGiftApplicationNotifier extends Notifier<ASMGiftApplicationState> {
     state = state.copyWith(selectedDoctorName: value);
   }
 
-  void updateStatus({
+  Future<void> updateStatus({
+    required String asmId,
     required String applicationId,
     required ASMGiftApplicationStatus status,
-  }) {
+  }) async {
+    final updatedApp = await _services.updateApplicationStatus(
+      asmId: asmId,
+      requestId: int.parse(applicationId),
+      status: status,
+    );
     final updated = state.applications
-        .map(
-          (app) => app.id == applicationId ? app.copyWith(status: status) : app,
-        )
+        .map((app) => app.id == applicationId ? updatedApp : app)
         .toList();
     state = state.copyWith(applications: updated);
   }
