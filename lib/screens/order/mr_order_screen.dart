@@ -17,6 +17,13 @@ class MROrderScreen extends ConsumerStatefulWidget {
 }
 
 class _MROrderScreenState extends ConsumerState<MROrderScreen> {
+    @override
+    void initState() {
+      super.initState();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(mrOrderNotifierProvider.notifier).loadOrders();
+      });
+    }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedNavKey = SideNavItemKeys.mrOrders;
 
@@ -86,7 +93,10 @@ class _MROrderScreenState extends ConsumerState<MROrderScreen> {
                   selectedDate: selectedDate,
                   selectedStatus: selectedStatus,
                   onSearchChanged: notifier.setSearchQuery,
-                  onMRChanged: notifier.setSelectedMR,
+                  onMRChanged: (mrId) async {
+                    notifier.setSelectedMR(mrId);
+                    await notifier.loadOrders(mrId: mrId);
+                  },
                   onDateChanged: notifier.setSelectedDate,
                   onClearDate: notifier.clearDateFilter,
                   onStatusChanged: notifier.setSelectedStatus,

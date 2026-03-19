@@ -1,3 +1,4 @@
+    
 class ApiUrl {
     
   // Update this base URL to your deployed backend host.
@@ -96,7 +97,12 @@ class ApiUrl {
     static String asmChemistShopGetByAsm(String asmId) => '$asmChemistShopBase/get-by-asm/$asmId';
     static String asmChemistShopGetByAsmAndShop(String asmId, String shopId) => '$asmChemistShopBase/get-by/$asmId/$shopId';
     static String asmChemistShopGetByShopId(String shopId) => '$asmChemistShopBase/get-by-shop/$shopId';
-
+// MR Order Network
+    static const String mrOrderBase = '/order/mr';
+    static const String mrOrderGetAll = '$mrOrderBase/get-all';
+    static String mrOrderGetByMR(String mrId) => '$mrOrderBase/get-by-mr/$mrId';
+    static String mrOrderGetByMRAndOrderId(String mrId, String orderId) => '$mrOrderBase/get-by/$mrId/$orderId';
+    static String mrOrderUpdateByOrderId(String orderId) => '$mrOrderBase/update-by/$orderId';
     // MR Chemist Shop Network
     static const String mrChemistShopBase = '/chemist-shop/mr';
     static const String mrChemistShopGetAll = '$mrChemistShopBase/get-all';
