@@ -70,6 +70,8 @@ class MROrderFilterCard extends StatelessWidget {
 
   String _statusLabel(MROrderStatus status) {
     switch (status) {
+      case MROrderStatus.approved:
+        return 'Approved';
       case MROrderStatus.pending:
         return 'Pending';
       case MROrderStatus.shipped:

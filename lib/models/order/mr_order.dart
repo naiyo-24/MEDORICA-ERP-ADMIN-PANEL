@@ -1,4 +1,4 @@
-enum MROrderStatus { pending, shipped, dispatched, delivered }
+enum MROrderStatus { pending, approved, shipped, dispatched, delivered }
 
 class MROrder {
   const MROrder({

@@ -62,6 +62,8 @@ class MROrderServices {
     switch (value?.toString().toLowerCase()) {
       case 'pending':
         return MROrderStatus.pending;
+      case 'approved':
+        return MROrderStatus.approved;
       case 'shipped':
         return MROrderStatus.shipped;
       case 'dispatched':

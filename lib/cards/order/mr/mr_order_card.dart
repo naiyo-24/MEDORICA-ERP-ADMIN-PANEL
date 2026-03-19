@@ -24,6 +24,8 @@ class MROrderCard extends StatelessWidget {
         return 'Dispatched';
       case MROrderStatus.delivered:
         return 'Delivered';
+      case MROrderStatus.approved:
+        return 'Approved';
     }
   }
 
@@ -37,6 +39,8 @@ class MROrderCard extends StatelessWidget {
         return Colors.blue;
       case MROrderStatus.delivered:
         return Colors.green;
+      case MROrderStatus.approved:
+        return Colors.teal;
     }
   }
 
