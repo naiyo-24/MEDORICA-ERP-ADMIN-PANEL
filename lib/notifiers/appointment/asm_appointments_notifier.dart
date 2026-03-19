@@ -1,10 +1,6 @@
+import '../../services/appointment/asm_appointment_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/onboarding/asm.dart';
 import '../../models/appointment/asm_appointments.dart';
-import '../../models/doctor_network/asm_doctor_network.dart';
-import '../../providers/doctor_network/asm_doctor_network_provider.dart';
-import '../../providers/onboarding/asm_onboarding_provider.dart';
 
 class ASMAppointmentsState {
   const ASMAppointmentsState({
@@ -51,84 +47,20 @@ class ASMAppointmentsState {
 }
 
 class ASMAppointmentsNotifier extends Notifier<ASMAppointmentsState> {
+
+  final ASMAppointmentServices _services = ASMAppointmentServices();
+
   @override
   ASMAppointmentsState build() {
-    final asmList = ref.watch(asmOnboardingNotifierProvider).asmList;
-    final doctorList = ref.watch(asmDoctorNetworkNotifierProvider).doctorList;
-
-    return ASMAppointmentsState(
-      appointments: _buildMockAppointments(
-        asmList: asmList,
-        doctorList: doctorList,
-      ),
-    );
+    _loadAppointments();
+    return const ASMAppointmentsState();
   }
 
-  List<ASMAppointment> _buildMockAppointments({
-    required List<ASM> asmList,
-    required List<ASMDoctorNetwork> doctorList,
-  }) {
-    if (asmList.isEmpty || doctorList.isEmpty) {
-      return const [];
-    }
-
-    final now = DateTime.now();
-    final appointments = <ASMAppointment>[];
-
-    for (var i = 0; i < doctorList.length; i++) {
-      final doctor = doctorList[i];
-      final chamber = (doctor.chambers != null && doctor.chambers!.isNotEmpty)
-          ? doctor.chambers!.first
-          : null;
-      final date = now.add(Duration(days: (i % 4) - 1, hours: 9 + (i % 4)));
-
-      appointments.add(
-        ASMAppointment(
-          id: 'ASM-APT-${1000 + i}',
-          dateTime: date,
-          asmId: doctor.asmId,
-          asmName: doctor.asmId,
-          doctorName: doctor.doctorName,
-          chamberName: chamber?.chamberName ?? '',
-          chamberAddress: chamber?.chamberAddress ?? '',
-          chamberPhone: chamber?.chamberPhoneNo ?? '',
-          doctorPhone: doctor.phoneNo,
-          doctorSpecialization: doctor.specialization,
-          status: ASMAppointmentStatus
-              .values[i % ASMAppointmentStatus.values.length],
-          appointmentProofImage: i % 3 == 0
-              ? 'https://via.placeholder.com/600x400.png?text=Appointment+Proof+${1000 + i}'
-              : null,
-        ),
-      );
-    }
-
-    if (appointments.length < 6 && doctorList.isNotEmpty) {
-      final firstDoctor = doctorList.first;
-      final firstChamber = (firstDoctor.chambers != null && firstDoctor.chambers!.isNotEmpty)
-          ? firstDoctor.chambers!.first
-          : null;
-      appointments.add(
-        ASMAppointment(
-          id: 'ASM-APT-2001',
-          dateTime: now.add(const Duration(days: 2, hours: 10)),
-          asmId: firstDoctor.asmId,
-          asmName: firstDoctor.asmId,
-          doctorName: firstDoctor.doctorName,
-          chamberName: firstChamber?.chamberName ?? '',
-          chamberAddress: firstChamber?.chamberAddress ?? '',
-          chamberPhone: firstChamber?.chamberPhoneNo ?? '',
-          doctorPhone: firstDoctor.phoneNo,
-          doctorSpecialization: firstDoctor.specialization,
-          status: ASMAppointmentStatus.scheduled,
-          appointmentProofImage:
-              'https://via.placeholder.com/600x400.png?text=Appointment+Proof+2001',
-        ),
-      );
-    }
-
-    return appointments;
+  Future<void> _loadAppointments() async {
+    final appointments = await _services.getAllAppointments();
+    state = state.copyWith(appointments: appointments);
   }
+
 
   void setSelectedASM(String asmId) {
     state = state.copyWith(selectedASMId: asmId);

@@ -1,6 +1,7 @@
             
     
 class ApiUrl {
+        
     
   // Update this base URL to your deployed backend host.
   static const String baseUrl = 'https://appbackend.medoricapharma.com';
@@ -42,6 +43,15 @@ class ApiUrl {
   static const String mrGiftApplicationGetAll = '$mrGiftApplicationBase/get-all';
   static String mrGiftApplicationGetByMR(String mrId) => '$mrGiftApplicationBase/get-by-mr/$mrId';
   static String mrGiftApplicationUpdateByMRAndRequestId(String mrId, int requestId) => '$mrGiftApplicationBase/update-by/$mrId/$requestId';
+  
+  // ASM Appointment
+  static const String asmAppointmentBase = '/appointment/asm';
+  static const String asmAppointmentGetAll = '$asmAppointmentBase/get-all';
+  static String asmAppointmentGetByASM(String asmId) => '$asmAppointmentBase/get-by-asm/$asmId';
+  static String asmAppointmentGetByDoctor(String doctorId) => '$asmAppointmentBase/get-by-doctor/$doctorId';
+  static String asmAppointmentGetByASMDoctor(String asmId, String doctorId) => '$asmAppointmentBase/get-by-asm-doctor/$asmId/$doctorId';
+  static String asmAppointmentGetById(String appointmentId) => '$asmAppointmentBase/get-by/$appointmentId';
+  static String asmAppointmentDeleteById(String appointmentId) => '$asmAppointmentBase/delete-by/$appointmentId';
   
   // MR Appointment
   static const String mrAppointmentBase = '/appointment/mr';
