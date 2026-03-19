@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/gift/gift.dart';
-import '../../models/onboarding/mr.dart';
-import '../../models/doctor_network/mr_doctor_network.dart';
 import '../../models/gift/mr_gift_application.dart';
-import '../../providers/gift/gift_provider.dart';
-import '../../providers/doctor_network/mr_doctor_network_provider.dart';
-import '../../providers/onboarding/mr_onboarding_provider.dart';
+import '../../services/gift/mr_gift_application_services.dart';
 
 class MRGiftApplicationState {
   const MRGiftApplicationState({
@@ -57,49 +51,25 @@ class MRGiftApplicationState {
 }
 
 class MRGiftApplicationNotifier extends Notifier<MRGiftApplicationState> {
+  late final MRGiftApplicationServices _services;
+
   @override
   MRGiftApplicationState build() {
-    final gifts = ref.watch(giftListProvider);
-    final mrs = ref.watch(mrOnboardingNotifierProvider).mrList;
-    final doctors = ref.watch(mrDoctorNetworkNotifierProvider).doctorList;
-
-    return MRGiftApplicationState(
-      applications: _mockApplications(gifts: gifts, mrs: mrs, doctors: doctors),
-    );
+    _services = MRGiftApplicationServices();
+    Future.microtask(loadApplications);
+    return const MRGiftApplicationState();
   }
 
-  List<MRGiftApplication> _mockApplications({
-    required List<Gift> gifts,
-    required List<MR> mrs,
-    required List<MRDoctorNetwork> doctors,
-  }) {
-    if (gifts.isEmpty || mrs.isEmpty || doctors.isEmpty) {
-      return const [];
+  Future<void> loadApplications({String? mrId}) async {
+    List<MRGiftApplication> apps = [];
+    if (mrId != null && mrId.isNotEmpty) {
+      apps = await _services.getApplicationsByMR(mrId);
+    } else {
+      apps = await _services.getAllApplications();
     }
-
-    final now = DateTime.now();
-    final count = [
-      gifts.length,
-      mrs.length,
-      doctors.length,
-    ].reduce((a, b) => a < b ? a : b);
-
-    return List.generate(count, (i) {
-      return MRGiftApplication(
-        id: 'MR-GA-${i + 100}',
-        doctorName: doctors[i].doctorName,
-        giftId: gifts[i].id,
-        giftItemRequired: gifts[i].itemName,
-        mrRequestedById: mrs[i].mrId,
-        mrRequestedBy: mrs[i].name,
-        date: now.subtract(Duration(days: i * 2 + 1)),
-        occasion: i.isEven ? 'Doctor Meet' : 'Clinic Milestone',
-        message: 'Requested for relationship engagement with key doctor.',
-        status: GiftApplicationStatus
-            .values[i % GiftApplicationStatus.values.length],
-      );
-    });
+    state = state.copyWith(applications: apps);
   }
+
 
   List<String> get doctorOptions {
     final names = state.applications.map((e) => e.doctorName).toSet().toList()
@@ -119,14 +89,18 @@ class MRGiftApplicationNotifier extends Notifier<MRGiftApplicationState> {
     state = state.copyWith(selectedDoctorName: value);
   }
 
-  void updateStatus({
+  Future<void> updateStatus({
+    required String mrId,
     required String applicationId,
     required GiftApplicationStatus status,
-  }) {
+  }) async {
+    final updatedApp = await _services.updateApplicationStatus(
+      mrId: mrId,
+      requestId: int.parse(applicationId),
+      status: status,
+    );
     final updated = state.applications
-        .map(
-          (app) => app.id == applicationId ? app.copyWith(status: status) : app,
-        )
+        .map((app) => app.id == applicationId ? updatedApp : app)
         .toList();
     state = state.copyWith(applications: updated);
   }

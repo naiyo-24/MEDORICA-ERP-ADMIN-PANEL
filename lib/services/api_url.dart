@@ -1,4 +1,4 @@
-        
+            
     
 class ApiUrl {
     
@@ -37,6 +37,12 @@ class ApiUrl {
   static String asmGiftApplicationGetByASM(String asmId) => '$asmGiftApplicationBase/get-by-asm/$asmId';
   static String asmGiftApplicationUpdateByASMAndRequestId(String asmId, int requestId) => '$asmGiftApplicationBase/update-by/$asmId/$requestId';
   
+  // MR Gift Application
+  static const String mrGiftApplicationBase = '/gift-application/mr';
+  static const String mrGiftApplicationGetAll = '$mrGiftApplicationBase/get-all';
+  static String mrGiftApplicationGetByMR(String mrId) => '$mrGiftApplicationBase/get-by-mr/$mrId';
+  static String mrGiftApplicationUpdateByMRAndRequestId(String mrId, int requestId) => '$mrGiftApplicationBase/update-by/$mrId/$requestId';
+        
   // ASM Onboarding
   static const String asmOnboardingBase = '/onboarding/asm';
   static const String asmOnboardingPost = '$asmOnboardingBase/post';

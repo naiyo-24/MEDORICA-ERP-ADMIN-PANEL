@@ -128,6 +128,7 @@ class _MRGiftApplicationsScreenState
                         application: app,
                         onStatusChanged: (status) {
                           notifier.updateStatus(
+                            mrId: app.mrRequestedById,
                             applicationId: app.id,
                             status: status,
                           );
