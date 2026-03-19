@@ -2,12 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../models/appointment/asm_appointments.dart';
+import '../../../models/onboarding/asm.dart';
+import '../../../models/doctor_network/asm_doctor_network.dart';
+import '../../../models/visual_ads.dart';
+import '../../../providers/onboarding/asm_onboarding_provider.dart';
+import '../../../providers/doctor_network/asm_doctor_network_provider.dart';
+import '../../../providers/visual_ads_provider.dart';
 import '../../../theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ASMAppointmentCard extends StatelessWidget {
+class ASMAppointmentCard extends ConsumerWidget {
   const ASMAppointmentCard({super.key, required this.appointment});
 
   final ASMAppointment appointment;
+
+  ASM _getASM(WidgetRef ref, String asmId) {
+    final asmList = ref.watch(asmListProvider);
+    return asmList.firstWhere(
+      (asm) => asm.asmId == asmId,
+      orElse: () => const ASM(asmId: '', name: '', phone: '', password: ''),
+    );
+  }
+
+  ASMDoctorNetwork _getDoctor(WidgetRef ref, String doctorId) {
+    final doctorList = ref.watch(asmDoctorListProvider);
+    return doctorList.firstWhere(
+      (doc) => doc.doctorId == doctorId,
+      orElse: () => const ASMDoctorNetwork(
+        id: 0,
+        asmId: '',
+        doctorId: '',
+        doctorName: '',
+        specialization: '',
+        phoneNo: '',
+      ),
+    );
+  }
+
+  List<String> _getVisualAdsNames(WidgetRef ref, List<dynamic>? visualAdsRaw) {
+    final adsList = ref.watch(visualAdsListProvider);
+    if (visualAdsRaw == null) return [];
+    return visualAdsRaw.map((ad) {
+      if (ad is Map && ad['id'] != null) {
+        final adObj = adsList.firstWhere(
+          (a) => a.id == ad['id'],
+          orElse: () => VisualAd(adId: '', name: '', createdAt: DateTime(2000)),
+        );
+        return adObj.name.isNotEmpty ? adObj.name : (ad['medicine_name']?.toString() ?? '');
+      }
+      return '';
+    }).where((name) => name.isNotEmpty).toList();
+  }
 
   String _date(DateTime value) {
     const months = [
@@ -60,9 +105,12 @@ class ASMAppointmentCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final statusColor = _statusColor(appointment.status);
+    final asm = _getASM(ref, appointment.asmId);
+    final doctor = _getDoctor(ref, appointment.doctor_id ?? '');
+    final visualAdsNames = _getVisualAdsNames(ref, appointment.visual_ads);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -129,71 +177,32 @@ class ASMAppointmentCard extends StatelessWidget {
                 value: _time(appointment.dateTime),
               ),
               _InfoChip(
+                icon: Iconsax.location,
+                label: 'Place',
+                value: appointment.place != null ? appointment.place! : '-',
+              ),
+              _InfoChip(
                 icon: Iconsax.user_octagon,
                 label: 'ASM Name',
-                value: appointment.asmName,
+                value: asm.name,
+              ),
+              _InfoChip(
+                icon: Iconsax.user,
+                label: 'Doctor',
+                value: doctor.doctorName,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          _DetailRow(label: 'Doctor', value: appointment.doctorName),
-          _DetailRow(label: 'Doctor Phone', value: appointment.doctorPhone),
-          _DetailRow(
-            label: 'Doctor Specialization',
-            value: appointment.doctorSpecialization,
-          ),
-          _DetailRow(label: 'Chamber Name', value: appointment.chamberName),
-          _DetailRow(
-            label: 'Chamber Address',
-            value: appointment.chamberAddress,
-          ),
-          _DetailRow(
-            label: 'Chamber Phone No',
-            value: appointment.chamberPhone,
-          ),
-          if (appointment.appointmentProofImage != null) ...[
+          if (visualAdsNames.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.md),
             const Divider(color: AppColors.border),
             const SizedBox(height: AppSpacing.sm),
-            Row(
-              children: [
-                const Icon(Iconsax.gallery, size: 16, color: AppColors.primary),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Appointment Proof Image',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            Text('Visual Ads:', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
             const SizedBox(height: AppSpacing.sm),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              child: Image.network(
-                appointment.appointmentProofImage!,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Iconsax.gallery_slash,
-                        size: 48,
-                        color: AppColors.quaternary,
-                      ),
-                    ),
-                  );
-                },
-              ),
+            Wrap(
+              spacing: AppSpacing.md,
+              children: visualAdsNames.map((name) => Chip(label: Text(name))).toList(),
             ),
           ],
         ],
@@ -240,41 +249,3 @@ class _InfoChip extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              '$label:',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.quaternary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

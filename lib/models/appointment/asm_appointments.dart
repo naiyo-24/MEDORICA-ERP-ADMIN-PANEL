@@ -5,20 +5,27 @@ class ASMAppointment {
     required this.id,
     required this.dateTime,
     required this.asmId,
-    required this.asmName,
-    required this.doctorName,
-    required this.chamberName,
-    required this.chamberAddress,
-    required this.chamberPhone,
-    required this.doctorPhone,
-    required this.doctorSpecialization,
+    this.place,
+    this.doctor_id,
+    this.visual_ads,
     required this.status,
+    this.asmName = '',
+    this.doctorName = '',
+    this.chamberName = '',
+    this.chamberAddress = '',
+    this.chamberPhone = '',
+    this.doctorPhone = '',
+    this.doctorSpecialization = '',
     this.appointmentProofImage,
   });
 
   final String id;
   final DateTime dateTime;
   final String asmId;
+  final String? place;
+  final String? doctor_id;
+  final List<dynamic>? visual_ads;
+  final ASMAppointmentStatus status;
   final String asmName;
   final String doctorName;
   final String chamberName;
@@ -26,13 +33,15 @@ class ASMAppointment {
   final String chamberPhone;
   final String doctorPhone;
   final String doctorSpecialization;
-  final ASMAppointmentStatus status;
   final String? appointmentProofImage;
 
   ASMAppointment copyWith({
     String? id,
     DateTime? dateTime,
     String? asmId,
+    String? place,
+    String? doctor_id,
+    List<dynamic>? visual_ads,
     String? asmName,
     String? doctorName,
     String? chamberName,
@@ -47,6 +56,9 @@ class ASMAppointment {
       id: id ?? this.id,
       dateTime: dateTime ?? this.dateTime,
       asmId: asmId ?? this.asmId,
+      place: place ?? this.place,
+      doctor_id: doctor_id ?? this.doctor_id,
+      visual_ads: visual_ads ?? this.visual_ads,
       asmName: asmName ?? this.asmName,
       doctorName: doctorName ?? this.doctorName,
       chamberName: chamberName ?? this.chamberName,
