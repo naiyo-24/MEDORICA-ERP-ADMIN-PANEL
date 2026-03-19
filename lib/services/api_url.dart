@@ -1,31 +1,7 @@
 class ApiUrl {
-    // ASM Monthly Target
-    static const String asmMonthlyTargetBase = '/monthly-target/asm';
-    static const String asmMonthlyTargetGetAll = '$asmMonthlyTargetBase/get-all';
-    static String asmMonthlyTargetGetByAsm(String asmId) => '$asmMonthlyTargetBase/get-by-asm/$asmId';
-    static String asmMonthlyTargetGetByAsmYearMonth(String asmId, int year, int month) => '$asmMonthlyTargetBase/get-by/$asmId/$year/$month';
-            
-    // MR Salary Slip
-    static const String mrSalarySlipBase = '/salary-slip/mr';
-    static const String mrSalarySlipGetAll = '$mrSalarySlipBase/get-all';
-
-    // MR Monthly Plan
-    static const String mrMonthlyPlanBase = '/monthly-plan';
-    static const String mrMonthlyPlanGetAll = '$mrMonthlyPlanBase/get-all';
-    static String mrMonthlyPlanGetById(int planId) => '$mrMonthlyPlanBase/get-by/$planId';
-    static String mrMonthlyPlanGetByMr(String mrId) => '$mrMonthlyPlanBase/get-by-mr/$mrId';
-    static String mrMonthlyPlanGetByMrAndDate(String mrId, String planDate) => '$mrMonthlyPlanBase/get-by-mr/$mrId/date/$planDate';
-    static String mrMonthlyPlanDeleteById(int planId) => '$mrMonthlyPlanBase/delete/$planId';
-
-    static String mrSalarySlipPostByMr(String mrId) => '$mrSalarySlipBase/post/$mrId';
-    static String mrSalarySlipUpdateByMr(String mrId) => '$mrSalarySlipBase/update-by/$mrId';
-    static String mrSalarySlipGetByMr(String mrId) => '$mrSalarySlipBase/get-by-mr/$mrId';
-    static String mrSalarySlipDownloadByMr(String mrId) => '$mrSalarySlipBase/download-by-mr/$mrId';
-    static String mrSalarySlipGetById(int slipId) => '$mrSalarySlipBase/get-by/$slipId';
-    static String mrSalarySlipDownloadById(int slipId) => '$mrSalarySlipBase/download-by/$slipId';
-    static String mrSalarySlipDeleteById(int slipId) => '$mrSalarySlipBase/delete-by/$slipId';
+    
   // Update this base URL to your deployed backend host.
-  static const String baseUrl = 'http://0.0.0.0:8000';
+  static const String baseUrl = 'https://appbackend.medoricapharma.com';
 
   // About Us
   static const String aboutUsBase = '/about-us';
@@ -67,7 +43,34 @@ class ApiUrl {
 
   static String asmOnboardingDeleteById(String asmId) =>
       '$asmOnboardingBase/delete-by/$asmId';
+  
+  // ASM Monthly Target
+  static const String asmMonthlyTargetBase = '/monthly-target/asm';
+  static const String asmMonthlyTargetGetAll = '$asmMonthlyTargetBase/get-all';
+  static String asmMonthlyTargetGetByAsm(String asmId) => '$asmMonthlyTargetBase/get-by-asm/$asmId';
+  static String asmMonthlyTargetGetByAsmYearMonth(String asmId, int year, int month) => '$asmMonthlyTargetBase/get-by/$asmId/$year/$month';
+            
+  // MR Salary Slip
+  static const String mrSalarySlipBase = '/salary-slip/mr';
+  static const String mrSalarySlipGetAll = '$mrSalarySlipBase/get-all';
 
+  // MR Monthly Plan
+  static const String mrMonthlyPlanBase = '/monthly-plan';
+  static const String mrMonthlyPlanGetAll = '$mrMonthlyPlanBase/get-all';
+  static String mrMonthlyPlanGetById(int planId) => '$mrMonthlyPlanBase/get-by/$planId';
+  static String mrMonthlyPlanGetByMr(String mrId) => '$mrMonthlyPlanBase/get-by-mr/$mrId';
+  static String mrMonthlyPlanGetByMrAndDate(String mrId, String planDate) => '$mrMonthlyPlanBase/get-by-mr/$mrId/date/$planDate';
+  static String mrMonthlyPlanDeleteById(int planId) => '$mrMonthlyPlanBase/delete/$planId';
+  
+  // MR Salary Slip
+  static String mrSalarySlipPostByMr(String mrId) => '$mrSalarySlipBase/post/$mrId';
+  static String mrSalarySlipUpdateByMr(String mrId) => '$mrSalarySlipBase/update-by/$mrId';
+  static String mrSalarySlipGetByMr(String mrId) => '$mrSalarySlipBase/get-by-mr/$mrId';
+  static String mrSalarySlipDownloadByMr(String mrId) => '$mrSalarySlipBase/download-by-mr/$mrId';
+  static String mrSalarySlipGetById(int slipId) => '$mrSalarySlipBase/get-by/$slipId';
+  static String mrSalarySlipDownloadById(int slipId) => '$mrSalarySlipBase/download-by/$slipId';
+  
+  static String mrSalarySlipDeleteById(int slipId) => '$mrSalarySlipBase/delete-by/$slipId';
   // MR Doctor Network
   static const String mrDoctorNetworkBase = '/doctor-network/mr';
   static const String mrDoctorNetworkGetAll = '$mrDoctorNetworkBase/get-all';
