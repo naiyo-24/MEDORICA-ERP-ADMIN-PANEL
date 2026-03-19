@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -106,6 +107,32 @@ class ASMAppointmentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+        // DEBUG: Print provider lists and appointment fields
+        final debugDoctorList = ref.watch(asmDoctorListProvider);
+        if (kDebugMode) {
+          print('DEBUG: asmDoctorListProvider contents:');
+        }
+        for (final doc in debugDoctorList) {
+          if (kDebugMode) {
+            print('doctorId: ${doc.doctorId}, doctorName: ${doc.doctorName}');
+          }
+        }
+        if (kDebugMode) {
+          print('DEBUG: appointment.doctor_id: ${appointment.doctor_id}');
+        }
+
+        final debugVisualAdsList = ref.watch(visualAdsListProvider);
+        if (kDebugMode) {
+          print('DEBUG: visualAdsListProvider contents:');
+        }
+        for (final ad in debugVisualAdsList) {
+          if (kDebugMode) {
+            print('id: ${ad.id}, name: ${ad.name}');
+          }
+        }
+        if (kDebugMode) {
+          print('DEBUG: appointment.visual_ads: ${appointment.visual_ads}');
+        }
     final theme = Theme.of(context);
     final statusColor = _statusColor(appointment.status);
     final asm = _getASM(ref, appointment.asmId);
