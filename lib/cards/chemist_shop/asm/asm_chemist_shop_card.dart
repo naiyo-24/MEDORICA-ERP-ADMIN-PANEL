@@ -100,31 +100,39 @@ class ASMChemistShopCard extends StatelessWidget {
                   label: 'Added By ASM',
                   value: shop.asmAddedBy,
                 ),
-                if (bankPassbookPhoto.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Iconsax.document, size: 18),
-                      label: const Text('View Bank Passbook'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 16,
-                        ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Iconsax.document, size: 18),
+                    label: const Text('View Bank Passbook'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),
-                      onPressed: () {
-                        if (bankPassbookUrl.isNotEmpty) {
-                          // ignore: deprecated_member_use
-                          launchUrl(Uri.parse(bankPassbookUrl));
-                        }
-                      },
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 16,
+                      ),
                     ),
+                    onPressed: () async {
+                      if (bankPassbookUrl.isNotEmpty) {
+                        await launchUrl(
+                          Uri.parse(bankPassbookUrl),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('No bank passbook photo available'),
+                            backgroundColor: AppColors.error,
+                          ),
+                        );
+                      }
+                    },
                   ),
+                ),
               ],
             ),
           ),
